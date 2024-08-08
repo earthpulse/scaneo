@@ -11,6 +11,7 @@ from .cache import CompressedLFUCache
 from .errors import ImageOutOfBounds
 from .image_utils import to_uint8, contrast_stretch
 import shapely
+import shapely.geometry
 from rasterio.warp import transform_bounds
 
 # import geopandas as gpd
