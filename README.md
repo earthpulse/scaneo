@@ -1,7 +1,7 @@
 <div align="center">
 
 <p align="center">
-    <img src="https://github.com/earthpulse/scaneo/raw/master/ui/static/scaneo.png" alt="" style="width: 90%;" />
+    <img src="https://github.com/earthpulse/scaneo/blob/main/ui/static/scaneo.png" alt="" style="width: 90%;" />
 </p>
 
 Create your own training datasets from satellite imagery, effortlessly and faster than ever.</p>
