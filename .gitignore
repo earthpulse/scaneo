@@ -31,4 +31,3 @@ ui/playwright/.cache/
 !scaneo/ui/**
 ui/mkdocs/site/**/*
 kk*
-scaneo/ui
