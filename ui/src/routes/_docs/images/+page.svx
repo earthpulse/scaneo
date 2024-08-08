@@ -1,0 +1,3 @@
+# Images
+
+Ensure your images are in TIF format. Define specific bands and ranges for visualization within Scaneo.

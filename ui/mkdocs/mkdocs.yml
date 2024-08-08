@@ -1,0 +1,51 @@
+site_name: ScanEO
+
+nav:
+  - Introduction: 'index.md'
+  - Getting Started: 'getting_started.md'
+  - Interface: 'interface.md'
+  - Tools: 'tools.md'
+  - Saving and exporting: 'saving_and_exporting.md'
+
+theme:
+  name: material
+  highlightjs: true
+  hljs_languages:
+    - python
+  favicon: img/favicon.ico
+  features:
+    - content.code.copy
+    - content.code.select
+    - navigation.footer
+  palette:
+    # Palette toggle for light mode
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - toc:
+      permalink: '¶'
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.keys
+
+plugins:
+  - search
+
+extra_css:
+  - css/video.css

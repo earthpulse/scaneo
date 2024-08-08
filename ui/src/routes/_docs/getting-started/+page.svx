@@ -1,0 +1,39 @@
+<script>
+    import Code from "../../../components/Docs/Code.svelte"
+</script>
+
+
+# Installation
+
+You can install the library and CLI using pip.
+<Code>pip install scaneo</Code>
+
+To verify the installation you can run the `help` command, which will give you a list of all the available commands in the CLI.
+<Code>scaneo --help</Code> 
+
+Until we hit a stable release (v1.0 is planned for October 2023) it is recommended to upgrade the cli regularly to get the latest changes.
+<Code>pip install eotdl --upgrade</Code> 
+
+
+> The library and CLI require Python >= 3.8.
+
+# CLI
+
+You can pick a port to run the server on with the flag `--port` or `-p`.
+<Code>scaneo --port 8080</Code>
+
+You can also specify the host with the flag `--host` or `-h`.
+<Code>scaneo --host</Code>
+
+To run the server in reload mode you can use the flag `--reload` or `-r`.
+<Code>scaneo --reload</Code>
+
+Find out which version of the CLI you are running with the flag `--version` or `-v`.
+<Code>scaneo --version</Code>
+
+If you're working with local data, you can specify a path to a local file with the flag `--data` or `-d` before the path to the data.
+<Code>scaneo --data ./path-to-data/</Code>
+
+Add a path to environment file with credentials to a cloud bucket (URL, ACCESS_KEY, SECRET_KEY, BUCKET, REGION) with the flag `--env`, `.env` or `-e`.
+<Code>scaneo --env</Code>
+

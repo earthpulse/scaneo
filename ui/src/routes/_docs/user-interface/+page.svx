@@ -1,0 +1,33 @@
+# User Interface
+
+
+
+## Label Selector
+
+Label Interaction: Engage with existing labels or create new ones with associated colors.
+Label Display: If an image has previously been labeled, the chosen label will be prominently displayed next to the label name.
+
+## Quick Selection
+
+Navigation: Shift between images swiftly with a comprehensive boundary view.
+Image Retrieval: Obtain images by directly clicking on their boundaries or by using the search function.
+
+## Classification
+
+Assign labels to selected images through a toggling mechanism.
+
+## Segmentation
+
+Determine and designate areas of interest correlated with specific labels using brush and eraser tools.
+
+## Detection
+
+Highlight rectangular areas of interest.
+
+## SAM (Segment Anything Model)
+
+Utilize marker prompts to isolate regions of interest.
+
+## Options
+
+Configure image band specifications, define selection ranges, and adjust the opacity of highlighted areas.

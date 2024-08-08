@@ -1,0 +1,9 @@
+# STAC Compatibility
+
+## Label Storage
+
+All labeling data can be stored in the STAC format.
+
+## Metadata Management
+
+Supply initial metadata using STAC collection and label items.
