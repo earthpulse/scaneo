@@ -10,7 +10,7 @@ sys.path.append(os.path.join(scaneo_cli_dir))
 app = typer.Typer()
 
 
-__version__ = "2024.08.08-5"
+__version__ = "2024.08.08-6"
 
 
 @app.command()
