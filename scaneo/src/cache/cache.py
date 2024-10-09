@@ -22,9 +22,9 @@ def create_database(name, verbose=False):
         print("No write permissions in cache directory")
         return False
     if os.path.exists(db_path):
+        os.remove(db_path)
         if verbose:
             print("Database already exists")
-        return False
     if verbose:
         print("Creating database")
     conn = sqlite3.connect(db_path)
