@@ -47,6 +47,8 @@ def run(
     if eotdl:
         typer.echo(f"Using EOTDL dataset: {eotdl} (ignoring `data` and `env` flags)")
         cmd = f"EOTDL={eotdl} {cmd}"
+        #cmd = f"EOTDL={eotdl} {cmd}"
+        os.environ["EOTDL"] = eotdl
     else:
         if env.exists() and data is None:
             cmd += f" --env-file {env}"
@@ -60,6 +62,8 @@ def run(
                     "Data directory not specified. Either specify a data directory, an environment file with credentials to a cloud bucket or an EOTDL dataset."
                 )
             cmd = f"DATA={data} {cmd}"
+            #cmd = f"DATA={data} {cmd}"
+            os.environ["DATA"] = str(data)
     # cmd = f"IMAGE={image} " + cmd
     typer.echo(f"Running command: {cmd}")
     os.system(cmd)
