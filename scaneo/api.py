@@ -5,8 +5,7 @@ import os
 
 from src.storage import Storage
 from src.image import get_images_info
-from src.cache import create_database, persist_dict_in_db
-
+from src.cache.cache import get_cache_dir, create_database, persist_dict_in_db, get_dict_from_db
 from routers import images, labels, geojson
 
 
@@ -27,9 +26,13 @@ app.include_router(geojson.router)
 
 # TODO: option to update db (if dataset changes)
 storage = Storage()
-if create_database(storage.name, True):
-    persist_dict_in_db(storage.name, get_images_info(True), True)
-
+image_info = get_images_info(True)
+if os.path.exists(get_cache_dir() + f"{storage.name}.db"): 
+    if image_info != get_dict_from_db(storage.name):
+        if create_database(storage.name, False):
+            persist_dict_in_db(storage.name, image_info, True)
+else:
+    create_database(storage.name, True)
 # this needs to be last in order to not override other routes
 # ui is in same directory as this file
 # in order for this to work with multipage apps, make sure to use trailingSlash = 'always' in svelte layout

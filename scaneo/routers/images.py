@@ -3,8 +3,7 @@ from starlette.responses import StreamingResponse
 from src.image import get_image_data, get_tile_data, ready_image
 from src.image.errors import ImageOutOfBounds
 from src.storage import Storage
-from src.cache import get_dict_from_db, persist_dict_in_db, create_database
-from src.image import get_images_info
+from src.cache import get_dict_from_db
 
 import os
 
@@ -16,9 +15,6 @@ router = APIRouter(prefix="/images", tags=["images"])
 def get_images(background_tasks: BackgroundTasks):
     try:
         storage = Storage()
-        create_database(storage.name, True)
-        persist_dict_in_db(storage.name,get_images_info(True),True)
-        
         images_info = get_dict_from_db(storage.name)
         # background_tasks.add_task(persist_dict_in_db, storage.name, images_info)
         return images_info

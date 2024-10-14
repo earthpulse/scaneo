@@ -57,5 +57,5 @@ def get_dict_from_db(name):
     cursor.execute("SELECT key, value FROM cache")
     rows = cursor.fetchall()
     return [
-        {"name": row[0], "bbox": list(map(float, row[1].split(",")))} for row in rows
+        {"name": row[0], "bbox": tuple(map(float, row[1].split(",")))} for row in rows
     ]
