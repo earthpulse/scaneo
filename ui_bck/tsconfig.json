@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"allowUnreachableCode": false,
+		"baseUrl": ".",
+		"exactOptionalPropertyTypes": true,
+		"ignoreDeprecations": "5.0",
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noUncheckedIndexedAccess": true,
+		"paths": {
+			"$components": ["./src/components"],
+			"$components/*": ["./src/components/*"],
+			"$lib": ["./src/lib"],
+			"$lib/*": ["./src/lib/*"],
+			"$stores": ["./src/stores"],
+			"$stores/*": ["./src/stores/*"],
+			"$tests": ["./tests"],
+			"$tests/*": ["./tests/*"]
+		},
+		"strict": true
+	},
+	"extends": "./.svelte-kit/tsconfig.json"
+}

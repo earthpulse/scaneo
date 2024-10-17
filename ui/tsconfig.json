@@ -17,8 +17,8 @@
 			"$lib/*": ["./src/lib/*"],
 			"$stores": ["./src/stores"],
 			"$stores/*": ["./src/stores/*"],
-			"$tests": ["./tests"],
-			"$tests/*": ["./tests/*"]
+			"$styles": ["./styles"],
+			"$styles/*": ["./styles/*"]
 		},
 		"strict": true
 	},
