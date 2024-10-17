@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "scaneo"
-version = "2024.08.08-6"
+version = "2024.10.09"
 description = "A labelling tool for satellite imagery"
 authors = ["earthpulse <it@earthpulse.es>"]
 readme = "README.md"
