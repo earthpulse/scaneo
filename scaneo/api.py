@@ -7,7 +7,7 @@ import os
 # from src.image import get_images_info
 # from src.cache import create_database, persist_dict_in_db
 
-# from routers import images, labels, geojson
+from routers import campaigns
 
 
 app = FastAPI(docs_url=None)
@@ -19,6 +19,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(campaigns.router)
 
 # app.include_router(images.router)
 # app.include_router(labels.router)
