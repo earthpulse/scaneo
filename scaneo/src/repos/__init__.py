@@ -1,1 +1,2 @@
-from .CampaignDBRepo import CampaignDBRepo
+from .CampaignsDBRepo import CampaignsDBRepo
+from .ImagesDBRepo import ImagesDBRepo

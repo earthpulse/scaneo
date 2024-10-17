@@ -3,11 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-# from src.storage import Storage
-# from src.image import get_images_info
-# from src.cache import create_database, persist_dict_in_db
-
-from routers import campaigns
+from routers import campaigns, images
 
 
 app = FastAPI(docs_url=None)
@@ -21,11 +17,7 @@ app.add_middleware(
 )
 
 app.include_router(campaigns.router)
-
-# app.include_router(images.router)
-# app.include_router(labels.router)
-# app.include_router(geojson.router)
-
+app.include_router(images.router)
 
 # # TODO: option to update db (if dataset changes)
 # if not os.environ.get("EOTDL"):

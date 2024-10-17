@@ -1,9 +1,8 @@
 from ...models import Campaign
-from ...repos import CampaignDBRepo
+from ...repos import CampaignsDBRepo
 
 def retrieve_campaigns():
-	repo = CampaignDBRepo()
-	data = repo.retrieve_campaigns()
-	campaigns = [Campaign(**d) for d in data]
-	# TODO: checks and validations
-	return campaigns
+    repo = CampaignsDBRepo()
+    data = repo.retrieve_campaigns()
+    campaigns = [Campaign.from_tuple(d) for d in data]
+    return campaigns
