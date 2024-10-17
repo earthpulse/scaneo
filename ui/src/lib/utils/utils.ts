@@ -78,6 +78,20 @@ export const giveBlockingOverlayOpacity = () => {
 	blocker.style.opacity = '0.4';
 };
 
+export const setReloadingMessage = () => {
+	const reloadMessage = document.querySelector('.reloading') as HTMLElement;
+	if (!reloadMessage) return;
+
+	reloadMessage.style.transition = 'opacity 0.5s ease-in-out';
+	reloadMessage.style.opacity = '0.4';
+}
+export const hideReloadingMessage = () => {
+	const reloadMessage = document.querySelector('.reloading') as HTMLElement;
+	if (!reloadMessage) return;
+
+	reloadMessage.style.opacity = '0';
+	reloadMessage.classList.remove('animate-pulse')
+}
 export const unselectMarkerTool = () => {
 	const cancelDrawingMarkersButtom = document.querySelector(
 		'[title="Cancel drawing"]'

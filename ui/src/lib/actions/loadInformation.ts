@@ -9,6 +9,7 @@ import { imagesStore } from '$stores/image';
 import loadImages from './image/loadImages';
 import loadLabels from './label/loadLabels';
 import toastPromise from './toastPromise';
+import { wsocket } from '$lib/actions/websocketComm';
 
 const loadInformation = async () => {
 	blockApplicationInteraction();
@@ -30,7 +31,7 @@ const loadInformation = async () => {
 			reject();
 		}
 	});
-
+	wsocket();
 	const errorMessage = `No images found.`;
 	toastPromise(imagesPromise, errorMessage, loadInformationToasts);
 

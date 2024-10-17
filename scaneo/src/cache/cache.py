@@ -15,6 +15,19 @@ def check_permissions(path):
     st = os.stat(path)
     return bool(st.st_mode & stat.S_IWUSR)
 
+def update_database(name, images_info):
+    if os.path.exists(get_cache_dir() + f"{name}.db"): 
+        if images_info != get_dict_from_db(name):
+            os.remove(get_cache_dir() + f"{name}.db")
+            if create_database(name, False):
+                persist_dict_in_db(name, images_info, True)
+                return True
+    else:
+        return False
+
+def reload_db(name, images_info):
+    if not update_database(name, images_info):
+        create_database(name, True)
 
 def create_database(name, verbose=False):
     db_path = get_cache_dir() + f"{name}.db"
@@ -22,9 +35,9 @@ def create_database(name, verbose=False):
         print("No write permissions in cache directory")
         return False
     if os.path.exists(db_path):
-        os.remove(db_path)
         if verbose:
             print("Database already exists")
+        return False
     if verbose:
         print("Creating database")
     conn = sqlite3.connect(db_path)
