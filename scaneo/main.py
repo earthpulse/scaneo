@@ -3,15 +3,13 @@ import os
 import sys
 from pathlib import Path
 
-# Add the cli directory to the Python path
-scaneo_cli_dir = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.join(scaneo_cli_dir))
+# # Add the cli directory to the Python path
+# scaneo_cli_dir = os.path.dirname(os.path.realpath(__file__))
+# sys.path.append(os.path.join(scaneo_cli_dir))
 
 app = typer.Typer()
 
-
 __version__ = "2024.10.09"
-
 
 @app.command()
 def run(
@@ -22,49 +20,21 @@ def run(
     host: str = typer.Option(
         "localhost", "--host", "-h", help="Host to run the server on"
     ),
-    data: Path = typer.Option(None, "--data", "-d", help="Path to data directory"),
-    # image: Path = typer.Option(
-    #     "vector", "--image", "-i", help="Save masks as vector or raster"
-    # ),
-    env: Path = typer.Option(
-        ".env",
-        "--env",
-        "-e",
-        help="Path to environment file with credentials to cloud bucket: URL, ACCESS_KEY, SECRET_KEY, BUCKET, REGION",
+    workers: int = typer.Option(
+        None, "--workers", "-w", help="Number of workers to run the server on"
     ),
     version: bool = typer.Option(
         False, "--version", "-v", help="Print the version and exit"
     ),
-    eotdl: bool = typer.Option(False, "--eotdl", help="Connect SCANEO to EOTDL"),
 ):
     if version:
         typer.echo(f"Scaneo version {__version__}")
         return
-    # we run the cli from some directory, but run the api from the directory where this file is
-    # operation done by the api will have the same working directory as the one from which the cli is run
-    # pass environment variable to the api before the command, parse in api settings object
-    cmd = f"uvicorn api:app --port {port} --host {host} {'--reload' if reload else ''} --app-dir {os.path.dirname(os.path.realpath(__file__))}"
-    if eotdl:
-        typer.echo(f"Using EOTDL (ignoring `data` and `env` flags)")
-        #cmd = f"EOTDL={eotdl} {cmd}"
-        os.environ["EOTDL"] = 'True'
-        os.environ["DATA"] = ''
-    else:
-        os.environ["EOTDL"] = ''
-        if env.exists() and data is None:
-            cmd += f" --env-file {env}"
-        else:
-            if env.exists():
-                typer.echo(f"Environment file {env} found, but using `data` instead.")
-            else:
-                typer.echo(f"Environment file {env} not found.")
-            if not data:
-                raise typer.Exit(
-                    "Data directory not specified. Either specify a data directory, an environment file with credentials to a cloud bucket or an EOTDL dataset."
-                )
-            #cmd = f"DATA={data} {cmd}"
-            os.environ["DATA"] = str(data)
-    # cmd = f"IMAGE={image} " + cmd
+    cmd = f"uvicorn api:app --port {port} --host {host} --app-dir {os.path.dirname(os.path.realpath(__file__))}"
+    if workers:
+        cmd += f" --workers {workers}"
+    if reload:
+        cmd += " --reload"
     typer.echo(f"Running command: {cmd}")
     os.system(cmd)
 
