@@ -26,9 +26,12 @@ app.include_router(geojson.router)
 
 
 # TODO: option to update db (if dataset changes)
-storage = Storage()
-if create_database(storage.name, True):
-    persist_dict_in_db(storage.name, get_images_info(True), True)
+if not os.environ.get("EOTDL"):
+    storage = Storage()
+    if create_database(storage.name, True):
+        persist_dict_in_db(storage.name, get_images_info(True), True)
+else:
+    print("Using EOTDL dataset, select a dataset in the UI first.")
 
 # this needs to be last in order to not override other routes
 # ui is in same directory as this file
