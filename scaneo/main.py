@@ -35,7 +35,7 @@ def run(
     version: bool = typer.Option(
         False, "--version", "-v", help="Print the version and exit"
     ),
-    eotdl: str = typer.Option(None, "--eotdl", help="Name of dataset in EOTDL to use"),
+    eotdl: bool = typer.Option(False, "--eotdl", help="Connect SCANEO to EOTDL"),
 ):
     if version:
         typer.echo(f"Scaneo version {__version__}")
@@ -45,10 +45,12 @@ def run(
     # pass environment variable to the api before the command, parse in api settings object
     cmd = f"uvicorn api:app --port {port} --host {host} {'--reload' if reload else ''} --app-dir {os.path.dirname(os.path.realpath(__file__))}"
     if eotdl:
-        typer.echo(f"Using EOTDL dataset: {eotdl} (ignoring `data` and `env` flags)")
+        typer.echo(f"Using EOTDL (ignoring `data` and `env` flags)")
         #cmd = f"EOTDL={eotdl} {cmd}"
-        os.environ["EOTDL"] = eotdl
+        os.environ["EOTDL"] = 'True'
+        os.environ["DATA"] = ''
     else:
+        os.environ["EOTDL"] = ''
         if env.exists() and data is None:
             cmd += f" --env-file {env}"
         else:
