@@ -11,8 +11,6 @@
     <p>Loading...</p>
   {:else if campaigns.error}
     <p>Error: {campaigns.error}</p>
-  {:else if campaigns.data.length == 0}
-    <p>No campaigns found</p>
   {:else}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div class="card bg-base-100 shadow-xl">
