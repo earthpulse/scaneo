@@ -10,7 +10,7 @@ sys.path.append(os.path.join(scaneo_cli_dir))
 app = typer.Typer()
 
 
-__version__ = "2024.08.08-6"
+__version__ = "2024.10.09"
 
 
 @app.command()
@@ -46,7 +46,8 @@ def run(
     cmd = f"uvicorn api:app --port {port} --host {host} {'--reload' if reload else ''} --app-dir {os.path.dirname(os.path.realpath(__file__))}"
     if eotdl:
         typer.echo(f"Using EOTDL dataset: {eotdl} (ignoring `data` and `env` flags)")
-        cmd = f"EOTDL={eotdl} {cmd}"
+        # cmd = f"EOTDL={eotdl} {cmd}"
+        os.environ["EOTDL"] = eotdl
     else:
         if env.exists() and data is None:
             cmd += f" --env-file {env}"
@@ -59,7 +60,8 @@ def run(
                 raise typer.Exit(
                     "Data directory not specified. Either specify a data directory, an environment file with credentials to a cloud bucket or an EOTDL dataset."
                 )
-            cmd = f"DATA={data} {cmd}"
+            # cmd = f"DATA={data} {cmd}"
+            os.environ["DATA"] = str(data)
     # cmd = f"IMAGE={image} " + cmd
     typer.echo(f"Running command: {cmd}")
     os.system(cmd)
