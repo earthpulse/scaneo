@@ -3,21 +3,21 @@
 
   import TopBar from "./TopBar.svelte";
   import LeftBar from "./LeftBar.svelte";
-  import Map from "./Map.svelte";
   import RightBar from "./RightBar.svelte";
   import images from "$stores/images.svelte.js";
-
+  import MapContainer from "./MapContainer.svelte";
+  
   $effect(() => {
     images.retrieve($page.params.campaign);
   });
 </script>
 
-<div class="h-full flex-1 flex flex-col">
+<div class="flex flex-col flex-1 h-full">
   <TopBar />
-  <div class="flex flex-row w-full h-full flex-1">
+  <div class="flex flex-row flex-1 w-full h-full">
     <LeftBar />
     <div class="flex-1">
-      <Map />
+      <MapContainer/>
     </div>
     <RightBar />
   </div>

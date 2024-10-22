@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="flex flex-col gap-2 bg-bg2 border-l border-border p-3 justify-between"
+  class="z-20 flex flex-col justify-between gap-2 p-3 border-l bg-bg2 border-border"
 >
   <div>
     <h2>images</h2>
