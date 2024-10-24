@@ -1,6 +1,7 @@
 <script>
   import campaigns from "$stores/campaigns.svelte.js";
   import { goto } from "$app/navigation";
+  import plugins from "$stores/plugins.svelte.js";
 
   let name = $state("");
   let description = $state("");
@@ -11,6 +12,7 @@
     e.preventDefault();
     console.log("localPath", localPath);
     if (name !== "" && description !== "") {
+      if (storageOption == 2) return alert("EOTDL not implemented yet");
       try {
         const data = await campaigns.create(name, description, localPath);
         goto(`/campaigns/${data.id}`);
@@ -20,15 +22,7 @@
     }
   };
 
-  const selectLocalFolder = async () => {
-    try {
-      const dirHandle = await window.showDirectoryPicker();
-      console.log("dirHandle", dirHandle);
-      localPath = dirHandle.name;
-    } catch (error) {
-      console.error("Error selecting folder:", error);
-    }
-  };
+  $inspect(plugins.data.find((p) => p.name == "eotdl")?.status);
 </script>
 
 <div class="p-3">
@@ -54,36 +48,65 @@
     />
     <label for="campaign-storage">Select storage</label>
     <span>
-      <button class="btn" type="button" onclick={() => (storageOption = 0)}
-        >Local</button
+      <button
+        class="btn"
+        class:btn-primary={storageOption === 0}
+        type="button"
+        onclick={() => (storageOption = 0)}>Local</button
       >
-      <button class="btn" type="button" onclick={() => (storageOption = 1)}
-        >Cloud (S3)</button
+      <button
+        class="btn"
+        class:btn-primary={storageOption === 1}
+        type="button"
+        onclick={() => (storageOption = 1)}>Cloud (S3)</button
       >
-      <button class="btn" type="button" onclick={() => (storageOption = 2)}
-        >EOTDL</button
-      >
+      {#if plugins.data.find((p) => p.name == "eotdl")?.status == "enabled"}
+        <button
+          class="btn"
+          class:btn-primary={storageOption === 2}
+          type="button"
+          onclick={() => (storageOption = 2)}>EOTDL</button
+        >
+      {/if}
     </span>
     {#if storageOption == 0}
       <input
         type="text"
         class="input input-bordered"
         placeholder="Folder path"
+        required
         bind:value={localPath}
       />
     {:else if storageOption == 1}
-      <input type="text" class="input input-bordered" placeholder="url" />
-      <input type="text" class="input input-bordered" placeholder="bucket" />
-      <input type="text" class="input input-bordered" placeholder="region" />
+      <input
+        type="text"
+        class="input input-bordered"
+        placeholder="url"
+        required
+      />
+      <input
+        type="text"
+        class="input input-bordered"
+        placeholder="bucket"
+        required
+      />
+      <input
+        type="text"
+        class="input input-bordered"
+        placeholder="region"
+        required
+      />
       <input
         type="text"
         class="input input-bordered"
         placeholder="access key"
+        required
       />
       <input
         type="text"
         class="input input-bordered"
         placeholder="secret key"
+        required
       />
     {:else}
       <p>select dataset from eotdl (if plugin is installed)</p>
