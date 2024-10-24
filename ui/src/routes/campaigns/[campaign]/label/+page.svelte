@@ -21,10 +21,6 @@
     <LeftBar />
     <div class="flex-1">
       <Map position={[42.0407, 3.1]} zoom={4}>
-        <TileLayer
-          url={"https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"}
-          options={{ maxZoom: 20, zIndex: 1 }}
-        />
         {#if layer == "streets"}
           <TileLayer
             url={"https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"}
