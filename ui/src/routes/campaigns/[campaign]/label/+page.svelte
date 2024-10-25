@@ -1,16 +1,10 @@
 <script>
-  import { page } from "$app/stores";
   import TopBar from "./TopBar.svelte";
   import LeftBar from "./LeftBar.svelte";
   import Map from "./Map.svelte";
   import RightBar from "./RightBar.svelte";
-  import images from "$stores/images.svelte.js";
   import TileLayer from "./TileLayer.svelte";
   import LayersControl from "./LayersControl.svelte";
-
-  $effect(() => {
-    images.retrieve($page.params.campaign);
-  });
 
   let layer = $state("streets");
 </script>

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from src.usecases.plugins import retrieve_plugins, install_plugin, uninstall_plugin
+from src.usecases.plugins import retrieve_plugins, enable_plugin, disable_plugin
 
 router = APIRouter(prefix="/plugins", tags=["plugins"])
 
@@ -18,17 +18,17 @@ class Body(BaseModel):
     name: str
 
 @router.post("")
-def _install_plugin(body: Body):
+def _enable_plugin(body: Body):
     try:
-        return install_plugin(body.name)
+        return enable_plugin(body.name)
     except Exception as e:
-        print("error plugins:install_plugin", e)
+        print("error plugins:enable_plugin", e)
         return HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{name}")
-def _uninstall_plugin(name: str):
+def _disable_plugin(name: str):
     try:
-        return uninstall_plugin(name)
+        return disable_plugin(name)
     except Exception as e:
-        print("error plugins:uninstall_plugin", e)
+        print("error plugins:disable_plugin", e)
         return HTTPException(status_code=500, detail=str(e))

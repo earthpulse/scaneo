@@ -4,11 +4,11 @@
   let disabled = $state(false);
   let selected = $state(null);
 
-  const installPlugin = async (name) => {
+  const enablePlugin = async (name) => {
     disabled = true;
     selected = name;
     try {
-      await plugins.install(name);
+      await plugins.enable(name);
     } catch (e) {
       alert(e.message);
     }
@@ -16,11 +16,11 @@
     selected = null;
   };
 
-  const uninstallPlugin = async (name) => {
+  const disablePlugin = async (name) => {
     disabled = true;
     selected = name;
     try {
-      await plugins.uninstall(name);
+      await plugins.disable(name);
     } catch (e) {
       alert(e.message);
     }
@@ -38,27 +38,14 @@
     <h1>Plugins</h1>
     {#each plugins.data as plugin}
       <p>{plugin.name}</p>
-      <p>status: {plugin.status}</p>
-      {#if plugin.status == "uninstalled"}
+      <p>status: {plugin.enabled ? "enabled" : "disabled"}</p>
+      {#if !plugin.enabled}
         <button
           {disabled}
           class="btn btn-primary {plugin.name == selected
             ? 'btn-disabled'
             : ''}"
-          onclick={() => installPlugin(plugin.name)}
-        >
-          {#if disabled && plugin.name == selected}
-            <span class="loading loading-spinner"></span>
-          {/if}
-          {disabled && plugin.name == selected
-            ? "installing..."
-            : "install"}</button
-        >
-      {:else if plugin.status == "installed"}
-        <button
-          {disabled}
-          class="btn btn-primary {plugin.name == selected ? 'btn-primary' : ''}"
-          onclick={() => installPlugin(plugin.name)}
+          onclick={() => enablePlugin(plugin.name)}
         >
           {#if disabled && plugin.name == selected}
             <span class="loading loading-spinner"></span>
@@ -67,10 +54,8 @@
             ? "enabling..."
             : "enable"}</button
         >
-      {:else if plugin.status == "enabled"}
-        <button
-          class="btn btn-error"
-          onclick={() => uninstallPlugin(plugin.name)}
+      {:else}
+        <button class="btn btn-error" onclick={() => disablePlugin(plugin.name)}
           >{#if disabled && plugin.name == selected}
             <span class="loading loading-spinner"></span>
           {/if}{disabled && plugin.name == selected

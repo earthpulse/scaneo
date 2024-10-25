@@ -1,6 +1,6 @@
 import retrievePlugins from "$lib/plugins/retrieve";
-import installPlugin from "$lib/plugins/install";
-import uninstallPlugin from "$lib/plugins/uninstall";
+import enablePlugin from "$lib/plugins/enable";
+import disablePlugin from "$lib/plugins/disable";
 
 function createModels() {
   let data = $state([]);
@@ -23,13 +23,13 @@ function createModels() {
       data = _data;
       loading = false;
     },
-    install: async (name) => {
-      const { data: _data, error } = await installPlugin(name);
+    enable: async (name) => {
+      const { data: _data, error } = await enablePlugin(name);
       if (error) throw error;
       data = data.map((d) => (d.name === name ? _data : d));
     },
-    uninstall: async (name) => {
-      const { data: _data, error } = await uninstallPlugin(name);
+    disable: async (name) => {
+      const { data: _data, error } = await disablePlugin(name);
       if (error) console.error(error);
       data = data.map((d) => (d.name === name ? _data : d));
     },

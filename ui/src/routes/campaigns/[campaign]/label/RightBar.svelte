@@ -1,5 +1,14 @@
 <script>
+  import { page } from "$app/stores";
+
+  import Labels from "./Labels.svelte";
+  import Annotations from "./Annotations.svelte";
+  import Settings from "./Settings.svelte";
   import images from "$stores/images.svelte.js";
+
+  $effect(() => {
+    images.retrieve($page.params.campaign);
+  });
 </script>
 
 <div
@@ -11,6 +20,7 @@
       <p>{image.path}</p>
     {/each}
   </div>
-  <section>labels</section>
-  <section>settings</section>
+  <Annotations />
+  <Labels />
+  <Settings />
 </div>

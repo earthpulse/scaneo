@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from .DBRepo import DBRepo
 from ..models import Plugin
 
@@ -6,37 +8,25 @@ class PluginsDBRepo(DBRepo):
         super().__init__()
         cursor = self.get_cursor()
         cursor.execute(f"""CREATE TABLE IF NOT EXISTS plugins (
-            id INTEGER PRIMARY KEY,
+            id TEXT NOT NULL PRIMARY KEY,
             name TEXT NOT NULL UNIQUE,
-            status TEXT NOT NULL,
+            enabled BOOLEAN NOT NULL,
             createdAt TEXT NOT NULL,
             updatedAt TEXT NOT NULL
         )""")
         self.commit_and_close_db()
-        self.populate()
+        self.plugins = ['eotdl']
+        self.init_plugins()
         
-    def populate(self):
-        # libs = ["eotdl", "spai"]
-        libs = ["eotdl"]
-        for i, lib in enumerate(libs, start=1):
-            data = self.retrieve_plugin(lib)
+    def init_plugins(self):
+        for i, plugin in enumerate(self.plugins, start=1):
+            data = self.retrieve_plugin(plugin)
             if not data:
-                plugin = Plugin(id=i, name=lib)
+                plugin = Plugin(id=plugin, name=plugin)
                 self.add_plugin(plugin)
-            else:
-                plugin = Plugin.from_tuple(data)
-            try:
-                exec(f"import {lib}")
-                plugin.status = "installed" if plugin.status == "uninstalled" else plugin.status
-                print(f"{lib.upper()} is installed, plugin available")
-            except:
-                print(f"{lib.upper()} is not installed, plugin not available")
-                plugin.status = "uninstalled"
-                pass
-            self.update_plugin(plugin)
-        # delete all plugins in table that are not in libs
+        # delete all plugins in table that are not in plugins
         cursor = self.get_cursor()
-        cursor.execute(f"DELETE FROM plugins WHERE name NOT IN ({', '.join(['?' for _ in libs])})", libs)
+        cursor.execute(f"DELETE FROM plugins WHERE name NOT IN ({', '.join(['?' for _ in self.plugins])})", self.plugins)
         self.commit_and_close_db()
 
 
@@ -52,10 +42,11 @@ class PluginsDBRepo(DBRepo):
 
     def add_plugin(self, plugin):
         cursor = self.get_cursor()
-        cursor.execute(f"INSERT INTO plugins (id, name, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)", (plugin.id, plugin.name, plugin.status, plugin.createdAt, plugin.updatedAt))
+        cursor.execute(f"INSERT INTO plugins (id, name, enabled, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)", (plugin.id, plugin.name, plugin.enabled, plugin.createdAt, plugin.updatedAt))
         self.commit_and_close_db()
 
     def update_plugin(self, plugin):
         cursor = self.get_cursor()
-        cursor.execute(f"UPDATE plugins SET status = ?, updatedAt = ? WHERE id = ?", (plugin.status, plugin.updatedAt, plugin.id))
+        plugin.updatedAt = datetime.now().isoformat()
+        cursor.execute(f"UPDATE plugins SET enabled = ?, updatedAt = ? WHERE id = ?", (plugin.enabled, plugin.updatedAt, plugin.id))
         self.commit_and_close_db()

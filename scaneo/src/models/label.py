@@ -2,10 +2,11 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
 
-class Plugin(BaseModel):
+class Label(BaseModel):
     id: str
     name: str
-    enabled: bool = Field(default=False)
+    campaign_id: str
+    color: str
     createdAt: datetime = Field(default_factory=datetime.now)
     updatedAt: datetime = Field(default_factory=datetime.now)
 
@@ -14,7 +15,8 @@ class Plugin(BaseModel):
         return cls(
             id=data[0],
             name=data[1],
-            enabled=data[2],
-            createdAt=datetime.fromisoformat(data[3]),
-            updatedAt=datetime.fromisoformat(data[4])
+            campaign_id=data[2],
+            color=data[3],
+            createdAt=datetime.fromisoformat(data[4]),
+            updatedAt=datetime.fromisoformat(data[5])
         )
