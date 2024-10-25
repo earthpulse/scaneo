@@ -60,7 +60,7 @@
         type="button"
         onclick={() => (storageOption = 1)}>Cloud (S3)</button
       >
-      {#if plugins.data.find((p) => p.name == "eotdl")?.status == "enabled"}
+      {#if plugins.data.find((p) => p.name == "eotdl")?.enabled}
         <button
           class="btn"
           class:btn-primary={storageOption === 2}
