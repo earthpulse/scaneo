@@ -1,15 +1,15 @@
 <script>
-  import images from "$stores/images.svelte.js";
+  import FileExplorer from "$components/FileExplorer.svelte";
 </script>
 
 <div
-  class="flex flex-col gap-2 bg-bg2 border-l border-border p-3 justify-between"
+  class="flex flex-col justify-between gap-2 p-3 border-l bg-bg2 border-border"
 >
   <div>
     <h2>images</h2>
-    {#each images.data as image}
-      <p>{image.path}</p>
-    {/each}
+    <div class="w-60">
+      <FileExplorer/>
+    </div>
   </div>
   <section>labels</section>
   <section>settings</section>
