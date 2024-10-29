@@ -4,6 +4,7 @@ function createImages() {
   let data = $state([]);
   let loading = $state(true);
   let error = $state(null);
+  let current = $state(null);
   return {
     get data() {
       return data;
@@ -13,6 +14,12 @@ function createImages() {
     },
     get error() {
       return error;
+    },
+    get current() {
+      return current;
+    },
+    set current(value) {
+      current = value;
     },
     retrieve: async (campaign) => {
       loading = true;

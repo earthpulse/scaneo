@@ -47,12 +47,12 @@
       <div class="flex flex-col items-start">
         {#each labels.data as label}
           <span
-            class="w-full flex justify-between {labels.current == label.id
+            class="w-full flex justify-between {labels.current == label.name
               ? 'bg-slate-300'
               : ''}"
           >
             <button
-              onclick={() => (labels.current = label.id)}
+              onclick={() => (labels.current = label.name)}
               class="hover:bg-slate-300 w-full">{label.name}</button
             >
             <button class="btn btn-error" onclick={() => deleteLabel(label.id)}
