@@ -7,6 +7,7 @@ class Annotation(BaseModel):
     id: str
     type: str
     value: str
+    bb: Optional[list[list[float]]] = None
     image_id: int
     createdAt: datetime = Field(default_factory=datetime.now)
     updatedAt: datetime = Field(default_factory=datetime.now)
@@ -17,22 +18,9 @@ class Annotation(BaseModel):
             id=data[0],
             type=data[1],
             value=data[2],
-            image_id=data[3],
-            createdAt=datetime.fromisoformat(data[4]),
-            updatedAt=datetime.fromisoformat(data[5])
+            bb=json.loads(data[3]) if data[3] else None,
+            image_id=data[4],
+            createdAt=datetime.fromisoformat(data[5]),
+            updatedAt=datetime.fromisoformat(data[6])
         )
 
-class DetectionAnnotation(Annotation):
-    bb: list[list[float]]
-
-    @classmethod
-    def from_tuple(cls, data: tuple):
-        return cls(
-            id=data[0],
-            type=data[1],
-            value=data[2],
-            image_id=data[3],
-            createdAt=datetime.fromisoformat(data[4]),
-            updatedAt=datetime.fromisoformat(data[5]),
-            bb=json.loads(data[6])
-        )

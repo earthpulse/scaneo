@@ -6,14 +6,14 @@ function createDrawBoxes() {
   let drawnItems = $state(null);
   let drawControl = $state(null);
 
-  const drawCallback = (e) => {
+  const drawCallback = async (e) => {
     console.log("drawCallback");
     const { layer } = e;
     // layer.options.color = currentLabelStore.retrieve().color;
     // layer.options.fillOpacity = optionsStore.retrieve().opacity;
     // layer.options.interactive = false;
     const bounds = layer.getBounds();
-    annotations.createDetection(
+    const data = await annotations.createDetection(
       [
         [bounds._southWest.lat, bounds._northEast.lng],
         [bounds._northEast.lat, bounds._southWest.lng],
@@ -21,23 +21,28 @@ function createDrawBoxes() {
       labels.current,
       images.current.id
     );
-
+    console.log("data", data);
+    layer.annotationId = data.id;
     drawnItems.addLayer(layer);
   };
 
   const editCallback = (e) => {
-    console.log("editCallback", e);
-    // const { layer } = e;
-    // console.log(layer);
-    // const bounds = layer.getBounds();
-    // annotations.updateDetection(layer.annotationId, [
-    //   [bounds._southWest.lat, bounds._northEast.lng],
-    //   [bounds._northEast.lat, bounds._southWest.lng],
-    // ]);
+    console.log("editCallback");
+    e.layers.eachLayer((layer) => {
+      const bounds = layer.getBounds();
+      annotations.updateDetection(layer.annotationId, [
+        [bounds._southWest.lat, bounds._northEast.lng],
+        [bounds._northEast.lat, bounds._southWest.lng],
+      ]);
+    });
   };
 
   const deleteCallback = (e) => {
     console.log("deleteCallback");
+    // console.log(e.layers._layers);
+    e.layers.eachLayer((layer) => {
+      annotations.delete(layer.annotationId);
+    });
   };
 
   const initItems = (map) => {
@@ -58,13 +63,18 @@ function createDrawBoxes() {
         circle: false,
         marker: false,
         rectangle: {
-          showArea: false, // sino peta
+          repeatMode: true,
+          showArea: false,
+          showLength: true,
+          shapeOptions: {
+            weight: 1,
+          },
         },
         polygon: false,
       },
     });
     map.addControl(drawControl);
-    map.on(L.Draw.Event.CREATED, drawCallback);
+    map.on(L.Draw.Event.CREATED, async (e) => await drawCallback(e));
     map.on(L.Draw.Event.EDITED, editCallback);
     map.on(L.Draw.Event.DELETED, deleteCallback);
   };
@@ -80,10 +90,19 @@ function createDrawBoxes() {
     },
     addLayer: (annotation) => {
       const bb = annotation.bb;
-      const layer = L.rectangle([
-        [bb[0][0], bb[0][1]],
-        [bb[1][0], bb[1][1]],
-      ]);
+      const layer = L.rectangle(
+        [
+          [bb[0][0], bb[0][1]],
+          [bb[1][0], bb[1][1]],
+        ],
+        {
+          editing: true,
+          // interactive: false,
+        }
+      );
+      // .on("click", () => {
+      //   console.log("rectanle", layer.annotationId);
+      // });
       layer.annotationId = annotation.id;
       drawnItems.addLayer(layer);
     },
