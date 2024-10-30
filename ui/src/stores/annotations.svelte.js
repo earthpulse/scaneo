@@ -4,6 +4,7 @@ import {
   createDetectionAnnotation,
 } from "$lib/annotations/create";
 import deleteAnnotation from "$lib/annotations/delete";
+import { updateDetectionAnnotation } from "$lib/annotations/update";
 
 function createAnnotations() {
   let data = $state([]);
@@ -32,6 +33,7 @@ function createAnnotations() {
       if (err) error = err.message;
       data = _data;
       loading = false;
+      return _data;
     },
     createClassification: async (label, imageId) => {
       const { data: _data, error: err } = await createClassificationAnnotation(
@@ -50,6 +52,16 @@ function createAnnotations() {
       console.log("createDetection", _data, err);
       if (err) throw new Error(err.message);
       data = [_data, ...data];
+    },
+    updateDetection: async (id, bb) => {
+      const { data: _data, error: err } = await updateDetectionAnnotation(
+        id,
+        bb
+      );
+      if (err) throw new Error(err.message);
+      data = data.map((annotation) =>
+        annotation.id === id ? { ...annotation, bb } : annotation
+      );
     },
     delete: async (id) => {
       const { error: err } = await deleteAnnotation(id);

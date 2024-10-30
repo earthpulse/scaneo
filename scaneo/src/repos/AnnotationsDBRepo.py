@@ -24,6 +24,11 @@ class AnnotationsDBRepo(DBRepo):
 		cursor = self.get_cursor()
 		cursor.execute(f"SELECT * FROM annotations WHERE image_id = ? ORDER BY createdAt DESC", (image_id,))
 		return cursor.fetchall()
+	
+	def retrieve_one_annotation(self, id):
+		cursor = self.get_cursor()
+		cursor.execute(f"SELECT * FROM annotations WHERE id = ?", (id,))
+		return cursor.fetchone()
 
 	def create_annotation(self, annotation):
 		cursor = self.get_cursor()

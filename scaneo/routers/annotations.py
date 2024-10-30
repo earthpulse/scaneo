@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from src.usecases.annotations import retrieve_annotations, create_classification_annotation, create_detection_annotation, delete_annotation
+from src.usecases.annotations import update_detection_annotation, retrieve_annotations, create_classification_annotation, create_detection_annotation, delete_annotation
 
 router = APIRouter(prefix="/annotations", tags=["annotations"])
 
@@ -40,5 +40,15 @@ def _create_detection_annotation(body: DetectionBody):
 def _delete_annotation(id: str):
     try:
         return delete_annotation(id)
+    except Exception as e:
+        return HTTPException(status_code=500, detail=str(e))
+
+class UpdateDetectionBody(BaseModel):
+    bb: list[list[float]]
+
+@router.put("/detection/{id}")
+def _update_detection_annotation(id: str, body: UpdateDetectionBody):
+    try:
+        return update_detection_annotation(id, body.bb)
     except Exception as e:
         return HTTPException(status_code=500, detail=str(e))
