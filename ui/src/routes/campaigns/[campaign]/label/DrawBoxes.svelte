@@ -1,6 +1,6 @@
 <script>
   import { mapStore } from "$stores/map/map.svelte.js";
-  import drawItems from "$stores/map/drawItems.svelte.js";
+  import drawBoxes from "$stores/map/drawBoxes.svelte.js";
   //   import { tick } from "svelte";
   import { onDestroy } from "svelte";
 
@@ -11,15 +11,15 @@
     // await tick();
 
     const map = mapStore.map;
-    drawItems.init(map);
+    drawBoxes.initControls(map);
     // return () => {
-    //   console.log("remove drawItems");
-    //   drawItems.remove(map);
+    //   console.log("remove drawBoxes");
+    //   drawBoxes.remove(map);
     // };
   });
 
   onDestroy(() => {
-    console.log("onDestroy drawItems");
-    drawItems.remove(mapStore.map);
+    console.log("onDestroy drawBoxes");
+    drawBoxes.remove(mapStore.map);
   });
 </script>
