@@ -22,6 +22,7 @@ def _create_classification_annotation(body: ClassificationBody):
     try:
         return create_classification_annotation(body.imageId, body.label)
     except Exception as e:
+        print("error annotations:create_classification_annotation", e)
         return HTTPException(status_code=500, detail=str(e))
 
 class DetectionBody(BaseModel):
@@ -34,6 +35,7 @@ def _create_detection_annotation(body: DetectionBody):
     try:
         return create_detection_annotation(body.imageId, body.bb, body.label)
     except Exception as e:
+        print("error annotations:create_detection_annotation", e)
         return HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{id}")
@@ -41,6 +43,7 @@ def _delete_annotation(id: str):
     try:
         return delete_annotation(id)
     except Exception as e:
+        print("error annotations:delete_annotation", e)
         return HTTPException(status_code=500, detail=str(e))
 
 class UpdateDetectionBody(BaseModel):
@@ -51,4 +54,5 @@ def _update_detection_annotation(id: str, body: UpdateDetectionBody):
     try:
         return update_detection_annotation(id, body.bb)
     except Exception as e:
+        print("error annotations:update_detection_annotation", e)
         return HTTPException(status_code=500, detail=str(e))

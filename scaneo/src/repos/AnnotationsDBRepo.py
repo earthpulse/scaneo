@@ -2,7 +2,6 @@ from datetime import datetime
 import json
 
 from .DBRepo import DBRepo
-from ..models import DetectionAnnotation
 
 class AnnotationsDBRepo(DBRepo):
 	def __init__(self):
@@ -12,10 +11,10 @@ class AnnotationsDBRepo(DBRepo):
             id TEXT PRIMARY KEY,
 			type TEXT NOT NULL,
 			value TEXT,
+			bb TEXT NULL,
 			image_id INTEGER,
 			createdAt TEXT,
 			updatedAt TEXT,
-			bb TEXT NULL,
 			FOREIGN KEY (image_id) REFERENCES images(id)
 		)""")
 		self.commit_and_close_db()
@@ -32,16 +31,13 @@ class AnnotationsDBRepo(DBRepo):
 
 	def create_annotation(self, annotation):
 		cursor = self.get_cursor()
-		if isinstance(annotation, DetectionAnnotation):
-			cursor.execute("INSERT INTO annotations (id, type, value, image_id, createdAt, updatedAt, bb) VALUES (?, ?, ?, ?, ?, ?, ?)", (annotation.id, annotation.type, annotation.value, annotation.image_id, annotation.createdAt, annotation.updatedAt, json.dumps(annotation.bb)))
-		else:
-			cursor.execute("INSERT INTO annotations (id, type, value, image_id, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)", (annotation.id, annotation.type, annotation.value, annotation.image_id, annotation.createdAt, annotation.updatedAt))
+		cursor.execute("INSERT INTO annotations (id, type, value, bb, image_id, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)", (annotation.id, annotation.type, annotation.value, json.dumps(annotation.bb), annotation.image_id, annotation.createdAt, annotation.updatedAt))
 		self.commit_and_close_db()
 
 	def update_annotation(self, annotation):
 		cursor = self.get_cursor()
-		annotation.updatedAt = datetime.now().isoformat()
-		cursor.execute("UPDATE annotations SET type = ?, value = ?, updatedAt = ? WHERE id = ?", (annotation.type, annotation.value, annotation.updatedAt, annotation.id))
+		annotation.updatedAt = datetime.now()
+		cursor.execute("UPDATE annotations SET type = ?, value = ?, updatedAt = ?, bb = ? WHERE id = ?", (annotation.type, annotation.value, annotation.updatedAt, json.dumps(annotation.bb), annotation.id))
 		self.commit_and_close_db()
 	
 	def delete_annotation(self, id):

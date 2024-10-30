@@ -41,7 +41,12 @@ function createAnnotations() {
         imageId
       );
       if (err) throw new Error(err.message);
-      data = [_data, ...data];
+      console.log(data, _data);
+      if (!data.find((a) => a.id === _data.id)) {
+        data = [_data, ...data];
+      } else {
+        data = data.map((a) => (a.id === _data.id ? _data : a));
+      }
     },
     createDetection: async (bb, label, imageId) => {
       const { data: _data, error: err } = await createDetectionAnnotation(
@@ -52,6 +57,7 @@ function createAnnotations() {
       console.log("createDetection", _data, err);
       if (err) throw new Error(err.message);
       data = [_data, ...data];
+      return _data;
     },
     updateDetection: async (id, bb) => {
       const { data: _data, error: err } = await updateDetectionAnnotation(

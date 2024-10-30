@@ -12,10 +12,14 @@
     return true;
   };
 
-  const classification = () => {
+  const classification = async () => {
     if (!validate()) return;
     task = "classification";
-    annotations.createClassification(labels.current, images.current.id);
+    try {
+      await annotations.createClassification(labels.current, images.current.id);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const detection = () => {
