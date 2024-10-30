@@ -9,7 +9,7 @@
 </script>
 
 <section>
-  <h1>Annotations</h1>
+  <h1>Annotations</h1>e
   {#if annotations.data.length == 0}
     <p>No annotations found</p>
   {:else}
