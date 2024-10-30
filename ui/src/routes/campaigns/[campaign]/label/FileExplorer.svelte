@@ -139,7 +139,7 @@
 {#if images.data}
 <p>Files ({images.data.length}) :</p>
 <div class="overflow-auto w-full max-h-[200px] border-2">
-  <input type="text" bind:value={filter_string} placeholder="Search in folder ..." class="ml-2">
+  <input type="text" bind:value={filter_string} placeholder="Search in folder ..." class="pl-4 mt-1 ml-2 rounded-md">
   <div class="pl-2 pb-2 h-fit text-[13px] font-semibold flex">
         <p>Path:/</p>
         {#each currentPath as folder}
