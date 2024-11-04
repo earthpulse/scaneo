@@ -1,0 +1,12 @@
+input[type="color"]{
+    display: inline-flex;
+    vertical-align: bottom;
+    border: none;
+    padding: 0;
+    width: 100%;
+    cursor: pointer;
+}
+
+::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
