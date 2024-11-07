@@ -15,8 +15,8 @@ class Label(BaseModel):
         return cls(
             id=data[0],
             name=data[1],
-            campaign_id=data[2],
-            color=data[3],
+            color=data[2],
+            campaign_id=data[3],
             createdAt=datetime.fromisoformat(data[4]),
             updatedAt=datetime.fromisoformat(data[5])
         )

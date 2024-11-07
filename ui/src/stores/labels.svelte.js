@@ -30,8 +30,8 @@ function createLabels() {
       data = _data;
       loading = false;
     },
-    create: async (label, campaignId) => {
-      const { data: _data, error } = await createLabel(label, campaignId);
+    create: async (label, color, campaignId) => {
+      const { data: _data, error } = await createLabel(label, color, campaignId);
       if (error) throw error;
       data = [_data, ...data];
       return _data;
