@@ -16,11 +16,12 @@ def _retrieve_labels(campaign: str):
 class Body(BaseModel):
     name: str
     campaign: str
+    color: str
 
 @router.post("")
 def _create_label(body: Body):
     try:
-        return create_label(body.name, body.campaign)
+        return create_label(body.name, body.color, body.campaign)
     except Exception as e:
         return HTTPException(status_code=500, detail=str(e))
 
