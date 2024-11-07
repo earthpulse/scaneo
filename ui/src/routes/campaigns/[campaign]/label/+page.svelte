@@ -11,9 +11,9 @@
   let layer = $state("streets");
 </script>
 
-<div class="h-full flex-1 flex flex-col">
+<div class="flex flex-col flex-1 h-full">
   <TopBar />
-  <div class="flex flex-row w-full h-full flex-1">
+  <div class="flex flex-row flex-1 w-full h-full">
     <LeftBar />
     <div class="flex-1">
       <Map position={[42.0407, 3.1]} zoom={4}>
@@ -35,6 +35,6 @@
   </div>
 </div>
 
-<!-- {#if images.current}
+{#if images.current}
   <ImageLayer image={images.current.path} />
-{/if} -->
+{/if}
