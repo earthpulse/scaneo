@@ -12,7 +12,7 @@
   let currentPath = $state([]);
   let onDetails = $state(false);
   let details = $state({});
-
+  let filter_string = $state(null)
   const load = async () => {
     loading = true;
     currentLevel = {};
@@ -123,13 +123,24 @@
   // 			alert(res.detail);
   // 		});
   // };
+  let filtered_level = $derived(()=>{
+    if (filter_string){
+      return Object.keys(currentLevel).filter((item) => {
+        return item.toLowerCase().includes(filter_string.toLowerCase())
+
+      })
+    }
+    else {
+      return Object.keys(currentLevel)}
+  })
 </script>
 
 {#if !loading}
-  {#if images.data}
-    <p>Files ({images.data.length}) :</p>
-    <div class="overflow-auto w-full max-h-[200px] border-2">
-      <div class="pl-2 pb-2 h-fit text-[13px] font-semibold flex">
+{#if images.data}
+<p>Files ({images.data.length}) :</p>
+<div class="overflow-auto w-full max-h-[200px] border-2">
+  <input type="text" bind:value={filter_string} placeholder="Search in folder ..." class="pl-4 mt-1 ml-2 rounded-md">
+  <div class="pl-2 pb-2 h-fit text-[13px] font-semibold flex">
         <p>Path:/</p>
         {#each currentPath as folder}
           <button
@@ -151,7 +162,7 @@
       <table class="ml-2">
         <tbody>
           {#if onDetails == false}
-            {#each Object.keys(currentLevel) as item}
+            {#each filtered_level() as item}
               <!-- {#if $user}
                             <button on:click={() => download(file.name)}
                                 ><Download color="gray" size={20} /></button
