@@ -14,13 +14,13 @@ class Annotation(BaseModel):
 
     @classmethod
     def from_tuple(cls, data: tuple):
-        return cls(
+        return cls (
             id=data[0],
             type=data[1],
             value=data[2],
-            bb=json.loads(data[3]) if data[3] else None,
-            image_id=data[4],
-            createdAt=datetime.fromisoformat(data[5]),
-            updatedAt=datetime.fromisoformat(data[6])
+            image_id=data[3],
+            createdAt=datetime.fromisoformat(data[4]),
+            updatedAt=datetime.fromisoformat(data[5]),
+            bb=json.loads(data[6]) if data[6] else None
         )
 
