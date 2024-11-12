@@ -7,7 +7,7 @@
   import LayersControl from "./LayersControl.svelte";
   import images from "$stores/images.svelte.js";
   import ImageLayer from "./ImageLayer.svelte";
-
+  
   let layer = $state("streets");
 </script>
 
@@ -35,6 +35,6 @@
   </div>
 </div>
 
-{#if images.current}
-  <ImageLayer image={images.current.path} />
+{#if images.data}
+  <ImageLayer/>
 {/if}
