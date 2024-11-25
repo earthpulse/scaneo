@@ -8,19 +8,22 @@ class Annotation(BaseModel):
     type: str
     value: str
     bb: Optional[list[list[float]]] = None
+    layer_data: object = None
     image_id: int
     createdAt: datetime = Field(default_factory=datetime.now)
     updatedAt: datetime = Field(default_factory=datetime.now)
 
     @classmethod
     def from_tuple(cls, data: tuple):
+        print(data[4],"\n\n",data[5],data[3])
         return cls(
             id=data[0],
             type=data[1],
             value=data[2],
             bb=json.loads(data[3]) if data[3] else None,
-            image_id=data[4],
-            createdAt=datetime.fromisoformat(data[5]),
-            updatedAt=datetime.fromisoformat(data[6])
+            layer_data=json.loads(data[4]) if data[4] else None,
+            image_id=data[5],
+            createdAt=datetime.fromisoformat(data[6]),
+            updatedAt=datetime.fromisoformat(data[7])
         )
 
