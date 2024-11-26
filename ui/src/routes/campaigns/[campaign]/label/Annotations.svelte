@@ -18,6 +18,7 @@
 
   onDestroy(() => {
     drawBoxes.remove(mapStore.map);
+    annotations.reset();
   });
 
   const deleteAnnotation = (id) => {

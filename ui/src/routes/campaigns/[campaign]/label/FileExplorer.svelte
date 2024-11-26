@@ -1,10 +1,9 @@
 <script>
   import { browser } from "$app/environment";
   import images from "$stores/images.svelte.js";
+  import { onDestroy } from "svelte";
 
   // $: console.log(dataset, version);
-
-  let { onImageSelect } = $props();
 
   let currentLevel = $state({});
   let navigationStack = $state([]);
@@ -12,14 +11,11 @@
   let currentPath = $state([]);
   let onDetails = $state(false);
   let details = $state({});
-  let filter_string = $state(null)
+  let filter_string = $state(null);
   const load = async () => {
     loading = true;
     currentLevel = {};
     navigationStack = [];
-    // only works in browser
-    // const streamsaver = await import("streamsaver");
-    // createWriteStream = streamsaver.createWriteStream;
     let tree = buildFileTree();
     currentLevel = tree;
     loading = false;
@@ -27,6 +23,10 @@
 
   $effect(async () => {
     if (browser) load();
+  });
+
+  onDestroy(() => {
+    images.reset();
   });
 
   const buildFileTree = () => {
@@ -77,11 +77,8 @@
     }
   };
 
-  const goToDetails = (file, filename) => {
+  const goToDetails = (file) => {
     images.current = file;
-    // onDetails = true;
-    // details = { id: file.id, campaign: file.campaign_id, path: file.path };
-    // currentPath = [...currentPath, filename];
   };
 
   const getCurrentPath = (intoFolder) => {
@@ -91,56 +88,29 @@
       currentPath = [];
     }
   };
-  // const download = async (fileName) => {
-  // 	// seems to work, but not sure if it will with large datasets (need to test)
-  // 	fetch(`${PUBLIC_EOTDL_API}/datasets/${id}/download/${fileName}`, {
-  // 		method: "GET",
-  // 		headers: {
-  // 			Authorization: `Bearer ${$id_token}`,
-  // 		},
-  // 	})
-  // 		.then((res) => {
-  // 			if (!res.ok) return res.json();
-  // 			const fileStream = createWriteStream(fileName);
-  // 			const writer = fileStream.getWriter();
-  // 			if (res.body.pipeTo) {
-  // 				writer.releaseLock();
-  // 				return res.body.pipeTo(fileStream);
-  // 			}
-  // 			const reader = res.body.getReader();
-  // 			const pump = () =>
-  // 				reader
-  // 					.read()
-  // 					.then(({ value, done }) =>
-  // 						done
-  // 							? writer.close()
-  // 							: writer.write(value).then(pump)
-  // 					);
-  // 			data.dataset.downloads = data.dataset.downloads + 1;
-  // 			return pump();
-  // 		})
-  // 		.then((res) => {
-  // 			alert(res.detail);
-  // 		});
-  // };
-  let filtered_level = $derived(()=>{
-    if (filter_string){
-      return Object.keys(currentLevel).filter((item) => {
-        return item.toLowerCase().includes(filter_string.toLowerCase())
 
-      })
+  let filtered_level = $derived(() => {
+    if (filter_string) {
+      return Object.keys(currentLevel).filter((item) => {
+        return item.toLowerCase().includes(filter_string.toLowerCase());
+      });
+    } else {
+      return Object.keys(currentLevel);
     }
-    else {
-      return Object.keys(currentLevel)}
-  })
+  });
 </script>
 
 {#if !loading}
-{#if images.data}
-<p>Files ({images.data.length}) :</p>
-<div class="overflow-auto w-full max-h-[200px] border-2">
-  <input type="text" bind:value={filter_string} placeholder="Search in folder ..." class="pl-4 mt-1 ml-2 rounded-md">
-  <div class="pl-2 pb-2 h-fit text-[13px] font-semibold flex">
+  {#if images.data}
+    <p>Files ({images.data.length}) :</p>
+    <div class="overflow-auto w-full max-h-[200px] border-2">
+      <input
+        type="text"
+        bind:value={filter_string}
+        placeholder="Search in folder ..."
+        class="pl-4 mt-1 ml-2 rounded-md"
+      />
+      <div class="pl-2 pb-2 h-fit text-[13px] font-semibold flex">
         <p>Path:/</p>
         {#each currentPath as folder}
           <button
