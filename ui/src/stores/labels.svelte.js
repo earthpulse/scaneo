@@ -31,7 +31,11 @@ function createLabels() {
       loading = false;
     },
     create: async (label, color, campaignId) => {
-      const { data: _data, error } = await createLabel(label, color, campaignId);
+      const { data: _data, error } = await createLabel(
+        label,
+        color,
+        campaignId
+      );
       if (error) throw error;
       data = [_data, ...data];
       return _data;
@@ -39,6 +43,12 @@ function createLabels() {
     delete: (id) => {
       data = data.filter((label) => label.id !== id);
       deleteLabel(id);
+    },
+    reset: () => {
+      data = [];
+      loading = true;
+      error = null;
+      current = null;
     },
   };
 }
