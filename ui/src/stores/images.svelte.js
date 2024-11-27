@@ -28,6 +28,18 @@ function createImages() {
       data = _data;
       loading = false;
     },
+    zoom: (image, map) => {
+      const c1 = L.latLng(image[1], image[0]);
+      const c2 = L.latLng(image[3], image[2]);
+      const bounds = L.latLngBounds(c1, c2);
+      map.fitBounds(bounds);
+    },
+    reset: () => {
+      data = [];
+      loading = true;
+      error = null;
+      current = null;
+    },
   };
 }
 

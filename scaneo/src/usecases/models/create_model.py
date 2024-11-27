@@ -1,9 +1,9 @@
 from ...models import Model
 from ...repos import ModelsDBRepo
 
-def create_model(name, description, url):	
+def create_model(name, description, url, task):	
 	repo = ModelsDBRepo()
 	id = repo.generate_id()
-	model = Model(id=id, name=name, description=description, url=url)
+	model = Model(id=id, name=name, description=description, url=url, task=task)
 	repo.create_model(model)
 	return model

@@ -1,7 +1,7 @@
 import { retrieveModels, retrieveOneModel } from "$lib/models/retrieve";
 import createModel from "$lib/models/create";
 import deleteModel from "$lib/models/delete";
-
+import inference from "$lib/models/inference";
 function createModels() {
   let data = $state([]);
   let loading = $state(true);
@@ -27,11 +27,12 @@ function createModels() {
       data = _data;
       loading = false;
     },
-    create: async (name, description, localPath) => {
+    create: async (name, description, localPath, task) => {
       const { data: _data, error } = await createModel(
         name,
         description,
-        localPath
+        localPath,
+        task
       );
       if (error) throw error;
       data = [_data, ...data];
@@ -46,6 +47,11 @@ function createModels() {
       const { data: _data, error: err } = await retrieveOneModel(model);
       if (err) console.error(error);
       current = _data;
+    },
+    inference: async (model, image_id) => {
+      const { data: _data, error: err } = await inference(model, image_id);
+      if (err) console.error(err);
+      return _data;
     },
   };
 }

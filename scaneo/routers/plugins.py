@@ -11,7 +11,7 @@ def _retrieve_plugins():
         return retrieve_plugins()
     except Exception as e:
         print("error plugins:retrieve_plugins", e)
-        return HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 class Body(BaseModel):
@@ -23,7 +23,7 @@ def _enable_plugin(body: Body):
         return enable_plugin(body.name)
     except Exception as e:
         print("error plugins:enable_plugin", e)
-        return HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{name}")
 def _disable_plugin(name: str):
@@ -31,4 +31,4 @@ def _disable_plugin(name: str):
         return disable_plugin(name)
     except Exception as e:
         print("error plugins:disable_plugin", e)
-        return HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))

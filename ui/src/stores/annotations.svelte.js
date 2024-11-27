@@ -86,6 +86,12 @@ function createAnnotations() {
       if (err) throw new Error(err.message);
       data = data.filter((annotation) => annotation.id !== id);
     },
+    reset: () => {
+      data = [];
+      loading = true;
+      error = null;
+      current = null;
+    },
   };
 }
 

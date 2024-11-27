@@ -1,6 +1,5 @@
 <script>
   import TopBar from "./TopBar.svelte";
-  import LeftBar from "./LeftBar.svelte";
   import Map from "./Map.svelte";
   import RightBar from "./RightBar.svelte";
   import TileLayer from "./TileLayer.svelte";
@@ -11,10 +10,9 @@
   let layer = $state("streets");
 </script>
 
-<div class="h-full flex-1 flex flex-col">
+<div class="flex flex-col flex-1 h-full">
   <TopBar />
-  <div class="flex flex-row w-full h-full flex-1">
-    <LeftBar />
+  <div class="flex flex-row flex-1 w-full h-full">
     <div class="flex-1">
       <Map position={[42.0407, 3.1]} zoom={4}>
         {#if layer == "streets"}
@@ -31,10 +29,12 @@
         <LayersControl layers={["streets", "satellite"]} bind:layer />
       </Map>
     </div>
-    <RightBar />
+    <div class="w-[300px]">
+      <RightBar />
+    </div>
   </div>
 </div>
 
-<!-- {#if images.current}
-  <ImageLayer image={images.current.path} />
-{/if} -->
+{#if images.data}
+  <ImageLayer />
+{/if}

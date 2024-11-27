@@ -8,13 +8,14 @@ class ImagesDBRepo(DBRepo):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             path TEXT NOT NULL,
             campaign_id TEXT,
+            bbox TEXT,
             FOREIGN KEY (campaign_id) REFERENCES campaigns(id)
         )""")
         self.commit_and_close_db()
-
-    def create_images(self, images, campaign_id):
+    
+    def create_images(self, images, campaign_id, bbs):
         cursor = self.get_cursor()
-        cursor.executemany("INSERT INTO images (path, campaign_id) VALUES (?, ?)", [(image, campaign_id) for image in images])
+        cursor.executemany("INSERT INTO images (path, campaign_id, bbox) VALUES (?, ?, ?)", [(image, campaign_id, bb) for image, bb in zip(images, bbs)])
         self.commit_and_close_db()
 
     def retrieve_images(self, campaign_id):
@@ -26,3 +27,8 @@ class ImagesDBRepo(DBRepo):
         cursor = self.get_cursor()
         cursor.execute(f"DELETE FROM images WHERE campaign_id = ?", (campaign_id,))
         self.commit_and_close_db()
+
+    def retrieve_image(self, image_id):
+        cursor = self.get_cursor()
+        cursor.execute(f"SELECT * FROM images WHERE id = ?", (image_id,))
+        return cursor.fetchone()

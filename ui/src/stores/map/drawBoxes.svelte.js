@@ -12,6 +12,8 @@ function createDrawBoxes() {
 
   const drawCallback = async (e) => {
     const { layer } = e;
+    // layer.options.fillOpacity = optionsStore.retrieve().opacity;
+    // layer.options.interactive = false;
     const bounds = layer.getBounds();
     const data = await annotations.createDetection(
       [
@@ -21,6 +23,9 @@ function createDrawBoxes() {
       labels.current,
       images.current.id
     );
+    layer.options.color = labels.data.filter(
+      (label) => data.value == label.name
+    )[0].color;
     console.log("data", data);
     layer.annotationId = data.id;
     drawnItems.addLayer(layer);
@@ -115,6 +120,12 @@ function createDrawBoxes() {
           editing: true,
         }
       );
+      layer.options.color = labels.data.filter(
+        (label) => annotation.value == label.name
+      )[0].color;
+      // .on("click", () => {
+      //   console.log("rectanle", layer.annotationId);
+      // });
       layer.annotationId = annotation.id;
       drawnItems.addLayer(layer);
     },
