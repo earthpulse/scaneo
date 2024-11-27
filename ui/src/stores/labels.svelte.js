@@ -36,7 +36,7 @@ function createLabels() {
         color,
         campaignId
       );
-      if (error) throw error;
+      if (error) throw new Error(error);
       data = [_data, ...data];
       return _data;
     },

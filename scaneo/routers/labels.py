@@ -11,7 +11,7 @@ def _retrieve_labels(campaign: str):
         return retrieve_labels(campaign)
     except Exception as e:
         print("error labels:retrieve_labels", e)
-        return HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 class Body(BaseModel):
     name: str
@@ -23,11 +23,13 @@ def _create_label(body: Body):
     try:
         return create_label(body.name, body.color, body.campaign)
     except Exception as e:
-        return HTTPException(status_code=500, detail=str(e))
+        print("error labels:create_label", e)
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{id}")
 def _delete_label(id: str):
     try:
         return delete_label(id)
     except Exception as e:
-        return HTTPException(status_code=500, detail=str(e))
+        print("error labels:delete_label", e)
+        raise HTTPException(status_code=500, detail=str(e))

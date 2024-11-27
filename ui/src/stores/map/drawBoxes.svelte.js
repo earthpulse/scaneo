@@ -20,7 +20,9 @@ function createDrawBoxes() {
       labels.current,
       images.current.id
     );
-    layer.options.color = labels.data.filter((label) => data.value == label.name)[0].color
+    layer.options.color = labels.data.filter(
+      (label) => data.value == label.name
+    )[0].color;
     console.log("data", data);
     layer.annotationId = data.id;
     drawnItems.addLayer(layer);
@@ -52,6 +54,7 @@ function createDrawBoxes() {
   };
 
   const initControls = (map) => {
+    initItems(map);
     drawControl = new L.Control.Draw({
       position: "topright",
       edit: {
@@ -100,7 +103,9 @@ function createDrawBoxes() {
           // interactive: false,
         }
       );
-      layer.options.color = labels.data.filter((label) => annotation.value == label.name)[0].color
+      layer.options.color = labels.data.filter(
+        (label) => annotation.value == label.name
+      )[0].color;
       // .on("click", () => {
       //   console.log("rectanle", layer.annotationId);
       // });
