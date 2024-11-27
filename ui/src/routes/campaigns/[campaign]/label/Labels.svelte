@@ -1,7 +1,8 @@
 <script>
-  import { onDestroy } from "svelte";
   import labels from "$stores/labels.svelte.js";
   import { page } from "$app/stores";
+  import Plus from "svelte-material-icons/Plus.svelte";
+  import DeleteOutline from "svelte-material-icons/DeleteOutline.svelte";
   import "$styles/color_input.css";
 
   $effect(async () => {
@@ -27,72 +28,73 @@
   };
 
   const deleteLabel = async (id) => {
-    labels.delete(id);
+    confirm(
+      "Are you sure you want to delete this label? This action is irreversible and will delete all the associated annotations."
+    ) && labels.delete(id);
   };
-
-  onDestroy(() => {
-    labels.reset();
-  });
 </script>
 
-<section>
-  <h1>Labels</h1>
+<section class="mt-2 flex flex-col gap-2 flex-1 h-full">
   <form class="flex" onsubmit={createLabel}>
     <input
       type="text"
       bind:value={newLabel}
       placeholder="new label"
       required
-      class="rounded-r-none input"
+      class="rounded-r-none input input-sm"
     />
     <button
       type="submit"
-      class="h-auto rounded-none btn btn-primary"
+      class="rounded-none btn btn-primary btn-sm"
       {disabled}
     >
-      Create
+      <Plus size="15" />
     </button>
-    <div
-      class="box-border w-24 flex border-[1px] border-slate-400 rounded-tr-lg rounded-br-lg"
-    >
+    <div class="box-border w-24 flex rounded-tr-lg rounded-br-lg">
       <input
         bind:value={color}
-        class="box-border h-auto p-0 m-0 rounded-tr-lg rounded-br-lg"
+        class="box-border h-full p-0 m-0 rounded-tr-lg rounded-br-lg"
         type="color"
-        name=""
-        id=""
       />
     </div>
   </form>
-  <div>
+  <div class="flex-1 h-full flex flex-col">
     {#if labels.data.length == 0}
       <p class="italic">No labels found</p>
     {:else}
-      <div class="flex flex-col items-start">
-        {#each labels.data as label}
-          <span
-            style="background-color: {label.color
-              ? label.color
-              : ''}{lineOpacity};
-                  
-            "
-            class="w-full my-1 hover:text-blue-900 hover:font-semibold flex justify-between rounded-md {labels.current ==
-            label.name
-              ? 'text-blue-900 font-semibold'
-              : ''}"
-          >
-            <div
-              style="background-color: {label.color ? label.color : ''};"
-              class="w-12 h-auto rounded-l-md"
-            ></div>
-            <button onclick={() => (labels.current = label.name)} class="w-full"
-              >{label.name}</button
+      <div class="flex-1 h-full flex flex-col overflow-auto">
+        <table class="w-full">
+          {#each labels.data as label}
+            <tr
+              class="h-8 hover:bg-slate-100 {labels.current == label.name
+                ? 'bg-slate-50'
+                : ''}"
             >
-            <button class="btn btn-error" onclick={() => deleteLabel(label.id)}
-              >Delete</button
-            ></span
-          >
-        {/each}
+              <td class="w-8">
+                <div
+                  style="background-color: {label.color};"
+                  class="w-4 h-4 rounded-full ml-2"
+                ></div>
+              </td>
+              <td>
+                <button
+                  onclick={() => (labels.current = label.name)}
+                  class="w-full text-left px-2"
+                >
+                  {label.name}
+                </button>
+              </td>
+              <td class="w-8">
+                <button
+                  class="hover:text-red-600 px-2"
+                  onclick={() => deleteLabel(label.id)}
+                >
+                  <DeleteOutline size="15" />
+                </button>
+              </td>
+            </tr>
+          {/each}
+        </table>
       </div>
     {/if}
   </div>

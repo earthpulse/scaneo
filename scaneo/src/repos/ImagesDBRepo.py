@@ -12,8 +12,6 @@ class ImagesDBRepo(DBRepo):
             FOREIGN KEY (campaign_id) REFERENCES campaigns(id)
         )""")
         self.commit_and_close_db()
-
-
     
     def create_images(self, images, campaign_id, bbs):
         cursor = self.get_cursor()
@@ -29,3 +27,8 @@ class ImagesDBRepo(DBRepo):
         cursor = self.get_cursor()
         cursor.execute(f"DELETE FROM images WHERE campaign_id = ?", (campaign_id,))
         self.commit_and_close_db()
+
+    def retrieve_image(self, image_id):
+        cursor = self.get_cursor()
+        cursor.execute(f"SELECT * FROM images WHERE id = ?", (image_id,))
+        return cursor.fetchone()

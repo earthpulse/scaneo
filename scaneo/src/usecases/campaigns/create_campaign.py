@@ -14,7 +14,7 @@ def get_bbox(image):
 		bounds = rasterio.warp.transform_bounds(crs, "EPSG:4326", *bounds)
 	return json.dumps(bounds)
 
-def create_campaign(name, description, path):	
+async def create_campaign(name, description, path, progress_callback=None):	
 	repo = CampaignsDBRepo()
 	id = repo.generate_id()
 	campaign = Campaign(id=id, name=name, description=description)
@@ -22,6 +22,13 @@ def create_campaign(name, description, path):
 	# retrieve images in path recursively
 	images = glob(os.path.join(path, '**/*.tif'), recursive=True)
 	images_repo = ImagesDBRepo()
-	bbs = [get_bbox(image) for image in images]
+	# generate bounding boxes
+	if progress_callback is not None:
+		bbs = []
+		for i, image in enumerate(images):
+			await progress_callback((i+1)/len(images), f"Processing {image}")
+			bbs.append(get_bbox(image))
+	else:
+		bbs = [get_bbox(image) for image in images]
 	images_repo.create_images(images, id, bbs)
 	return campaign

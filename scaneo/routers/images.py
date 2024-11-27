@@ -14,7 +14,7 @@ def _retrieve_images(campaign: str):
         return retrieve_images(campaign)
     except Exception as e:
         print("error images:retrieve_images", e)
-        return HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/{image:path}/{z}/{x}/{y}.png")
 def retrieve_image_tile(

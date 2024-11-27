@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from src.usecases.models import create_model, retrieve_models, delete_model, retrieve_one_model
+from src.usecases.models import create_model, retrieve_models, delete_model, retrieve_one_model, inference_model
 
 router = APIRouter(prefix="/models", tags=["models"])
 
@@ -11,7 +11,7 @@ def _retrieve_models():
         return retrieve_models()
     except Exception as e:
         print("error models:retrieve_models", e)
-        return HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
     
 
 @router.get("/{model_id}")
@@ -20,20 +20,21 @@ def _retrieve_one_models(model_id: str):
         return retrieve_one_model(model_id)
     except Exception as e:
         print("error models:retrieve_one_model", e)
-        return HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
     
 class Body(BaseModel):
     name: str
     description: str
     url: str
+    task: str
 
 @router.post("")
 def _create_model(body: Body):
     try:
-        return create_model(body.name, body.description, body.url)
+        return create_model(body.name, body.description, body.url, body.task)
     except Exception as e:
         print("error models:create_model", e)
-        return HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{model_id}")
 def _delete_model(model_id: str):
@@ -41,4 +42,15 @@ def _delete_model(model_id: str):
         return delete_model(model_id)
     except Exception as e:
         print("error models:delete_model", e)
-        return HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+class InferenceBody(BaseModel):
+    image: int
+
+@router.post("/inference/{model_id}")
+def _inference_model(model_id: str, body: InferenceBody):
+    try:
+        return inference_model(model_id, body.image)
+    except Exception as e:
+        print("error models:create_model", e)
+        raise HTTPException(status_code=500, detail=str(e))
