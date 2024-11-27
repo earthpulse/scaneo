@@ -29,40 +29,61 @@
   };
 </script>
 
-<div class="p-3">
+<div class="p-6">
   {#if plugins.loading}
     <div>loading...</div>
   {:else if plugins.error}
     <div>{plugins.error}</div>
   {:else}
-    <h1>Plugins</h1>
-    {#each plugins.data as plugin}
-      <p>{plugin.name}</p>
-      <p>status: {plugin.enabled ? "enabled" : "disabled"}</p>
-      {#if !plugin.enabled}
-        <button
-          {disabled}
-          class="btn btn-primary {plugin.name == selected
-            ? 'btn-disabled'
-            : ''}"
-          onclick={() => enablePlugin(plugin.name)}
-        >
-          {#if disabled && plugin.name == selected}
-            <span class="loading loading-spinner"></span>
-          {/if}
-          {disabled && plugin.name == selected
-            ? "enabling..."
-            : "enable"}</button
-        >
-      {:else}
-        <button class="btn btn-error" onclick={() => disablePlugin(plugin.name)}
-          >{#if disabled && plugin.name == selected}
-            <span class="loading loading-spinner"></span>
-          {/if}{disabled && plugin.name == selected
-            ? "disabling..."
-            : "Disable"}</button
-        >
-      {/if}
-    {/each}
+    <h1 class="text-3xl font-bold mb-8">Plugins</h1>
+    <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      {#each plugins.data as plugin}
+        <div class="card bg-base-100 shadow-xl border border-1">
+          <div class="card-body">
+            <h2 class="card-title">{plugin.name}</h2>
+            <p class="text-sm opacity-70">
+              Status: <span
+                class={plugin.enabled ? "text-success" : "text-warning"}
+              >
+                {plugin.enabled ? "enabled" : "disabled"}
+              </span>
+            </p>
+            <div class="card-actions justify-end mt-4">
+              {#if !plugin.enabled}
+                <button
+                  {disabled}
+                  class="btn btn-primary {plugin.name == selected
+                    ? 'btn-disabled'
+                    : ''}"
+                  onclick={() => enablePlugin(plugin.name)}
+                >
+                  {#if disabled && plugin.name == selected}
+                    <span class="loading loading-spinner"></span>
+                  {/if}
+                  {disabled && plugin.name == selected
+                    ? "enabling..."
+                    : "Enable"}
+                </button>
+              {:else}
+                <button
+                  {disabled}
+                  class="btn btn-error {plugin.name == selected
+                    ? 'btn-disabled'
+                    : ''}"
+                  onclick={() => disablePlugin(plugin.name)}
+                >
+                  {#if disabled && plugin.name == selected}
+                    <span class="loading loading-spinner"></span>
+                  {/if}
+                  {disabled && plugin.name == selected
+                    ? "disabling..."
+                    : "Disable"}
+                </button>
+              {/if}
+            </div>
+          </div>
+        </div>
+      {/each}
+    </div>
   {/if}
 </div>

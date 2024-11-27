@@ -15,8 +15,7 @@ class Annotation(BaseModel):
 
     @classmethod
     def from_tuple(cls, data: tuple):
-        print(data[4],"\n\n",data[5],data[3])
-        return cls(
+        return cls (
             id=data[0],
             type=data[1],
             value=data[2],

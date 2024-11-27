@@ -9,6 +9,7 @@ class Model(BaseModel):
     url: str
     createdAt: datetime = Field(default_factory=datetime.now)
     updatedAt: datetime = Field(default_factory=datetime.now)
+    task: str
 
     @classmethod
     def from_tuple(cls, data: tuple):
@@ -18,5 +19,6 @@ class Model(BaseModel):
             description=data[2],
             url=data[3],
             createdAt=datetime.fromisoformat(data[4]),
-            updatedAt=datetime.fromisoformat(data[5])
+            updatedAt=datetime.fromisoformat(data[5]),
+            task=data[6]
         )

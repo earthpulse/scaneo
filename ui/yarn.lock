@@ -1168,6 +1168,11 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
+svelte-material-icons@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/svelte-material-icons/-/svelte-material-icons-3.0.5.tgz#37bed05ceadd981b0da8630bd43b6d7cd6345376"
+  integrity sha512-UbhAa+Btd5y6e6DMljVccP+cbJ8lvesltMippiCOvfIUtYe2TsQqM+P6osfrVsZHV47b1tY6AmqCuSpMKnwMOQ==
+
 svelte@^5.0.0-next.1:
   version "5.0.0-next.268"
   resolved "https://registry.npmjs.org/svelte/-/svelte-5.0.0-next.268.tgz"

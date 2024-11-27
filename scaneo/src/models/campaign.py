@@ -29,3 +29,9 @@ class Campaign(BaseModel):
             createdAt=datetime.fromisoformat(data[3]),
             updatedAt=datetime.fromisoformat(data[4])
         )
+    
+    model_config = {
+        "json_encoders": {
+            datetime: lambda dt: dt.isoformat()
+        }
+    }

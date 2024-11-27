@@ -1,10 +1,11 @@
 <script>
-  import { browser } from "$app/environment";
   import images from "$stores/images.svelte.js";
+  import { onDestroy } from "svelte";
+  import FolderOpenOutline from "svelte-material-icons/FolderOpenOutline.svelte";
+  import ImageOutline from "svelte-material-icons/ImageOutline.svelte";
+  import { page } from "$app/stores";
 
   // $: console.log(dataset, version);
-
-  let { onImageSelect } = $props();
 
   let currentLevel = $state({});
   let navigationStack = $state([]);
@@ -12,21 +13,23 @@
   let currentPath = $state([]);
   let onDetails = $state(false);
   let details = $state({});
-  let filter_string = $state(null)
-  const load = async () => {
+  let filter_string = $state(null);
+
+  $effect(async () => {
+    images.retrieve($page.params.campaign);
+  });
+
+  $effect(async () => {
     loading = true;
     currentLevel = {};
     navigationStack = [];
-    // only works in browser
-    // const streamsaver = await import("streamsaver");
-    // createWriteStream = streamsaver.createWriteStream;
     let tree = buildFileTree();
     currentLevel = tree;
     loading = false;
-  };
+  });
 
-  $effect(async () => {
-    if (browser) load();
+  onDestroy(() => {
+    images.reset();
   });
 
   const buildFileTree = () => {
@@ -77,11 +80,8 @@
     }
   };
 
-  const goToDetails = (file, filename) => {
+  const goToDetails = (file) => {
     images.current = file;
-    // onDetails = true;
-    // details = { id: file.id, campaign: file.campaign_id, path: file.path };
-    // currentPath = [...currentPath, filename];
   };
 
   const getCurrentPath = (intoFolder) => {
@@ -91,129 +91,90 @@
       currentPath = [];
     }
   };
-  // const download = async (fileName) => {
-  // 	// seems to work, but not sure if it will with large datasets (need to test)
-  // 	fetch(`${PUBLIC_EOTDL_API}/datasets/${id}/download/${fileName}`, {
-  // 		method: "GET",
-  // 		headers: {
-  // 			Authorization: `Bearer ${$id_token}`,
-  // 		},
-  // 	})
-  // 		.then((res) => {
-  // 			if (!res.ok) return res.json();
-  // 			const fileStream = createWriteStream(fileName);
-  // 			const writer = fileStream.getWriter();
-  // 			if (res.body.pipeTo) {
-  // 				writer.releaseLock();
-  // 				return res.body.pipeTo(fileStream);
-  // 			}
-  // 			const reader = res.body.getReader();
-  // 			const pump = () =>
-  // 				reader
-  // 					.read()
-  // 					.then(({ value, done }) =>
-  // 						done
-  // 							? writer.close()
-  // 							: writer.write(value).then(pump)
-  // 					);
-  // 			data.dataset.downloads = data.dataset.downloads + 1;
-  // 			return pump();
-  // 		})
-  // 		.then((res) => {
-  // 			alert(res.detail);
-  // 		});
-  // };
-  let filtered_level = $derived(()=>{
-    if (filter_string){
-      return Object.keys(currentLevel).filter((item) => {
-        return item.toLowerCase().includes(filter_string.toLowerCase())
 
-      })
+  let filtered_level = $derived(() => {
+    if (filter_string) {
+      return Object.keys(currentLevel).filter((item) => {
+        return item.toLowerCase().includes(filter_string.toLowerCase());
+      });
+    } else {
+      return Object.keys(currentLevel);
     }
-    else {
-      return Object.keys(currentLevel)}
-  })
+  });
 </script>
 
-{#if !loading}
-{#if images.data}
-<p>Files ({images.data.length}) :</p>
-<div class="overflow-auto w-full max-h-[200px] border-2">
-  <input type="text" bind:value={filter_string} placeholder="Search in folder ..." class="pl-4 mt-1 ml-2 rounded-md">
-  <div class="pl-2 pb-2 h-fit text-[13px] font-semibold flex">
-        <p>Path:/</p>
-        {#each currentPath as folder}
-          <button
-            onclick={() => goToLevel(folder)}
-            class="text-nowrap hover:underline"
-          >
-            {folder}/</button
-          >
-        {/each}
-      </div>
-      {#if navigationStack.length > 0 || onDetails}
-        <button
-          class="flex ml-2 italic underline hover:underline"
-          onclick={goBack}
-        >
-          Return
-        </button>
-      {/if}
-      <table class="ml-2">
-        <tbody>
-          {#if onDetails == false}
-            {#each filtered_level() as item}
-              <!-- {#if $user}
-                            <button on:click={() => download(file.name)}
-                                ><Download color="gray" size={20} /></button
-                                >
-                                {/if} -->
-              {#if typeof currentLevel[item] === "object" && !currentLevel[item].id}
-                <tr>
-                  <td>
-                    <button
-                      class="flex hover:underline"
-                      onclick={() => openFolder(item)}>{item}</button
+<div class="flex flex-col gap-2 h-full overflow-hidden">
+  {#if !loading}
+    {#if images.data}
+      <p>Images ({images.data.length}) :</p>
+      <div class="overflow-auto flex-grow flex flex-col gap-2">
+        <input
+          type="text"
+          bind:value={filter_string}
+          placeholder="Search in folder ..."
+          class="p-1 rounded-md input-sm w-full"
+        />
+        <div class="text-sm flex">
+          <p>Path: /</p>
+          {#each currentPath as folder}
+            <button
+              onclick={() => goToLevel(folder)}
+              class="text-nowrap hover:underline"
+            >
+              {folder}/</button
+            >
+          {/each}
+        </div>
+        <div class="overflow-auto flex-grow">
+          <table class="w-full">
+            <tbody>
+              {#if onDetails == false}
+                {#each filtered_level() as item}
+                  {#if typeof currentLevel[item] === "object" && !currentLevel[item].id}
+                    <tr class="hover:bg-slate-100">
+                      <td>
+                        <button
+                          class="flex hover:underline items-center gap-1 w-full"
+                          onclick={() => openFolder(item)}
+                          ><FolderOpenOutline size="15" />{item}</button
+                        >
+                      </td>
+                    </tr>
+                  {:else}
+                    <tr
+                      class="hover:bg-slate-100 {images.current?.id ==
+                      currentLevel[item]?.id
+                        ? 'bg-slate-100'
+                        : ''}"
                     >
-                  </td>
-                </tr>
+                      <td class="pr-1">
+                        <button
+                          onclick={() => goToDetails(currentLevel[item])}
+                          class="w-full"
+                          ><p class="flex items-center gap-1 w-full">
+                            <ImageOutline size="15" />{item}
+                          </p></button
+                        >
+                      </td>
+                    </tr>
+                  {/if}
+                {/each}
               {:else}
-                <tr>
-                  <td class="pr-1">
-                    <button
-                      onclick={() => goToDetails(currentLevel[item], item)}
-                      ><p class="flex">{item}</p></button
-                    >
-                  </td>
-                  <!-- <td class="px-1">
-                                        <p>
-                                                {currentLevel[item].checksum.substr(0, 8)}...
-                                        </p>
-                                    </td>
-                                    <td class="px-1">
-                                        <p>
-                                                {currentLevel[item].version}
-                                        </p>
-                                    </td> -->
-                </tr>
+                {#each Object.keys(details) as detail}
+                  <tr>
+                    <th class="text-left">{detail}:</th>
+                    <td class="pl-1">{details[detail]}</td>
+                  </tr>
+                {/each}
               {/if}
-              <!-- <td>{formatFileSize(file.size)}</td> -->
-              <!-- <td class="text-xs">{current_files[file].checksum}</td> -->
-            {/each}
-          {:else}
-            {#each Object.keys(details) as detail}
-              <tr>
-                <th class="text-left">{detail}:</th>
-                <td class="pl-1">{details[detail]}</td>
-              </tr>
-            {/each}
-          {/if}
-        </tbody>
-      </table>
-    </div>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {:else}
+      <p>No files found.</p>
+    {/if}
   {:else}
-    <p>No files found.</p>
+    <p>Loading files ...</p>
   {/if}
-{:else}
-  <p>Loading files ...</p>
-{/if}
+</div>
