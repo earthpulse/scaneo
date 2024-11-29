@@ -5,17 +5,20 @@ import images from "$stores/images.svelte.js";
 function createDrawBrush() {
   let drawnItems = $state(null);
   let brushControl = $state(null);
-  
+
   const LabelHasSegmentation = () => {
-    return annotations.data.find((annotation)=>{
-      return annotation.value == labels.current && annotation.type == "segmentation"
-    })
+    return annotations.data.find((annotation) => {
+      return (
+        annotation.value == labels.current && annotation.type == "segmentation"
+      );
+    });
   };
+
   const onMouseDown = () => {
-    if (LabelHasSegmentation()){
+    if (LabelHasSegmentation()) {
       const currentAnnotation = LabelHasSegmentation();
       brushControl.setData(currentAnnotation.layer_data);
-      console.log(brushControl.layerOptions, brushControl)
+      // console.log(brushControl.layerOptions, brushControl)
       brushControl.options.layerOptions.color = labels.data.filter(
         (label) => currentAnnotation.value == label.name
       )[0].color;
@@ -23,41 +26,42 @@ function createDrawBrush() {
         if (layer.annotationId === currentAnnotation.id) {
           drawnItems.removeLayer(layer);
         }
-        
       });
     }
-  }
-
-  const drawCallback = async () => {    
-      const layerData = brushControl?.getData();
-    
-      if (!layerData) {
-        return;
-      }
-
-      try {
-        if (LabelHasSegmentation()){
-          const currentAnnotation = LabelHasSegmentation();
-          deleteCallback(currentAnnotation.id)
-        }
-        const data = await annotations.createSegmentation(
-          layerData,
-          labels.current,
-          images.current.id
-        );
-    
-        const layer = L.geoJSON(layerData, {
-          style: { color: labels.data.filter((label) => data.value == label.name)[0].color},
-        });
-        layer.annotationId = data.id;
-        drawnItems.addLayer(layer);
-    
-        brushControl.eraseAll();
-      } catch (error) {
-        console.error("Error saving annotation:", error);
-      }
   };
-  
+
+  const drawCallback = async () => {
+    const layerData = brushControl?.getData();
+
+    if (!layerData) {
+      return;
+    }
+
+    try {
+      if (LabelHasSegmentation()) {
+        const currentAnnotation = LabelHasSegmentation();
+        deleteCallback(currentAnnotation.id);
+      }
+      const data = await annotations.createSegmentation(
+        layerData,
+        labels.current,
+        images.current.id
+      );
+
+      const layer = L.geoJSON(layerData, {
+        style: {
+          color: labels.data.filter((label) => data.value == label.name)[0]
+            .color,
+        },
+      });
+      layer.annotationId = data.id;
+      drawnItems.addLayer(layer);
+
+      brushControl.eraseAll();
+    } catch (error) {
+      console.error("Error saving annotation:", error);
+    }
+  };
 
   const deleteCallback = (annotationId) => {
     drawnItems.eachLayer((layer) => {
@@ -65,7 +69,6 @@ function createDrawBrush() {
         drawnItems.removeLayer(layer);
         annotations.delete(annotationId);
       }
-      
     });
     annotations.delete(annotationId);
   };
@@ -83,7 +86,10 @@ function createDrawBrush() {
     }
 
     brushControl = L.control.paintPolygon({
-      layerOptions: { color: labels.data.filter((label) => labels.current == label.name)[0].color },
+      layerOptions: {
+        color: labels.data.filter((label) => labels.current == label.name)[0]
+          .color,
+      },
     });
     map.addControl(brushControl);
 
@@ -93,7 +99,10 @@ function createDrawBrush() {
 
   const addLayer = (annotation) => {
     const layer = L.geoJSON(annotation.layer_data, {
-      style: { color: labels.data.filter((label) => annotation.value == label.name)[0].color},
+      style: {
+        color: labels.data.filter((label) => annotation.value == label.name)[0]
+          .color,
+      },
     });
     layer.annotationId = annotation.id;
     drawnItems.addLayer(layer);
@@ -121,5 +130,3 @@ function createDrawBrush() {
 }
 
 export default createDrawBrush();
-
-

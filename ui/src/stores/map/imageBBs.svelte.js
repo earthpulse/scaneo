@@ -19,7 +19,7 @@ function createImageBBs() {
         {
           interactive: true,
           //   color: "#ff0000", // Red color
-          weight: 5, // Line thickness
+          weight: 10, // Line thickness
           //   opacity: 0.8, // Line opacity
           //   fillColor: "#ff0000", // Fill color
           //   fillOpacity: 0.2, // Fill opacity

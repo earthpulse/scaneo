@@ -2,7 +2,7 @@ import retrieveAnnotations from "$lib/annotations/retrieve";
 import {
   createClassificationAnnotation,
   createDetectionAnnotation,
-  createSegmentationAnnotation
+  createSegmentationAnnotation,
 } from "$lib/annotations/create";
 import deleteAnnotation from "$lib/annotations/delete";
 import { updateDetectionAnnotation } from "$lib/annotations/update";
@@ -55,7 +55,6 @@ function createAnnotations() {
         label,
         imageId
       );
-      console.log("createDetection", _data, err);
       if (err) throw new Error(err.message);
       data = [_data, ...data];
       return _data;
@@ -68,19 +67,18 @@ function createAnnotations() {
       if (err) throw new Error(err.message);
       data = data.map((annotation) =>
         annotation.id === id ? { ...annotation, bb } : annotation
-    );
-  },
+      );
+    },
     createSegmentation: async (layerData, label, imageId) => {
       const { data: _data, error: err } = await createSegmentationAnnotation(
         layerData,
         label,
         imageId
       );
-      console.log("createSegmentation", _data, err);
       if (err) throw new Error(err.message);
       data = [_data, ...data];
       return _data;
-  },
+    },
     delete: async (id) => {
       const { error: err } = await deleteAnnotation(id);
       if (err) throw new Error(err.message);

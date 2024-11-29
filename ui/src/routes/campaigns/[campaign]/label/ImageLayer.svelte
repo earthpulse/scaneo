@@ -13,21 +13,24 @@
   } = $props();
 
   let layer = $state(null);
-
-  $effect(async () => {
-    const map = mapStore.map;
-    if (map) {
-      imageBBs.initItems(map);
-      images.data.forEach((image) => {
-        imageBBs.addBbox(image, map);
-      });
-    }
-    imageBBs.zoom(map);
-  });
+  let initialized = $state(false);
 
   $effect(() => {
-    if (!settings.showImageBBs) {
-      imageBBs.hide(map);
+    const map = mapStore.map;
+    if (map) {
+      if (!initialized) {
+        imageBBs.initItems(map);
+        images.data.forEach((image) => {
+          imageBBs.addBbox(image, map);
+        });
+        imageBBs.zoom(map);
+      }
+      if (!settings.showImageBBs) {
+        imageBBs.hide(map);
+      }
+      if (images.data.length > 0) {
+        initialized = true;
+      }
     }
   });
 
@@ -46,5 +49,6 @@
 
   onDestroy(() => {
     imageBBs.remove(mapStore.map);
+    initialized = false;
   });
 </script>

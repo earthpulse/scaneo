@@ -7,12 +7,27 @@
   import annotations from "$stores/annotations.svelte.js";
   import drawBoxes from "$stores/map/drawBoxes.svelte.js";
   import { mapStore } from "$stores/map/map.svelte.js";
+  import images from "$stores/images.svelte.js";
+  import drawBrush from "$stores/map/drawBrush.svelte.js";
 
   let selected = $state("labels");
+
+  $effect(async () => {
+    if (images.current) {
+      const data = await annotations.retrieve(images.current.id);
+      drawBoxes.initItems(mapStore.map);
+      drawBrush.initItems(mapStore.map);
+      data?.forEach((annotation) => {
+        if (annotation.type === "detection") drawBoxes.addLayer(annotation);
+        if (annotation.type === "segmentation") drawBrush.addLayer(annotation);
+      });
+    }
+  });
 
   onDestroy(() => {
     labels.reset();
     drawBoxes.remove(mapStore.map);
+    drawBrush.remove(mapStore.map);
     annotations.reset();
   });
 </script>
