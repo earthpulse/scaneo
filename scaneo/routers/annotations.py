@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from src.usecases.annotations import update_detection_annotation, retrieve_annotations, create_classification_annotation, create_detection_annotation, delete_annotation
+from src.usecases.annotations import update_detection_annotation, retrieve_annotations, create_classification_annotation, create_detection_annotation, delete_annotation, create_segmentation_annotation
 
 router = APIRouter(prefix="/annotations", tags=["annotations"])
 
@@ -55,4 +55,30 @@ def _update_detection_annotation(id: str, body: UpdateDetectionBody):
         return update_detection_annotation(id, body.bb)
     except Exception as e:
         print("error annotations:update_detection_annotation", e)
-        raise HTTPException(status_code=500, detail=str(e))
+        return HTTPException(status_code=500, detail=str(e))
+
+class SegmentationBody(BaseModel):
+    imageId: int
+    label: str
+    layer_data: object
+
+@router.post("/segmentation")
+def _create_segmentation_annotation(body: SegmentationBody):
+    try:
+        return create_segmentation_annotation(body.imageId, body.layer_data, body.label)
+    except Exception as e:
+        print("error annotations:create_segmentation_annotation", e)
+        return HTTPException(status_code=500, detail=str(e))
+
+class SegmentationBody(BaseModel):
+    imageId: int
+    label: str
+    layer_data: object
+
+@router.post("/segmentation")
+def _create_segmentation_annotation(body: SegmentationBody):
+    try:
+        return create_segmentation_annotation(body.imageId, body.layer_data, body.label)
+    except Exception as e:
+        print("error annotations:create_segmentation_annotation", e)
+        return HTTPException(status_code=500, detail=str(e))

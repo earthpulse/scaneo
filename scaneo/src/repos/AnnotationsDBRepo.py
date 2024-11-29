@@ -12,6 +12,7 @@ class AnnotationsDBRepo(DBRepo):
 			type TEXT NOT NULL,
 			value TEXT,
 			bb TEXT NULL,
+			layer_data TEXT NULL,
 			image_id INTEGER,
 			createdAt TEXT,
 			updatedAt TEXT,
@@ -31,7 +32,7 @@ class AnnotationsDBRepo(DBRepo):
 
 	def create_annotation(self, annotation):
 		cursor = self.get_cursor()
-		cursor.execute("INSERT INTO annotations (id, type, value, bb, image_id, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)", (annotation.id, annotation.type, annotation.value, json.dumps(annotation.bb), annotation.image_id, annotation.createdAt, annotation.updatedAt))
+		cursor.execute("INSERT INTO annotations (id, type, value, bb, layer_data, image_id, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (annotation.id, annotation.type, annotation.value, json.dumps(annotation.bb), json.dumps(annotation.layer_data), annotation.image_id, annotation.createdAt, annotation.updatedAt))
 		self.commit_and_close_db()
 
 	def update_annotation(self, annotation):

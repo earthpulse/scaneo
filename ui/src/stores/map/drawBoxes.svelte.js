@@ -6,8 +6,11 @@ function createDrawBoxes() {
   let drawnItems = $state(null);
   let drawControl = $state(null);
 
+  let drawCreatedHandler;
+  let drawEditedHandler;
+  let drawDeletedHandler;
+
   const drawCallback = async (e) => {
-    console.log("drawCallback");
     const { layer } = e;
     // layer.options.fillOpacity = optionsStore.retrieve().opacity;
     // layer.options.interactive = false;
@@ -40,8 +43,6 @@ function createDrawBoxes() {
   };
 
   const deleteCallback = (e) => {
-    console.log("deleteCallback");
-    // console.log(e.layers._layers);
     e.layers.eachLayer((layer) => {
       annotations.delete(layer.annotationId);
     });
@@ -54,7 +55,13 @@ function createDrawBoxes() {
   };
 
   const initControls = (map) => {
-    initItems(map);
+    if (!drawnItems) initItems(map);
+
+    if (drawCreatedHandler) map.off(L.Draw.Event.CREATED, drawCreatedHandler);
+    if (drawEditedHandler) map.off(L.Draw.Event.EDITED, drawEditedHandler);
+    if (drawDeletedHandler) map.off(L.Draw.Event.DELETED, drawDeletedHandler);
+    if (drawControl) map.removeControl(drawControl);
+
     drawControl = new L.Control.Draw({
       position: "topright",
       edit: {
@@ -76,10 +83,16 @@ function createDrawBoxes() {
         polygon: false,
       },
     });
+
     map.addControl(drawControl);
-    map.on(L.Draw.Event.CREATED, async (e) => await drawCallback(e));
-    map.on(L.Draw.Event.EDITED, editCallback);
-    map.on(L.Draw.Event.DELETED, deleteCallback);
+
+    drawCreatedHandler = async (e) => await drawCallback(e);
+    drawEditedHandler = editCallback;
+    drawDeletedHandler = deleteCallback;
+
+    map.on(L.Draw.Event.CREATED, drawCreatedHandler);
+    map.on(L.Draw.Event.EDITED, drawEditedHandler);
+    map.on(L.Draw.Event.DELETED, drawDeletedHandler);
   };
 
   return {
@@ -88,6 +101,11 @@ function createDrawBoxes() {
     remove: (map) => {
       if (drawnItems) map?.removeLayer(drawnItems);
       if (drawControl) map?.removeControl(drawControl);
+
+      if (drawCreatedHandler) map.off(L.Draw.Event.CREATED, drawCreatedHandler);
+      if (drawEditedHandler) map.off(L.Draw.Event.EDITED, drawEditedHandler);
+      if (drawDeletedHandler) map.off(L.Draw.Event.DELETED, drawDeletedHandler);
+
       drawnItems = null;
       drawControl = null;
     },
@@ -100,7 +118,6 @@ function createDrawBoxes() {
         ],
         {
           editing: true,
-          // interactive: false,
         }
       );
       layer.options.color = labels.data.filter(

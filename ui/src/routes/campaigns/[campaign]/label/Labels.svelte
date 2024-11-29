@@ -27,6 +27,10 @@
     }
   };
 
+  const selectLabel = async (LabelName) => {
+    labels.current = LabelName
+  };
+
   const deleteLabel = async (id) => {
     confirm(
       "Are you sure you want to delete this label? This action is irreversible and will delete all the associated annotations."
@@ -34,7 +38,7 @@
   };
 </script>
 
-<section class="mt-2 flex flex-col gap-2 flex-1 h-full">
+<section class="flex flex-col flex-1 h-full gap-2 mt-2">
   <form class="flex" onsubmit={createLabel}>
     <input
       type="text"
@@ -50,7 +54,7 @@
     >
       <Plus size="15" />
     </button>
-    <div class="box-border w-24 flex rounded-tr-lg rounded-br-lg">
+    <div class="box-border flex w-24 rounded-tr-lg rounded-br-lg">
       <input
         bind:value={color}
         class="box-border h-full p-0 m-0 rounded-tr-lg rounded-br-lg"
@@ -58,11 +62,11 @@
       />
     </div>
   </form>
-  <div class="flex-1 h-full flex flex-col">
+  <div class="flex flex-col flex-1 h-full">
     {#if labels.data.length == 0}
       <p class="italic">No labels found</p>
     {:else}
-      <div class="flex-1 h-full flex flex-col overflow-auto">
+      <div class="flex flex-col flex-1 h-full overflow-auto">
         <table class="w-full">
           {#each labels.data as label}
             <tr
@@ -73,20 +77,20 @@
               <td class="w-8">
                 <div
                   style="background-color: {label.color};"
-                  class="w-4 h-4 rounded-full ml-2"
+                  class="w-4 h-4 ml-2 rounded-full"
                 ></div>
               </td>
               <td>
                 <button
-                  onclick={() => (labels.current = label.name)}
-                  class="w-full text-left px-2"
+                  onclick={() =>selectLabel(label.name)}
+                  class="w-full px-2 text-left"
                 >
                   {label.name}
                 </button>
               </td>
               <td class="w-8">
                 <button
-                  class="hover:text-red-600 px-2"
+                  class="px-2 hover:text-red-600"
                   onclick={() => deleteLabel(label.id)}
                 >
                   <DeleteOutline size="15" />
