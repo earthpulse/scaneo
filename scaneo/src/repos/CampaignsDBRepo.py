@@ -9,18 +9,19 @@ class CampaignsDBRepo(DBRepo):
             name TEXT NOT NULL UNIQUE,
             description TEXT NOT NULL,
             createdAt TEXT NOT NULL,
-            updatedAt TEXT NOT NULL
+            updatedAt TEXT NOT NULL,
+            eotdlDatasetId TEXT NULL
         )""")
         self.commit_and_close_db()
 
     def retrieve_campaigns(self):
         cursor = self.get_cursor()
-        cursor.execute("SELECT id, name, description, createdAt, updatedAt FROM campaigns")
+        cursor.execute("SELECT id, name, description, createdAt, updatedAt, eotdlDatasetId FROM campaigns")
         return cursor.fetchall()
     
     def create_campaign(self, campaign):
         cursor = self.get_cursor()
-        cursor.execute(f"INSERT INTO campaigns (id, name, description, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)", (campaign.id, campaign.name, campaign.description, campaign.createdAt, campaign.updatedAt))
+        cursor.execute(f"INSERT INTO campaigns (id, name, description, createdAt, updatedAt, eotdlDatasetId) VALUES (?, ?, ?, ?, ?, ?)", (campaign.id, campaign.name, campaign.description, campaign.createdAt, campaign.updatedAt, campaign.eotdlDatasetId))
         self.commit_and_close_db()
 
     def retrieve_campaign(self, id):
@@ -35,5 +36,5 @@ class CampaignsDBRepo(DBRepo):
 
     def retrieve_one_campaign(self, campaign_id):
         cursor = self.get_cursor()
-        cursor.execute("SELECT id, name, description, createdAt, updatedAt FROM campaigns WHERE id = ?", (campaign_id,))
+        cursor.execute("SELECT id, name, description, createdAt, updatedAt, eotdlDatasetId FROM campaigns WHERE id = ?", (campaign_id,))
         return cursor.fetchone()

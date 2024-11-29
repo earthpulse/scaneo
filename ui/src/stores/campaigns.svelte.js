@@ -18,6 +18,45 @@ function createCampaigns() {
   let creating = $state(false);
   let completed = $state(false);
 
+  const createWS = (payload, endpoint) => {
+    ws = new WebSocket(
+      `${PUBLIC_API_URL.replace("https://", "ws://")}/campaigns/${endpoint}`
+    );
+    ws.onmessage = (event) => {
+      const _data = JSON.parse(event.data);
+      if (_data.status === "processing") {
+        // console.log("processing");
+        // console.log(data.progress);
+        progress = parseFloat(_data.progress);
+        message = _data.message;
+        creating = true;
+      } else if (_data.status === "complete") {
+        console.log("complete");
+        console.log(_data.data);
+        data = [_data.data, ...data];
+        progress = 1;
+        message = "Campaign created";
+        creating = false;
+        completed = true;
+      } else if (_data.status === "error") {
+        console.log("error");
+        console.log(_data.error);
+        progress = 1;
+        message = "Error creating campaign";
+        creating = false;
+        completed = false;
+        alert(_data.error);
+      }
+    };
+    ws.onopen = () => {
+      progress = 0;
+      message = "Creating campaign...";
+      creating = true;
+      completed = false;
+      ws.send(JSON.stringify(payload));
+    };
+  };
+
   return {
     get data() {
       return data;
@@ -57,60 +96,10 @@ function createCampaigns() {
       loading = false;
     },
     create: async (name, description, path) => {
-      // const { data: _data, error } = await createCampaign(
-      //   name,
-      //   description,
-      //   localPath
-      // );
-      // if (error) throw error;
-      // data = [_data, ...data];
-      // return _data;
-
-      ws = new WebSocket(
-        `${PUBLIC_API_URL.replace("https://", "ws://")}/campaigns/create`
-      );
-
-      ws.onmessage = (event) => {
-        const _data = JSON.parse(event.data);
-        if (_data.status === "processing") {
-          // console.log("processing");
-          // console.log(data.progress);
-          progress = parseFloat(_data.progress);
-          message = _data.message;
-          creating = true;
-        } else if (_data.status === "complete") {
-          console.log("complete");
-          console.log(_data.data);
-          data = [_data.data, ...data];
-          progress = 1;
-          message = "Campaign created";
-          creating = false;
-          completed = true;
-        } else if (_data.status === "error") {
-          console.log("error");
-          console.log(_data.error);
-          progress = 1;
-          message = "Error creating campaign";
-          creating = false;
-          completed = false;
-          alert(_data.error);
-        }
-      };
-
-      // Send campaign data
-      ws.onopen = () => {
-        progress = 0;
-        message = "Creating campaign...";
-        creating = true;
-        completed = false;
-        ws.send(
-          JSON.stringify({
-            name,
-            description,
-            path,
-          })
-        );
-      };
+      createWS({ name, description, path }, "create");
+    },
+    createEOTDL: async (name, description, eotdlDatasetId) => {
+      createWS({ name, description, eotdlDatasetId }, "create-eotdl");
     },
     cancel: () => {
       if (ws && ws.readyState === WebSocket.OPEN) {

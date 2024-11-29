@@ -2,3 +2,4 @@ from .create_campaign import create_campaign
 from .retrieve_campaigns import retrieve_campaigns
 from .delete_campaign import delete_campaign
 from .retrieve_one_campaign import retrieve_one_campaign
+from .create_campaign_eotdl import create_campaign_eotdl

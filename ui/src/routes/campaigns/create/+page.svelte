@@ -2,20 +2,31 @@
   import campaigns from "$stores/campaigns.svelte.js";
   import plugins from "$stores/plugins.svelte.js";
   import S3StorageParams from "./S3StorageParams.svelte";
+  import EOTDLDatasetSelector from "./EOTDLDatasetSelector.svelte";
 
   let name = $state("");
   let description = $state("");
   let localPath = $state("");
   let storageOption = $state(0);
+  let eotdlDatasetId = $state("");
 
   const createCampaign = async (e) => {
     e.preventDefault();
-    if (name !== "" && description !== "") {
-      if (storageOption == 2) return alert("EOTDL not implemented yet");
+    if (storageOption == 2) {
+      if (!eotdlDatasetId) return alert("EOTDL dataset is required");
       try {
-        campaigns.create(name, description, localPath);
+        campaigns.createEOTDL(name, description, eotdlDatasetId);
       } catch (error) {
         alert(error);
+      }
+    } else {
+      if (storageOption == 1) return alert("S3 not implemented yet");
+      if (name !== "" && description !== "") {
+        try {
+          campaigns.create(name, description, localPath);
+        } catch (error) {
+          alert(error);
+        }
       }
     }
   };
@@ -105,9 +116,7 @@
     {:else if storageOption == 1}
       <S3StorageParams />
     {:else}
-      <div class="alert">
-        <p>Select dataset from EOTDL (if plugin is installed)</p>
-      </div>
+      <EOTDLDatasetSelector bind:eotdlDatasetId />
     {/if}
 
     {#if campaigns.completed}

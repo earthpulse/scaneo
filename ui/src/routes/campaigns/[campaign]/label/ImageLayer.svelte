@@ -5,6 +5,8 @@
   import imageBBs from "$stores/map/imageBBs.svelte.js";
   import settings from "$stores/settings.svelte.js";
   import { onDestroy } from "svelte";
+  import campaigns from "$stores/campaigns.svelte.js";
+
   let {
     options,
     stretch = [0, 3000],
@@ -38,7 +40,11 @@
     const map = mapStore.map;
     if (map && images.current) {
       images.zoom(JSON.parse(images.current.bbox), map);
-      const url = `${PUBLIC_API_URL}/images/${images.current.path}/{z}/{x}/{y}.png?stretch=${stretch}&bands=${bands}&palette=${palette}`;
+      let url = `${PUBLIC_API_URL}/images/${images.current.path}/{z}/{x}/{y}.png?stretch=${stretch}&bands=${bands}&palette=${palette}`;
+      console.log("eotdlDatasetId", campaigns.current);
+      if (campaigns.current.eotdlDatasetId) {
+        url += `&eotdlDatasetId=${campaigns.current.eotdlDatasetId}`;
+      }
       if (layer) {
         layer.setUrl(url);
       } else {
