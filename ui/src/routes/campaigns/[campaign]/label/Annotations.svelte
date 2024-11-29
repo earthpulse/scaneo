@@ -1,25 +1,8 @@
 <script>
-  import images from "$stores/images.svelte.js";
   import annotations from "$stores/annotations.svelte.js";
   import drawBoxes from "$stores/map/drawBoxes.svelte.js";
   import drawBrush from "$stores/map/drawBrush.svelte.js";
-  import labels from "$stores/labels.svelte.js";
-
-  import { mapStore } from "$stores/map/map.svelte.js";
   import DeleteOutline from "svelte-material-icons/DeleteOutline.svelte";
-
-  $effect(async () => {
-    if (images.current) {
-      const data = await annotations.retrieve(images.current.id);
-      // draw initial boxes
-      drawBoxes.initItems(mapStore.map);
-      drawBrush.initItems(mapStore.map);
-      data?.forEach((annotation) => {
-        if (annotation.type === "detection") drawBoxes.addLayer(annotation);
-        if (annotation.type === "segmentation") drawBrush.addLayer(annotation);
-      });
-    }
-  });
 
   const deleteAnnotation = (id) => {
     if (

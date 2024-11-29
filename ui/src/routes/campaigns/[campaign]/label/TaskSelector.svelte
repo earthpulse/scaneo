@@ -7,6 +7,10 @@
   import labels from "$stores/labels.svelte.js";
   import annotations from "$stores/annotations.svelte.js";
   import DrawBrush from "./DrawBrush.svelte";
+  import EyeOutline from "svelte-material-icons/EyeOutline.svelte";
+  import drawBrush from "$stores/map/drawBrush.svelte.js";
+  import drawBoxes from "$stores/map/drawBoxes.svelte.js";
+  import { mapStore } from "$stores/map/map.svelte.js";
 
   let task = $state(null);
 
@@ -34,6 +38,17 @@
   const segmentation = () => {
     if (!validate()) return;
     task = "segmentation";
+  };
+
+  const showAll = async () => {
+    task = null;
+    const data = await annotations.retrieve(images.current.id);
+    drawBoxes.initItems(mapStore.map);
+    drawBrush.initItems(mapStore.map);
+    data?.forEach((annotation) => {
+      if (annotation.type === "detection") drawBoxes.addLayer(annotation);
+      if (annotation.type === "segmentation") drawBrush.addLayer(annotation);
+    });
   };
 </script>
 
@@ -63,6 +78,15 @@
   onclick={segmentation}
 >
   <VectorPolygon size="15" />
+</button>
+<button
+  class="btn {task === null
+    ? 'btn-primary'
+    : 'btn-outline'} btn-sm tooltip flex items-center p-2"
+  data-tip="See all annotations"
+  onclick={showAll}
+>
+  <EyeOutline size="15" />
 </button>
 
 {#if task === "detection"}

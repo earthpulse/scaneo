@@ -796,6 +796,11 @@ leaflet-draw@^1.0.4:
   resolved "https://registry.yarnpkg.com/leaflet-draw/-/leaflet-draw-1.0.4.tgz#45be92f378ed253e7202fdeda1fcc71885198d46"
   integrity sha512-rsQ6saQO5ST5Aj6XRFylr5zvarWgzWnrg46zQ1MEOEIHsppdC/8hnN8qMoFvACsPvTioAuysya/TVtog15tyAQ==
 
+leaflet-paintpolygon@^1.2.1-alpha.1:
+  version "1.2.1-alpha.1"
+  resolved "https://registry.yarnpkg.com/leaflet-paintpolygon/-/leaflet-paintpolygon-1.2.1-alpha.1.tgz#bf2c523a51a1eb170c79f4d2fbe2be276fb914f9"
+  integrity sha512-JnJNT+zb6vvtJRA6wRhdSpguPCD9vmK0LnHn/MbY6MXPnGQN8Fg5avrZJgLkfzj8cDIyfTGiy1k1WEHuFPyEnQ==
+
 leaflet@^1.9.4:
   version "1.9.4"
   resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.9.4.tgz#23fae724e282fa25745aff82ca4d394748db7d8d"
