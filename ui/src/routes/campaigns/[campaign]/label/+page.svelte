@@ -6,8 +6,14 @@
   import LayersControl from "./LayersControl.svelte";
   import images from "$stores/images.svelte.js";
   import ImageLayer from "./ImageLayer.svelte";
+  import campaigns from "$stores/campaigns.svelte.js";
+  import { page } from "$app/stores";
 
   let layer = $state("streets");
+
+  $effect(() => {
+    campaigns.retrieveOne($page.params.campaign);
+  });
 </script>
 
 <div class="flex flex-col flex-1 h-full">

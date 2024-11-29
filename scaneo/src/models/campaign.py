@@ -8,6 +8,7 @@ class Campaign(BaseModel):
     description: str
     createdAt: datetime = Field(default_factory=datetime.now)
     updatedAt: datetime = Field(default_factory=datetime.now)
+    eotdlDatasetId: Optional[str] = None
     # storage
     # labels
 
@@ -27,7 +28,8 @@ class Campaign(BaseModel):
             name=data[1],
             description=data[2],
             createdAt=datetime.fromisoformat(data[3]),
-            updatedAt=datetime.fromisoformat(data[4])
+            updatedAt=datetime.fromisoformat(data[4]),
+            eotdlDatasetId=data[5]
         )
     
     model_config = {

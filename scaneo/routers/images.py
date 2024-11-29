@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from src.usecases.images import retrieve_images
 from src.utils.image import get_image_data, get_tile_data, ready_image
 from src.utils.image.errors import ImageOutOfBounds
-
+from src.repos import EOTDLRepo
 router = APIRouter(prefix="/images", tags=["images"])
 
 @router.get("/{campaign}")
@@ -25,6 +25,7 @@ def retrieve_image_tile(
     bands: str = "4,3,2",
     stretch: str = "0,3000",
     palette: str = "viridis",
+    eotdlDatasetId: str = None
 ):
     tile_size = (256, 256)
     if len(bands) == 1:
@@ -33,6 +34,9 @@ def retrieve_image_tile(
         bands = tuple([int(band) for band in bands.split(",")])
     stretch = tuple([float(v) for v in stretch.split(",")])
     try:
+        if eotdlDatasetId:
+            eotdl_repo = EOTDLRepo()
+            image = eotdl_repo.get_url(eotdlDatasetId, image)
         tile = get_tile_data(image, (x, y, z), bands, tile_size)
         tile = get_image_data(tile, stretch, palette)
         image = ready_image(tile)
