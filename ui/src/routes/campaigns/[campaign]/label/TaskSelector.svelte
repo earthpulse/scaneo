@@ -6,6 +6,7 @@
   import images from "$stores/images.svelte.js";
   import labels from "$stores/labels.svelte.js";
   import annotations from "$stores/annotations.svelte.js";
+  import DrawBrush from "./DrawBrush.svelte";
 
   let task = $state(null);
 
@@ -66,4 +67,7 @@
 
 {#if task === "detection"}
   <DrawBoxes />
+{/if}
+{#if task === "segmentation"}
+  <DrawBrush />
 {/if}

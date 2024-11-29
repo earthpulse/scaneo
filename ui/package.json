@@ -22,6 +22,7 @@
 	"type": "module",
 	"dependencies": {
 		"leaflet": "^1.9.4",
-		"leaflet-draw": "^1.0.4"
+		"leaflet-draw": "^1.0.4",
+		"leaflet-paintpolygon": "^1.2.1-alpha.1"
 	}
 }
