@@ -6,12 +6,25 @@
   let description = $state("");
   let url = $state("");
   let task = $state("segmentation");
+  let preprocessing = $state({ S2RGB: false });
+  let postprocessing = $state({ Sigmoid: false });
 
   const createModel = async (e) => {
     e.preventDefault();
     if (name !== "" && description !== "") {
       try {
-        const data = await models.create(name, description, url, task);
+        const data = await models.create(
+          name,
+          description,
+          url,
+          task,
+          Object.entries(preprocessing)
+            .filter(([k, v]) => v)
+            .map(([k]) => k),
+          Object.entries(postprocessing)
+            .filter(([k, v]) => v)
+            .map(([k]) => k)
+        );
         goto(`/models/${data.id}`);
       } catch (error) {
         alert(error);
@@ -70,6 +83,7 @@
             name="task"
             class="radio radio-primary"
             value="classification"
+            disabled
             bind:group={task}
           />
           <span class="ml-2">Classification</span>
@@ -80,6 +94,7 @@
             name="task"
             class="radio radio-primary"
             value="detection"
+            disabled
             bind:group={task}
           />
           <span class="ml-2">Detection</span>
@@ -96,6 +111,57 @@
         </label>
       </div>
     </div>
+
+    <div class="form-control">
+      <label class="preprocessing font-medium mb-1">Preprocessing options</label
+      >
+      <div class="flex flex-col gap-4">
+        <label class="preprocessing cursor-pointer">
+          <input
+            type="checkbox"
+            name="preprocessing"
+            class="checkbox checkbox-primary"
+            value="S2RGB"
+            bind:checked={preprocessing.S2RGB}
+          />
+          <span class="ml-2">S2RGB</span>
+          <p class="text-sm text-gray-600 ml-8">
+            Converts Sentinel-2 bands 4,3,2 to RGB by scaling values between
+            0-3000 to 0-255
+          </p>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-control">
+      <label class="postprocessing font-medium mb-1"
+        >Postprocessing options</label
+      >
+      <div class="flex flex-col gap-4">
+        <label class="postprocessing cursor-pointer">
+          <input
+            type="checkbox"
+            name="postprocessing"
+            class="checkbox checkbox-primary"
+            value="Sigmoid"
+            bind:checked={postprocessing.Sigmoid}
+          />
+          <span class="ml-2">Sigmoid</span>
+          <p class="text-sm text-gray-600 ml-8">
+            Applies sigmoid function to model output and thresholds at 0.5 to
+            create binary mask
+          </p>
+        </label>
+      </div>
+    </div>
+
+    <p>
+      When you perform inference, the backend will perform a POST request to the
+      model URL with the image as a multipart/form-data request, using the name
+      "image" for the form data field. You can use the preprocessing and
+      postprocessing options to preprocess and postprocess the image before and
+      after inference (limited to simple, common operations).
+    </p>
 
     <button
       class="btn btn-primary mt-4 w-full md:w-auto md:self-end"

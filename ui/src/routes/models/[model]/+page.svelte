@@ -70,6 +70,18 @@
             >
           </div>
           <div class="flex">
+            <span class="font-medium w-32">Preprocessing:</span>
+            <span class="text-gray-700"
+              >{models.current?.preprocessing.join(", ") || "-"}</span
+            >
+          </div>
+          <div class="flex">
+            <span class="font-medium w-32">Postprocessing:</span>
+            <span class="text-gray-700"
+              >{models.current?.postprocessing.join(", ") || "-"}</span
+            >
+          </div>
+          <div class="flex">
             <span class="font-medium w-32">Labels:</span>
             <span class="text-gray-700">TODO: add label mapper</span>
           </div>
