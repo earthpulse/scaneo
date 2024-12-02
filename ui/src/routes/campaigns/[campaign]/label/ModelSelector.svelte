@@ -26,6 +26,7 @@
       mapStore.map.addLayer(L.geoJSON(data));
     } catch (error) {
       console.error(error);
+      alert(error);
     } finally {
       disabled = false;
     }

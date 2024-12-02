@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-
+from typing import Optional, List
 from src.usecases.models import create_model, retrieve_models, delete_model, retrieve_one_model, inference_model
 
 router = APIRouter(prefix="/models", tags=["models"])
@@ -27,11 +27,13 @@ class Body(BaseModel):
     description: str
     url: str
     task: str
+    preprocessing: Optional[List[str]] = []
+    postprocessing: Optional[List[str]] = []
 
 @router.post("")
 def _create_model(body: Body):
     try:
-        return create_model(body.name, body.description, body.url, body.task)
+        return create_model(body.name, body.description, body.url, body.task, body.preprocessing, body.postprocessing)
     except Exception as e:
         print("error models:create_model", e)
         raise HTTPException(status_code=500, detail=str(e))
@@ -52,5 +54,5 @@ def _inference_model(model_id: str, body: InferenceBody):
     try:
         return inference_model(model_id, body.image)
     except Exception as e:
-        print("error models:create_model", e)
+        print("error models:inference_model", e)
         raise HTTPException(status_code=500, detail=str(e))
