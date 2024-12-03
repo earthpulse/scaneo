@@ -3,13 +3,35 @@
   import { goto } from "$app/navigation";
 
   import campaigns from "$stores/campaigns.svelte.js";
+  import models from "$stores/models.svelte.js";
+  import labelMappings from "$stores/label_mappings.svelte.js";
+  import labels from "$stores/labels.svelte.js";
   import LabelBtn from "$components/LabelBtn.svelte";
   import ExportBtn from "$components/ExportBtn.svelte";
   import DeleteBtn from "$components/DeleteBtn.svelte";
   import UpdateBtn from "$components/UpdateBtn.svelte";
+  import Labels from "./label/Labels.svelte";
+  import ModelSelector from "../create/ModelSelector.svelte";
+
+  let parsedLabelMappings = $state({});
 
   $effect(() => {
     campaigns.retrieveOne($page.params.campaign);
+    models.retrieve();
+    labels.retrieve($page.params.campaign);
+    labelMappings.retrieve($page.params.campaign);
+  });
+
+  $effect(() => {
+    parsedLabelMappings = labelMappings.data?.reduce((acc, mapping) => {
+      if (!acc[mapping.modelId]) {
+        acc[mapping.modelId] = {};
+      }
+      acc[mapping.modelId][
+        labels.data?.find((l) => l.id == mapping.labelId)?.name
+      ] = mapping.output_index;
+      return acc;
+    }, {});
   });
 
   const deleteCampaign = () => {
@@ -21,6 +43,14 @@
 
   const updateCampaign = () => {
     console.log("update sources");
+  };
+
+  const onclick = async () => {
+    try {
+      await labelMappings.update($page.params.campaign, parsedLabelMappings);
+    } catch (err) {
+      alert(err);
+    }
   };
 </script>
 
@@ -68,15 +98,27 @@
           </div>
           <div class="flex">
             <span class="font-medium w-32">Images:</span>
-            <span class="text-gray-700">TODO: add number of images</span>
+            <span class="text-gray-700">{campaigns.current?.image_count}</span>
           </div>
           <div class="flex">
             <span class="font-medium w-32">Annotations:</span>
-            <span class="text-gray-700">TODO: add number of annotations</span>
+            <span class="text-gray-700"
+              >{campaigns.current?.annotation_count}</span
+            >
           </div>
-          <div class="flex">
+          <div class="flex flex-col">
             <span class="font-medium w-32">Labels:</span>
-            <span class="text-gray-700">TODO: add label editor</span>
+            <div>
+              <Labels />
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <ModelSelector
+              labels={labels.data}
+              bind:labelMappings={parsedLabelMappings}
+              {onclick}
+              ondelete={onclick}
+            />
           </div>
         </div>
       </div>

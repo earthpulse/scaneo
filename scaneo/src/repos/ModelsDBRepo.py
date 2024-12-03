@@ -22,6 +22,12 @@ class ModelsDBRepo(DBRepo):
         cursor.execute("SELECT id, name, description, url, createdAt, updatedAt, task, preprocessing, postprocessing FROM models")
         return cursor.fetchall()
     
+    def retrieve_models_by_ids(self, ids):
+        cursor = self.get_cursor()
+        placeholders = ','.join(['?' for _ in ids])
+        cursor.execute(f"SELECT id, name, description, url, createdAt, updatedAt, task, preprocessing, postprocessing FROM models WHERE id IN ({placeholders})", ids)
+        return cursor.fetchall()
+    
     def create_model(self, model):
         cursor = self.get_cursor()
         cursor.execute(f"INSERT INTO models (id, name, description, url, createdAt, updatedAt, task, preprocessing, postprocessing) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
