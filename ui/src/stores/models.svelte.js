@@ -20,9 +20,9 @@ function createModels() {
     get current() {
       return current;
     },
-    retrieve: async () => {
+    retrieve: async (campaign_id = null) => {
       loading = true;
-      const { data: _data, error: err } = await retrieveModels();
+      const { data: _data, error: err } = await retrieveModels(campaign_id);
       if (err) error = err.message;
       data = _data;
       loading = false;

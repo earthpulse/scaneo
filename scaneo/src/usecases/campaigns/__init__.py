@@ -3,3 +3,5 @@ from .retrieve_campaigns import retrieve_campaigns
 from .delete_campaign import delete_campaign
 from .retrieve_one_campaign import retrieve_one_campaign
 from .create_campaign_eotdl import create_campaign_eotdl
+from .retrieve_campaign_label_mappings import retrieve_campaign_label_mappings
+from .update_label_mappings import update_label_mappings

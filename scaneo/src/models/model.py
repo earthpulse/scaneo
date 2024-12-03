@@ -26,3 +26,20 @@ class Model(BaseModel):
             preprocessing=data[7].split(',') if data[7] else [],
             postprocessing=data[8].split(',') if data[8] else []
         )
+    
+class LabelMapping(BaseModel):
+    id: str
+    campaignId: str
+    modelId: str
+    labelId: str
+    output_index: int
+
+    @classmethod
+    def from_tuple(cls, data: tuple):
+        return cls(
+            id=data[0],
+            campaignId=data[1],
+            modelId=data[2],
+            labelId=data[3],
+            output_index=data[4]
+        )

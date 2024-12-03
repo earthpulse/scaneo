@@ -3,3 +3,5 @@ from .retrieve_models import retrieve_models
 from .delete_model import delete_model
 from .retrieve_one_model import retrieve_one_model
 from .inference_model import inference_model
+from .create_label_mapping import create_label_mapping
+from .retrieve_model_label_mappings import retrieve_model_label_mappings

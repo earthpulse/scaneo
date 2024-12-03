@@ -4,12 +4,12 @@
   import { mapStore } from "$stores/map/map.svelte.js";
   import RobotOutline from "svelte-material-icons/RobotOutline.svelte";
   import Divider from "./Divider.svelte";
-
+  import { page } from "$app/stores";
   let selected_model = $state(null);
   let disabled = $state(false);
 
   $effect(() => {
-    models.retrieve();
+    models.retrieve($page.params.campaign);
   });
 
   const inference = async () => {
@@ -33,7 +33,7 @@
   };
 </script>
 
-{#if models.data.length > 0}
+{#if models.data?.length > 0}
   <Divider />
   <select class="select select-sm" bind:value={selected_model}>
     <option value={null} disabled>Select a model</option>

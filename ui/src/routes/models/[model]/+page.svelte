@@ -81,10 +81,6 @@
               >{models.current?.postprocessing.join(", ") || "-"}</span
             >
           </div>
-          <div class="flex">
-            <span class="font-medium w-32">Labels:</span>
-            <span class="text-gray-700">TODO: add label mapper</span>
-          </div>
         </div>
       </div>
     </div>
