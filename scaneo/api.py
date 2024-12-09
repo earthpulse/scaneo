@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-from routers import campaigns, images, models, plugins, labels, annotations
+from routers import campaigns, images, models, plugins, labels, annotations, geojson
 
 app = FastAPI(docs_url=None)
 
@@ -21,6 +21,7 @@ app.include_router(models.router)
 app.include_router(plugins.router)
 app.include_router(labels.router)
 app.include_router(annotations.router)
+app.include_router(geojson.router)
 
 
 

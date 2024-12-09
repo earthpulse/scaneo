@@ -101,6 +101,9 @@ function createCampaigns() {
     createEOTDL: async (name, description, eotdlDatasetId) => {
       createWS({ name, description, eotdlDatasetId }, "create-eotdl");
     },
+    import: async (name, description, path) => {
+      createWS({ name, description, path }, "import");
+    },
     cancel: () => {
       if (ws && ws.readyState === WebSocket.OPEN) {
         ws.close();
