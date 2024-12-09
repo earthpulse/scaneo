@@ -32,3 +32,8 @@ class ImagesDBRepo(DBRepo):
         cursor = self.get_cursor()
         cursor.execute(f"SELECT * FROM images WHERE id = ?", (image_id,))
         return cursor.fetchone()
+    
+    def retrieve_image_by_path(self, path, campaign_id):
+        cursor = self.get_cursor()
+        cursor.execute(f"SELECT * FROM images WHERE path = ? AND campaign_id = ?", (path, campaign_id))
+        return cursor.fetchone()
