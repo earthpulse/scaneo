@@ -1,4 +1,5 @@
 build:
+	rm -rf dist
 	rm -rf scaneo/ui
 	rm -rf ui/.svelte-kit
 	rm -r -f ui/static/docs 
@@ -8,12 +9,14 @@ build:
 	mv ui/static/docs/img ui/static
 	cd ui && pnpm build
 	cp -r ui/build scaneo/ui
-	sed -i 's/^version = .*/version = "$(v)"/' pyproject.toml
-	sed -i 's/^__version__ = .*/__version__ = "$(v)"/' scaneo/main.py
-	poetry build
+	# sed -i 's/^version = .*/version = "$(v)"/' pyproject.toml
+	# sed -i 's/^__version__ = .*/__version__ = "$(v)"/' scaneo/main.py
+	sed -i '' 's/^version = .*/version = "$(v)"/' pyproject.toml
+	sed -i '' 's/^__version__ = .*/__version__ = "$(v)"/' scaneo/main.py
+	uv build
 
 publish:
-	poetry publish
+	uv publish --username "__token__" --password "$(token)"
 
 dev:
 	python scaneo/main.py -r -d data

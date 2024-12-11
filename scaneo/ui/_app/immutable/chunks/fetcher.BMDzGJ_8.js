@@ -1,0 +1,1 @@
+const i="";async function o(s,t,r){const n={method:t||"GET",headers:new Headers({"Content-Type":"application/json"}),credentials:"same-origin"};t&&t!=="GET"&&(n.body=JSON.stringify(r));const e=await fetch(s,n),a=await e.json();return e.status!==200?{error:a.detail}:{data:a}}export{i as P,o as f};

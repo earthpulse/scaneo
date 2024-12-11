@@ -20,7 +20,7 @@ function createCampaigns() {
 
   const createWS = (payload, endpoint) => {
     ws = new WebSocket(
-      `${PUBLIC_API_URL.replace("https://", "ws://")}/campaigns/${endpoint}`
+      `${PUBLIC_API_URL.replace("https://", "ws://")}/_campaigns/${endpoint}`
     );
     ws.onmessage = (event) => {
       const _data = JSON.parse(event.data);
