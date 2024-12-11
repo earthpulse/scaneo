@@ -41,3 +41,8 @@ class LabelsDBRepo(DBRepo):
 		cursor = self.get_cursor()
 		cursor.execute(f"SELECT * FROM labels WHERE name = ? AND campaign_id = ?", (name, campaign_id))
 		return cursor.fetchone()
+	
+	def delete_labels(self, campaign_id):
+		cursor = self.get_cursor()
+		cursor.execute(f"DELETE FROM labels WHERE campaign_id = ?", (campaign_id,))
+		self.commit_and_close_db()

@@ -23,9 +23,6 @@ app.include_router(labels.router)
 app.include_router(annotations.router)
 app.include_router(geojson.router)
 
-
-
-
 # this needs to be last in order to not override other routes
 # ui is in same directory as this file
 # in order for this to work with multipage apps, make sure to use trailingSlash = 'always' in svelte layout

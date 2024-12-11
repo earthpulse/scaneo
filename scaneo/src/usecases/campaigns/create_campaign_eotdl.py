@@ -1,18 +1,18 @@
-from glob import glob
-import os
-import rasterio
-import json
-
 from ...models import Campaign
 from ...repos import CampaignsDBRepo, ImagesDBRepo, EOTDLRepo
 from .create_campaign import get_bbox
+from ...usecases.labels import create_label
 
 
-async def create_campaign_eotdl(name, description, eotdlDatasetId, progress_callback=None):	
+async def create_campaign_eotdl(name, description, eotdlDatasetId, labels, labelMappings, progress_callback=None):	
 	repo = CampaignsDBRepo()
 	id = repo.generate_id()
 	campaign = Campaign(id=id, name=name, description=description, eotdlDatasetId=eotdlDatasetId)
 	repo.create_campaign(campaign)
+	# create labels
+	if labels:
+		for label in labels:
+			create_label(label['name'], label['color'], campaign.id)
 	# retrieve images from eotdl
 	eotdl_repo = EOTDLRepo()
 	images, error = eotdl_repo.get_files(eotdlDatasetId, "*.tif") 
@@ -29,4 +29,6 @@ async def create_campaign_eotdl(name, description, eotdlDatasetId, progress_call
 	# store images and bounding boxes
 	images_repo = ImagesDBRepo()
 	images_repo.create_images(images, id, bbs)
+	campaign.image_count = len(images)
+	repo.update_campaign(campaign)
 	return campaign
