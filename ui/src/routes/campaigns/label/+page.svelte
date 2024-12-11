@@ -8,11 +8,14 @@
   import ImageLayer from "./ImageLayer.svelte";
   import campaigns from "$stores/campaigns.svelte.js";
   import { page } from "$app/stores";
+  import { browser } from "$app/environment";
 
   let layer = $state("streets");
 
   $effect(() => {
-    campaigns.retrieveOne($page.url.searchParams.get("id"));
+    if (browser) {
+      campaigns.retrieveOne($page.url.searchParams.get("id"));
+    }
   });
 </script>
 

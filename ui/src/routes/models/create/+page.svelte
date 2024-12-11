@@ -25,7 +25,7 @@
             .filter(([k, v]) => v)
             .map(([k]) => k)
         );
-        goto(`/models/${data.id}`);
+        goto(`/models/model?id=${data.id}`);
       } catch (error) {
         alert(error);
       }
