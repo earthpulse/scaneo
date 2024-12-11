@@ -95,11 +95,20 @@ function createCampaigns() {
       data = _data;
       loading = false;
     },
-    create: async (name, description, path) => {
-      createWS({ name, description, path }, "create");
+    create: async (name, description, path, labels, labelMappings) => {
+      createWS({ name, description, path, labels, labelMappings }, "create");
     },
-    createEOTDL: async (name, description, eotdlDatasetId) => {
-      createWS({ name, description, eotdlDatasetId }, "create-eotdl");
+    createEOTDL: async (
+      name,
+      description,
+      eotdlDatasetId,
+      labels,
+      labelMappings
+    ) => {
+      createWS(
+        { name, description, eotdlDatasetId, labels, labelMappings },
+        "create-eotdl"
+      );
     },
     import: async (name, description, path) => {
       createWS({ name, description, path }, "import");

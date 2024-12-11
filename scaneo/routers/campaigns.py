@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, WebSocket
 from pydantic import BaseModel
 
-from src.usecases.campaigns import create_campaign, create_campaign_eotdl, retrieve_campaigns, delete_campaign, retrieve_one_campaign, create_imported_campaign
+from src.usecases.campaigns import create_campaign, create_campaign_eotdl, retrieve_campaigns, delete_campaign, retrieve_one_campaign, create_imported_campaign, retrieve_campaign_label_mappings, update_label_mappings
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
 
@@ -55,6 +55,8 @@ async def websocket_create_campaign(websocket: WebSocket):
             data["name"], 
             data["description"], 
             data["path"],
+            data["labels"],
+            data["labelMappings"],
             progress_callback=progress_callback
         )
         
@@ -149,6 +151,7 @@ async def websocket_create_campaign_eotdl(websocket: WebSocket):
             data["name"], 
             data["description"], 
             data["eotdlDatasetId"],
+            data["labels"],
             progress_callback=progress_callback
         )
         
@@ -171,3 +174,23 @@ async def websocket_create_campaign_eotdl(websocket: WebSocket):
         })
     finally:
         await websocket.close()
+
+
+@router.get("/{campaign_id}/label_mappings")
+def _retrieve_label_mappings(campaign_id: str):
+    try:
+        return retrieve_campaign_label_mappings(campaign_id)
+    except Exception as e:
+        print("error campaigns:retrieve_campaign_label_mappings", e)
+        raise HTTPException(status_code=500, detail=str(e))
+    
+class UpdateLabelMappingsBody(BaseModel):
+    data: dict
+
+@router.post("/{campaign_id}/label_mappings")
+def _update_label_mappings(campaign_id: str, body: UpdateLabelMappingsBody):
+    try:
+        return update_label_mappings(campaign_id, body.data) 
+    except Exception as e:
+        print("error campaigns:update_label_mappings", e)
+        raise HTTPException(status_code=500, detail=str(e))

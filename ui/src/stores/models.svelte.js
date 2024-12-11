@@ -20,19 +20,28 @@ function createModels() {
     get current() {
       return current;
     },
-    retrieve: async () => {
+    retrieve: async (campaign_id = null) => {
       loading = true;
-      const { data: _data, error: err } = await retrieveModels();
+      const { data: _data, error: err } = await retrieveModels(campaign_id);
       if (err) error = err.message;
       data = _data;
       loading = false;
     },
-    create: async (name, description, localPath, task) => {
+    create: async (
+      name,
+      description,
+      localPath,
+      task,
+      preprocessing,
+      postprocessing
+    ) => {
       const { data: _data, error } = await createModel(
         name,
         description,
         localPath,
-        task
+        task,
+        preprocessing,
+        postprocessing
       );
       if (error) throw error;
       data = [_data, ...data];
@@ -50,7 +59,7 @@ function createModels() {
     },
     inference: async (model, image_id) => {
       const { data: _data, error: err } = await inference(model, image_id);
-      if (err) console.error(err);
+      if (err) throw new Error(err);
       return _data;
     },
   };

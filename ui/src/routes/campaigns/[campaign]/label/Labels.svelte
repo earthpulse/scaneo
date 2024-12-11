@@ -28,7 +28,7 @@
   };
 
   const selectLabel = async (LabelName) => {
-    labels.current = LabelName
+    labels.current = LabelName;
   };
 
   const deleteLabel = async (id) => {
@@ -45,7 +45,7 @@
       bind:value={newLabel}
       placeholder="new label"
       required
-      class="rounded-r-none input input-sm"
+      class="rounded-r-none input input-sm border border-1"
     />
     <button
       type="submit"
@@ -82,7 +82,7 @@
               </td>
               <td>
                 <button
-                  onclick={() =>selectLabel(label.name)}
+                  onclick={() => selectLabel(label.name)}
                   class="w-full px-2 text-left"
                 >
                   {label.name}

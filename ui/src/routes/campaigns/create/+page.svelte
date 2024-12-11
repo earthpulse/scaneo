@@ -3,19 +3,29 @@
   import plugins from "$stores/plugins.svelte.js";
   import S3StorageParams from "./S3StorageParams.svelte";
   import EOTDLDatasetSelector from "./EOTDLDatasetSelector.svelte";
+  import ModelSelector from "./ModelSelector.svelte";
+  import LabelGenerator from "./LabelGenerator.svelte";
 
   let name = $state("");
   let description = $state("");
   let localPath = $state("");
   let storageOption = $state(0);
   let eotdlDatasetId = $state("");
+  let labels = $state([]);
+  let labelMappings = $state({});
 
   const createCampaign = async (e) => {
     e.preventDefault();
     if (storageOption == 2) {
       if (!eotdlDatasetId) return alert("EOTDL dataset is required");
       try {
-        campaigns.createEOTDL(name, description, eotdlDatasetId);
+        campaigns.createEOTDL(
+          name,
+          description,
+          eotdlDatasetId,
+          labels,
+          labelMappings
+        );
       } catch (error) {
         alert(error);
       }
@@ -23,7 +33,7 @@
       if (storageOption == 1) return alert("S3 not implemented yet");
       if (name !== "" && description !== "") {
         try {
-          campaigns.create(name, description, localPath);
+          campaigns.create(name, description, localPath, labels, labelMappings);
         } catch (error) {
           alert(error);
         }
@@ -128,9 +138,15 @@
       <EOTDLDatasetSelector bind:eotdlDatasetId />
     {/if}
 
+    <LabelGenerator bind:labels />
+    {#if labels.length > 0}
+      <ModelSelector {labels} bind:labelMappings />
+    {/if}
+
     {#if campaigns.completed}
       <div class="flex flex-row justify-between alert">
         <p>Campaign created successfully !</p>
+
         <a
           href={`/campaigns/${campaigns.data[0]?.id}/label`}
           class="btn btn-primary">Label</a
