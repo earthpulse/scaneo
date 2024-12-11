@@ -10,7 +10,7 @@ function createImageBBs() {
       map.addLayer(bbs);
     },
     addBbox: (image, map) => {
-      let bb = JSON.parse(image.bbox);
+      let bb = image.bbox;
       bb = L.rectangle(
         [
           [bb[1], bb[0]],

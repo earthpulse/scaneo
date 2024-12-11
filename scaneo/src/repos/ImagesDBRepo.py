@@ -1,5 +1,5 @@
 from .DBRepo import DBRepo
-
+import json
 class ImagesDBRepo(DBRepo):
     def __init__(self):
         super().__init__()
@@ -15,7 +15,7 @@ class ImagesDBRepo(DBRepo):
     
     def create_images(self, images, campaign_id, bbs):
         cursor = self.get_cursor()
-        cursor.executemany("INSERT INTO images (path, campaign_id, bbox) VALUES (?, ?, ?)", [(image, campaign_id, bb) for image, bb in zip(images, bbs)])
+        cursor.executemany("INSERT INTO images (path, campaign_id, bbox) VALUES (?, ?, ?)", [(image, campaign_id, json.dumps(bb)) for image, bb in zip(images, bbs)])
         self.commit_and_close_db()
 
     def retrieve_images(self, campaign_id):

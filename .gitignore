@@ -32,3 +32,4 @@ ui/playwright/.cache/
 ui/mkdocs/site/**/*
 kk*
 uv.lock
+.venv

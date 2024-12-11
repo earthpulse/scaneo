@@ -14,12 +14,12 @@ def get_bbox(image):
 	crs = src.crs
 	if crs != "EPSG:4326":
 		bounds = rasterio.warp.transform_bounds(crs, "EPSG:4326", *bounds)
-	return json.dumps(bounds)
+	return bounds
 
 async def create_campaign(name, description, path, labels, labelMappings, progress_callback=None):	
 	repo = CampaignsDBRepo()
 	id = repo.generate_id()
-	campaign = Campaign(id=id, name=name, description=description)
+	campaign = Campaign(id=id, name=name, description=description, path=path)
 	repo.create_campaign(campaign)
 	# create labels
 	if labels:
