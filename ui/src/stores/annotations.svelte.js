@@ -5,6 +5,7 @@ import {
   createSegmentationAnnotation,
 } from "$lib/annotations/create";
 import deleteAnnotation from "$lib/annotations/delete";
+import saveAnnotations from "$lib/annotations/save";
 import { updateDetectionAnnotation } from "$lib/annotations/update";
 
 function createAnnotations() {
@@ -83,6 +84,10 @@ function createAnnotations() {
       const { error: err } = await deleteAnnotation(id);
       if (err) throw new Error(err.message);
       data = data.filter((annotation) => annotation.id !== id);
+    },
+    save: async (campaignId) => {
+      const { error: err } = await saveAnnotations(campaignId);
+      if (err) throw new Error(err.message);
     },
     reset: () => {
       data = [];
