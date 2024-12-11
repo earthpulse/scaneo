@@ -69,16 +69,3 @@ def _create_segmentation_annotation(body: SegmentationBody):
     except Exception as e:
         print("error annotations:create_segmentation_annotation", e)
         return HTTPException(status_code=500, detail=str(e))
-
-class SegmentationBody(BaseModel):
-    imageId: int
-    label: str
-    layer_data: object
-
-@router.post("/segmentation")
-def _create_segmentation_annotation(body: SegmentationBody):
-    try:
-        return create_segmentation_annotation(body.imageId, body.layer_data, body.label)
-    except Exception as e:
-        print("error annotations:create_segmentation_annotation", e)
-        return HTTPException(status_code=500, detail=str(e))

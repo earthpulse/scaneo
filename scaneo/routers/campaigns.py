@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, WebSocket
 from pydantic import BaseModel
 
-from src.usecases.campaigns import create_campaign, create_campaign_eotdl, retrieve_campaigns, delete_campaign, retrieve_one_campaign, retrieve_campaign_label_mappings, update_label_mappings
+from src.usecases.campaigns import create_campaign, create_campaign_eotdl, retrieve_campaigns, delete_campaign, retrieve_one_campaign, create_imported_campaign, retrieve_campaign_label_mappings, update_label_mappings
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
 
@@ -73,6 +73,49 @@ async def websocket_create_campaign(websocket: WebSocket):
         
     except Exception as e:
         print("error campaigns:websocket_create_campaign", e)
+        await websocket.send_json({
+            "status": "error",
+            "error": str(e)
+        })
+    finally:
+        await websocket.close()
+
+@router.websocket("/import")
+async def websocket_create_campaign(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        # Receive the campaign data as JSON
+        data = await websocket.receive_json()
+        
+        # Create campaign with progress callback
+        async def progress_callback(progress: float, message: str):
+            await websocket.send_json({
+                "progress": progress,
+                "message": message,
+                "status": "processing"
+            })
+        
+        # Call create_campaign with the callback
+        result = await create_imported_campaign(
+            data["name"], 
+            data["description"], 
+            data["path"],
+            progress_callback=progress_callback
+        )
+        
+        # Send success response
+        data = result.model_dump()
+        await websocket.send_json({
+            "status": "complete",
+            "data": {
+                "name": data["name"],
+                "description": data["description"],
+                "id": data["id"]
+            }
+        })
+        
+    except Exception as e:
+        print("error campaigns:websocket_import_campaign", e)
         await websocket.send_json({
             "status": "error",
             "error": str(e)
