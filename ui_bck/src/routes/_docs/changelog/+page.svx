@@ -1,3 +1,0 @@
-# Changelog
-
-Document version history and updates to assist users in navigating and utilizing Scaneo effectively.

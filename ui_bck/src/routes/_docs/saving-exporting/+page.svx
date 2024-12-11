@@ -1,3 +1,0 @@
-# Saving and Exporting
-
-Labeling data is stored in a GeoJson format, encapsulating varied labeling tasks within a single image file while maintaining distinct data for each.
