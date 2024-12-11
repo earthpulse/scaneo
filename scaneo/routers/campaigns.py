@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 from src.usecases.campaigns import create_campaign, create_campaign_eotdl, retrieve_campaigns, delete_campaign, retrieve_one_campaign, create_imported_campaign, retrieve_campaign_label_mappings, update_label_mappings
 
-router = APIRouter(prefix="/campaigns", tags=["campaigns"])
+router = APIRouter(prefix="/_campaigns", tags=["campaigns"])
 
 @router.get("")
 def _retrieve_campaigns():

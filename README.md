@@ -37,6 +37,8 @@ pip install scaneo --upgrade
 ```
 
 > The library requires Python >= 3.8
+>
+> For a fast installation, we commend using `uv pip install scaneo`.
 
 ## Usage
 
@@ -46,10 +48,10 @@ SCANEO allows to launch the labelling web application through CLI commands. The 
 scaneo --help
 ```
 
-You can launch `scaneo` with a single command, just specifying the path to the folder where the sallite data is stored using the `--data` flag:
+You can launch `scaneo` with a single command:
 
 ```
-scaneo --data <path-to-you-folder>
+scaneo
 ```
 
 This will launch the UI, which will be accessible on your [localhost:8000](http://localhost:8000/).
@@ -72,7 +74,7 @@ The CLI runs the API, which in turns serves the static files for the UI.
 Run the API with the CLI:
 
 ```
-python scaneo/main.py run --reload --data <folder>
+python scaneo/main.py run -r
 ```
 
 Then, run the UI:

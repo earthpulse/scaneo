@@ -43,13 +43,13 @@
 
   const importCampaign = async () => {
     if (name !== "" && description !== "") {
-        try {
-          campaigns.import(name, description, localPath);
-        } catch (error) {
-          alert(error);
-        }
+      try {
+        campaigns.import(name, description, localPath);
+      } catch (error) {
+        alert(error);
       }
-  }
+    }
+  };
   const cancel = () => {
     campaigns.cancel();
     creating = false;
@@ -148,7 +148,7 @@
         <p>Campaign created successfully !</p>
 
         <a
-          href={`/campaigns/${campaigns.data[0]?.id}/label`}
+          href={`/campaigns/label?id=${campaigns.data[0]?.id}`}
           class="btn btn-primary">Label</a
         >
       </div>
@@ -167,25 +167,28 @@
         ></progress>
       </div>
     {:else}
-    <div class="flex w-full gap-4 mt-4 md:w-auto md:self-end {campaigns.creating ? "hidden": ""}">
-      <button
-      class="btn btn-primary md:w-auto md:self-end"
-      type="button"
-      onclick={() => importCampaign()}
-      disabled={campaigns.creating}
-    >
-      {campaigns.creating ? "Creating..." : "Import Campaign"}
-    </button>
+      <div
+        class="flex w-full gap-4 mt-4 md:w-auto md:self-end {campaigns.creating
+          ? 'hidden'
+          : ''}"
+      >
+        <button
+          class="btn btn-primary md:w-auto md:self-end"
+          type="button"
+          onclick={() => importCampaign()}
+          disabled={campaigns.creating}
+        >
+          {campaigns.creating ? "Creating..." : "Import Campaign"}
+        </button>
 
-      <button
-      class="btn btn-primary md:w-auto md:self-end"
-      type="submit"
-      disabled={campaigns.creating}
-    >
-      {campaigns.creating ? "Creating..." : "Create Campaign"}
-      </button>
-
-    </div>
+        <button
+          class="btn btn-primary md:w-auto md:self-end"
+          type="submit"
+          disabled={campaigns.creating}
+        >
+          {campaigns.creating ? "Creating..." : "Create Campaign"}
+        </button>
+      </div>
     {/if}
   </form>
 </div>

@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
@@ -23,9 +24,7 @@ app.include_router(labels.router)
 app.include_router(annotations.router)
 app.include_router(geojson.router)
 
-# this needs to be last in order to not override other routes
-# ui is in same directory as this file
-# in order for this to work with multipage apps, make sure to use trailingSlash = 'always' in svelte layout
+# serve static files from ui directory
 app.mount(
     "/",
     StaticFiles(
@@ -33,6 +32,22 @@ app.mount(
     ),
     name="ui",
 )
+
+# multi page app fallback
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exc):
+    path = request.url.path.lstrip("/")
+    html_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", f"{path}.html")
+    
+    if os.path.isfile(html_file):
+        return FileResponse(html_file)
+    
+    # Fallback to index.html for SPA routes
+    index_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "index.html")
+    if os.path.isfile(index_file):
+        return FileResponse(index_file)
+    
+    return FileResponse(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "index.html"))
 
 
 if __name__ == "__main__":

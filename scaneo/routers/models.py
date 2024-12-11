@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 from src.usecases.models import create_model, retrieve_models, delete_model, retrieve_one_model, inference_model, retrieve_model_label_mappings
 
-router = APIRouter(prefix="/models", tags=["models"])
+router = APIRouter(prefix="/_models", tags=["models"])
 
 @router.get("")
 def _retrieve_models(campaign: Optional[str] = None):

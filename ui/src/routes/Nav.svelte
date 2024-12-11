@@ -20,10 +20,10 @@
     >
   </div>
   <div class="flex flex-row gap-3">
-    <a
+    <!-- <a
       href="/docs"
       class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Docs</a
-    >
+    > -->
     <a
       href="https://github.com/earthpulse/scaneo"
       target="_blank"

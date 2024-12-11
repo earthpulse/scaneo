@@ -37,12 +37,12 @@
         <Card name={campaign.name} description={campaign.description}>
           <div class="card-actions flex flex-row gap-2 mt-6 justify-between">
             <span class="flex flex-row gap-2">
-              <LabelBtn link={`/campaigns/${campaign.id}/label`} />
-              <ExportBnt link={`/campaigns/${campaign.id}/export`} />
+              <LabelBtn link={`/campaigns/label?id=${campaign.id}`} />
+              <ExportBnt link={`/campaigns/export?id=${campaign.id}`} />
             </span>
             <span class="flex flex-row gap-2">
               <DeleteBnt onclick={() => deleteCampaign(campaign.id)} />
-              <ManageBnt link={`/campaigns/${campaign.id}`} />
+              <ManageBnt link={`/campaigns/campaign?id=${campaign.id}`} />
             </span>
           </div>
         </Card>

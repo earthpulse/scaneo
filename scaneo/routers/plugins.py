@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 from src.usecases.plugins import retrieve_plugins, enable_plugin, disable_plugin
 
-router = APIRouter(prefix="/plugins", tags=["plugins"])
+router = APIRouter(prefix="/_plugins", tags=["plugins"])
 
 @router.get("")
 def _retrieve_plugins():

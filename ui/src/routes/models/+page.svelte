@@ -36,7 +36,7 @@
           <div class="card-actions flex flex-row gap-2 mt-6 justify-end">
             <span class="flex flex-row gap-2"> </span>
             <DeleteBtn onclick={() => deleteModel(model.id)} />
-            <ManageBnt link={`/models/${model.id}`} />
+            <ManageBnt link={`/models/model?id=${model.id}`} />
           </div>
         </Card>
       {/each}
