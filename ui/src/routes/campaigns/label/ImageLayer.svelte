@@ -39,9 +39,8 @@
   $effect(() => {
     const map = mapStore.map;
     if (map && images.current) {
-      images.zoom(JSON.parse(images.current.bbox), map);
+      images.zoom(images.current.bbox, map);
       let url = `${PUBLIC_API_URL}/images/${images.current.path}/{z}/{x}/{y}.png?stretch=${stretch}&bands=${bands}&palette=${palette}`;
-      console.log("eotdlDatasetId", campaigns.current);
       if (campaigns.current.eotdlDatasetId) {
         url += `&eotdlDatasetId=${campaigns.current.eotdlDatasetId}`;
       }

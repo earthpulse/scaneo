@@ -6,3 +6,4 @@ from .create_campaign_eotdl import create_campaign_eotdl
 from .create_imported_campaign import create_imported_campaign
 from .retrieve_campaign_label_mappings import retrieve_campaign_label_mappings
 from .update_label_mappings import update_label_mappings
+from .export_campaign import export_campaign

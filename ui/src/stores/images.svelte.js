@@ -26,6 +26,7 @@ function createImages() {
       const { data: _data, error: err } = await retrieveImages(campaign);
       if (err) error = err.message;
       data = _data;
+      console.log(_data);
       loading = false;
     },
     zoom: (image, map) => {

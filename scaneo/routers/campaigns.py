@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, WebSocket
 from pydantic import BaseModel
 
-from src.usecases.campaigns import create_campaign, create_campaign_eotdl, retrieve_campaigns, delete_campaign, retrieve_one_campaign, create_imported_campaign, retrieve_campaign_label_mappings, update_label_mappings
+from src.usecases.campaigns import export_campaign, create_campaign, create_campaign_eotdl, retrieve_campaigns, delete_campaign, retrieve_one_campaign, create_imported_campaign, retrieve_campaign_label_mappings, update_label_mappings
 
 router = APIRouter(prefix="/_campaigns", tags=["campaigns"])
 
@@ -152,6 +152,7 @@ async def websocket_create_campaign_eotdl(websocket: WebSocket):
             data["description"], 
             data["eotdlDatasetId"],
             data["labels"],
+            data["labelMappings"],
             progress_callback=progress_callback
         )
         
@@ -194,3 +195,44 @@ def _update_label_mappings(campaign_id: str, body: UpdateLabelMappingsBody):
     except Exception as e:
         print("error campaigns:update_label_mappings", e)
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+# @router.post("/{campaign_id}/export")
+# def _export_campaign(campaign_id: str):
+#     try:
+#         return export_campaign(campaign_id)
+#     except Exception as e:
+#         print("error campaigns:export_campaign", e)
+#         raise HTTPException(status_code=500, detail=str(e))
+
+@router.websocket("/{campaign_id}/export")
+async def websocket_export_campaign(websocket: WebSocket, campaign_id: str):
+    await websocket.accept()
+    try:
+        # Create campaign with progress callback
+        async def progress_callback(progress: float, message: str):
+            await websocket.send_json({
+                "progress": progress,
+                "message": message,
+                "status": "exporting"
+            })
+        
+        # Call create_campaign with the callback
+        await export_campaign(
+            campaign_id,
+            progress_callback=progress_callback
+        )
+        
+        # Send success response
+        await websocket.send_json({
+            "status": "complete",
+        })
+        
+    except Exception as e:
+        print("error campaigns:websocket_export_campaign", e)
+        await websocket.send_json({
+            "status": "error",
+            "error": str(e)
+        })
+    finally:
+        await websocket.close()

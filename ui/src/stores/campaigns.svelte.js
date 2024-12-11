@@ -2,8 +2,8 @@ import {
   retrieveCampaigns,
   retrieveOneCampaign,
 } from "$lib/campaigns/retrieve";
-// import createCampaign from "$lib/campaigns/create";
 import deleteCampaign from "$lib/campaigns/delete";
+import exportCampaign from "$lib/campaigns/export";
 
 import { PUBLIC_API_URL } from "$env/static/public";
 
@@ -16,6 +16,7 @@ function createCampaigns() {
   let message = $state("");
   let ws = $state(null);
   let creating = $state(false);
+  let exporting = $state(false);
   let completed = $state(false);
 
   const createWS = (payload, endpoint) => {
@@ -32,7 +33,6 @@ function createCampaigns() {
         creating = true;
       } else if (_data.status === "complete") {
         console.log("complete");
-        console.log(_data.data);
         data = [_data.data, ...data];
         progress = 1;
         message = "Campaign created";
@@ -54,6 +54,46 @@ function createCampaigns() {
       creating = true;
       completed = false;
       ws.send(JSON.stringify(payload));
+    };
+  };
+
+  const exportWS = (campaignId) => {
+    ws = new WebSocket(
+      `${PUBLIC_API_URL.replace(
+        "https://",
+        "ws://"
+      )}/_campaigns/${campaignId}/export`
+    );
+    ws.onmessage = (event) => {
+      const _data = JSON.parse(event.data);
+      if (_data.status === "exporting") {
+        // console.log("processing");
+        // console.log(data.progress);
+        progress = parseFloat(_data.progress);
+        message = _data.message;
+        exporting = true;
+      } else if (_data.status === "complete") {
+        console.log("complete");
+        progress = 1;
+        message = "Campaign exported";
+        exporting = false;
+        completed = true;
+      } else if (_data.status === "error") {
+        console.log("error");
+        console.log(_data.error);
+        progress = 1;
+        message = "Error exporting campaign";
+        exporting = false;
+        completed = false;
+        alert(_data.error);
+      }
+    };
+    ws.onopen = () => {
+      progress = 0;
+      message = "Exporting campaign...";
+      exporting = true;
+      completed = false;
+      ws.send(JSON.stringify({}));
     };
   };
 
@@ -79,6 +119,9 @@ function createCampaigns() {
     get creating() {
       return creating;
     },
+    get exporting() {
+      return exporting;
+    },
     get completed() {
       return completed;
     },
@@ -86,6 +129,7 @@ function createCampaigns() {
       progress = 0;
       message = "";
       creating = false;
+      exporting = false;
       completed = false;
     },
     retrieve: async () => {
@@ -119,6 +163,7 @@ function createCampaigns() {
         message = "Cancelled";
         progress = 0;
         creating = false;
+        exporting = false;
         completed = false;
       }
     },
@@ -131,6 +176,11 @@ function createCampaigns() {
       const { data: _data, error: err } = await retrieveOneCampaign(campaign);
       if (err) console.error(error);
       current = _data;
+    },
+    export: async (campaignId) => {
+      // const { error: err } = await exportCampaign(campaignId);
+      // if (err) throw new Error(err.message);
+      exportWS(campaignId);
     },
   };
 }

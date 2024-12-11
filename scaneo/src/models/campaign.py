@@ -10,6 +10,7 @@ class Campaign(BaseModel):
     updatedAt: datetime = Field(default_factory=datetime.now)
     image_count: int = 0
     annotation_count: int = 0
+    path: Optional[str] = None
     eotdlDatasetId: Optional[str] = None
     # storage
     # labels
@@ -33,7 +34,8 @@ class Campaign(BaseModel):
             updatedAt=datetime.fromisoformat(data[4]),
             image_count=data[5],
             annotation_count=data[6],
-            eotdlDatasetId=data[7]
+            path=data[7],
+            eotdlDatasetId=data[8]
         )
     
     model_config = {

@@ -10,16 +10,12 @@ def check_permissions(path):
 class DBRepo:
     def __init__(self):
         home_dir = os.path.expanduser("~")
-        cache_dir = os.path.join(home_dir, ".cache/scaneo/")
+        cache_dir = os.path.join(home_dir, os.getenv("SCANEO_CACHE_DIR", ".cache/scaneo/"))
         if not os.path.exists(cache_dir):
             os.makedirs(cache_dir)
         if not check_permissions(cache_dir):
             print("No write permissions to cache directory")
         self.db_path = cache_dir + 'scaneo.db'
-        # if os.path.exists(db_path):
-        #     print("Database already exists")
-        # else:
-        #     print("New database created")
         
 
     def get_cursor(self):
@@ -33,6 +29,3 @@ class DBRepo:
     def generate_id(self):
         return str(uuid.uuid4())
 
-    # def create(self, data):
-    # 	self.db.append(data)
-    # 	return data

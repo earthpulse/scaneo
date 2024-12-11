@@ -1,10 +1,10 @@
 from pydantic import BaseModel
-
+import json
 class Image(BaseModel):
     id: int
     path: str
     campaign_id: str
-    bbox: str
+    bbox: list
     # labels
 
     @classmethod
@@ -13,5 +13,5 @@ class Image(BaseModel):
             id=data[0],
             path=data[1],
             campaign_id=data[2],
-            bbox=data[3],
+            bbox=json.loads(data[3]),
         )

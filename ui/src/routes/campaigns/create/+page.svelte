@@ -41,18 +41,18 @@
     }
   };
 
-  const importCampaign = async () => {
-    if (name !== "" && description !== "") {
-      try {
-        campaigns.import(name, description, localPath);
-      } catch (error) {
-        alert(error);
-      }
-    }
-  };
+  // const importCampaign = async () => {
+  //   if (name !== "" && description !== "") {
+  //     try {
+  //       campaigns.import(name, description, localPath);
+  //     } catch (error) {
+  //       alert(error);
+  //     }
+  //   }
+  // };
+
   const cancel = () => {
     campaigns.cancel();
-    creating = false;
   };
 
   $effect(() => {
@@ -172,14 +172,14 @@
           ? 'hidden'
           : ''}"
       >
-        <button
+        <!-- <button
           class="btn btn-primary md:w-auto md:self-end"
           type="button"
           onclick={() => importCampaign()}
           disabled={campaigns.creating}
         >
           {campaigns.creating ? "Creating..." : "Import Campaign"}
-        </button>
+        </button> -->
 
         <button
           class="btn btn-primary md:w-auto md:self-end"

@@ -5,8 +5,6 @@
   import models from "$stores/models.svelte.js";
   import DeleteBtn from "$components/DeleteBtn.svelte";
 
-  $inspect($page.url.searchParams.get("id"));
-
   $effect(() => {
     models.retrieveOne($page.url.searchParams.get("id"));
   });
