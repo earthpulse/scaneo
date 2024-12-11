@@ -1,6 +1,7 @@
 <script>
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
+  import { browser } from "$app/environment";
 
   import campaigns from "$stores/campaigns.svelte.js";
   import models from "$stores/models.svelte.js";
@@ -14,12 +15,19 @@
   import ModelSelector from "../create/ModelSelector.svelte";
 
   let parsedLabelMappings = $state({});
+  let campaignId = $state("");
 
   $effect(() => {
-    campaigns.retrieveOne($page.url.searchParams.get("id"));
+    if (browser) {
+      campaignId = $page.url.searchParams.get("id");
+    }
+  });
+
+  $effect(() => {
+    campaigns.retrieveOne(campaignId);
     models.retrieve();
-    labels.retrieve($page.url.searchParams.get("id"));
-    labelMappings.retrieve($page.url.searchParams.get("id"));
+    labels.retrieve(campaignId);
+    labelMappings.retrieve(campaignId);
   });
 
   $effect(() => {
@@ -36,7 +44,7 @@
 
   const deleteCampaign = () => {
     if (confirm("Are you sure you want to delete this campaign?")) {
-      campaigns.delete($page.url.searchParams.get("id"));
+      campaigns.delete(campaignId);
       goto("/campaigns");
     }
   };
@@ -47,10 +55,7 @@
 
   const onclick = async () => {
     try {
-      await labelMappings.update(
-        $page.url.searchParams.get("id"),
-        parsedLabelMappings
-      );
+      await labelMappings.update(campaignId, parsedLabelMappings);
     } catch (err) {
       alert(err);
     }
@@ -66,12 +71,8 @@
       </h1>
 
       <div class="flex flex-row gap-3">
-        <LabelBtn
-          link={`/campaigns/${$page.url.searchParams.get("id")}/label`}
-        />
-        <ExportBtn
-          link={`/campaigns/${$page.url.searchParams.get("id")}/export`}
-        />
+        <LabelBtn link={`/campaigns/label?id=${campaignId}`} />
+        <ExportBtn link={`/campaigns/export?id=${campaignId}`} />
         <UpdateBtn onclick={updateCampaign} />
         <DeleteBtn onclick={deleteCampaign} />
       </div>
