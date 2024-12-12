@@ -4,16 +4,25 @@
   import { onDestroy } from "svelte";
 
   let disabled = $state(false);
+  let exportType = $state("eotdl");
+  let exportPath = $state("");
 
   $effect(() => {
     campaigns.retrieveOne($page.url.searchParams.get("id"));
   });
 
   const exportCampaign = (e) => {
+    if (exportType === "folder" && !exportPath) {
+      return;
+    }
     e.preventDefault();
     try {
       disabled = true;
-      campaigns.export($page.url.searchParams.get("id"));
+      campaigns.export(
+        $page.url.searchParams.get("id"),
+        exportType,
+        exportPath
+      );
     } catch (e) {
       alert(e.message);
     }
@@ -31,7 +40,46 @@
 
 <div class="w-full max-w-2xl p-6 mx-auto">
   <form class="flex flex-col gap-4" onsubmit={exportCampaign}>
-    <p>Your annotations will be exported at: {campaigns.current?.path}</p>
+    {#if campaigns.current?.path}
+      <p>Your annotations will be exported at: {campaigns.current?.path}</p>
+    {:else if campaigns.current?.eotdlDatasetId}
+      <p>This is an EOTDL dataset. Choose one export option:</p>
+      <div class="form-control">
+        <label class="cursor-pointer gap-2 flex flex-row items-center">
+          <input
+            type="radio"
+            name="export-type"
+            class="radio radio-xs"
+            value="eotdl"
+            bind:group={exportType}
+          />
+          <span class="label-text">Export to EOTDL</span>
+        </label>
+      </div>
+      <div class="form-control">
+        <label class="cursor-pointer gap-2 flex flex-row items-center">
+          <input
+            type="radio"
+            name="export-type"
+            class="radio radio-xs"
+            value="folder"
+            bind:group={exportType}
+          />
+          <span class="label-text">Export to local folder</span>
+        </label>
+        {#if exportType === "folder"}
+          <input
+            type="text"
+            class="input input-bordered w-full mt-2"
+            bind:value={exportPath}
+            placeholder="Enter export path"
+            required
+          />
+        {/if}
+      </div>
+    {:else}
+      <p>Something went wrong :(</p>
+    {/if}
     <p>Images: {campaigns.current?.image_count}</p>
     <p>Annotations: {campaigns.current?.annotation_count}</p>
     {#if campaigns.completed}

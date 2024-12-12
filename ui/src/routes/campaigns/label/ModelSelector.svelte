@@ -45,4 +45,5 @@
     onclick={inference}
     {disabled}><RobotOutline size="15" /></button
   >
+  <Divider />
 {/if}
