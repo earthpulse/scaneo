@@ -23,6 +23,7 @@ dependencies = [
 
 [project.scripts]
 scaneo = "scaneo.main:app"
+scaneo-proxy = "scaneo.proxy:app"
 
 [build-system]
 requires = ["hatchling"]
