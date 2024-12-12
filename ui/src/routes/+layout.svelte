@@ -8,8 +8,16 @@
 
   const { children } = $props();
 
+  const trimUrl = (url, exp) => url.split(exp)[0];
+
   $effect(() => {
     let url = PUBLIC_API_URL || $page.url.origin;
+
+    // hacky af
+    if (url.includes("/campaings")) url = trimUrl(url, "/campaings");
+    else if (url.includes("/models")) url = trimUrl(url, "/models");
+    else if (url.includes("/plugins")) url = trimUrl(url, "/plugins");
+
     baseUrl.url = url;
     console.log("baseUrl", baseUrl.url);
     plugins.retrieve();

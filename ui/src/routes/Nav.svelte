@@ -1,21 +1,26 @@
+<script>
+  import baseUrl from "$stores/baseUrl.svelte.js";
+  $inspect("baseUrl", baseUrl.url);
+</script>
+
 <nav class="flex flex-row justify-between bg-bg1 p-3">
   <a
-    href="/"
+    href={baseUrl.url}
     class="text-lg font-bold hover:bg-bg2 px-2 py-1 rounded transition duration-300"
     >SCANEO</a
   >
   <div class="flex flex-row gap-6">
     <a
-      href="/campaigns"
+      href="{baseUrl.url}/campaigns"
       class="hover:bg-bg2 px-2 py-1 rounded transition duration-300"
       >Campaigns</a
     >
     <a
-      href="/models"
+      href="{baseUrl.url}/models"
       class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Models</a
     >
     <a
-      href="/plugins"
+      href="{baseUrl.url}/plugins"
       class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Plugins</a
     >
   </div>
