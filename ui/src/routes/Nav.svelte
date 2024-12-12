@@ -6,7 +6,7 @@
 
 <nav class="flex flex-row justify-between bg-bg1 p-3">
   <a
-    href="/"
+    href={baseUrl.url}
     class="text-lg font-bold hover:bg-bg2 px-2 py-1 rounded transition duration-300"
     >SCANEO</a
   >
