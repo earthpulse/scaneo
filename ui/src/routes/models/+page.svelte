@@ -30,7 +30,7 @@
       <CreateCard
         title="Create Model"
         description="Create a model to automatically label data"
-        link="/models/create"
+        link={`${baseUrl.url}/models/create`}
       />
       {#each models.data as model}
         <Card name={model.name} description={model.description}>
