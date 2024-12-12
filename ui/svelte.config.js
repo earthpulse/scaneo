@@ -12,13 +12,10 @@ const config = {
       // these options are set automatically — see below
       pages: "build",
       assets: "build",
-      fallback: "index.html", // Fallback file for SPA-like behavior
+      fallback: null,
       precompress: false,
       strict: true,
     }),
-    prerender: {
-      entries: [], // Disable automatic prerendering of routes
-    },
     alias: {
       $stores: "./src/stores",
       $components: "./src/components",
