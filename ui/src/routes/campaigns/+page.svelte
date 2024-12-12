@@ -32,7 +32,7 @@
       <CreateCard
         title="Create Campaign"
         description="Start a new campaign and begin labelling data"
-        link="/campaigns/create"
+        link={`${baseUrl.url}/campaigns/create`}
       />
       {#each campaigns.data as campaign}
         <Card name={campaign.name} description={campaign.description}>
