@@ -1,4 +1,3 @@
-import { PUBLIC_API_URL } from "$env/static/public";
 import { fetcher } from "$lib/utils/fetcher";
 import baseUrl from "$stores/baseUrl.svelte.js";
 

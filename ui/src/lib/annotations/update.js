@@ -1,7 +1,6 @@
-import { PUBLIC_API_URL } from "$env/static/public";
 import { fetcher } from "$lib/utils/fetcher";
-
+import baseUrl from "$stores/baseUrl.svelte.js";
 export async function updateDetectionAnnotation(annotationId, bb) {
-  const url = `${PUBLIC_API_URL}/annotations/detection/${annotationId}`;
+  const url = `${baseUrl.url}/annotations/detection/${annotationId}`;
   return fetcher(url, "PUT", { bb });
 }

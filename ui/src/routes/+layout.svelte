@@ -18,6 +18,9 @@
     else if (url.includes("/models")) url = trimUrl(url, "/models");
     else if (url.includes("/plugins")) url = trimUrl(url, "/plugins");
 
+    // Remove trailing slash if present
+    url = url.replace(/\/+$/, "");
+
     baseUrl.url = url;
     console.log("baseUrl", baseUrl.url);
     plugins.retrieve();

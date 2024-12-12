@@ -1,8 +1,8 @@
-import { PUBLIC_API_URL } from "$env/static/public";
 import { fetcher } from "$lib/utils/fetcher";
+import baseUrl from "$stores/baseUrl.svelte.js";
 
 export default async (name, description, path) => {
-  const url = `${PUBLIC_API_URL}/_campaigns`;
+  const url = `${baseUrl.url}/_campaigns`;
   const body = { name, description, path };
   return fetcher(url, "POST", body);
 };

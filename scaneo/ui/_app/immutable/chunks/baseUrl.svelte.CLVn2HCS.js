@@ -1,1 +1,0 @@
-import{p as e}from"./proxy.B3-__M_J.js";import{b as s,g as a,e as l}from"./runtime.B40kIuYm.js";function o(){let r=l(null);return{set url(t){s(r,e(t))},get url(){return a(r)}}}const p=o();export{p as b};
