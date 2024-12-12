@@ -17,11 +17,9 @@
     if (!selected_model) return alert("Select model");
     disabled = true;
     try {
-      console.log(selected_model);
       // call model in backend, save and return annotation
       const data = await models.inference(selected_model, images.current.id);
       // add annotation to map and list (already in backend)
-      console.log(data);
       // add geojson to map
       mapStore.map.addLayer(L.geoJSON(data));
     } catch (error) {

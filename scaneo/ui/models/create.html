@@ -6,10 +6,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		
 		<link href="../_app/immutable/assets/0.D796s31O.css" rel="stylesheet">
-		<link rel="modulepreload" href="../_app/immutable/entry/start.gZOj1m3X.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/entry.BdyLa95u.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/start.mkZOx8kJ.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/entry.DU9Akn9k.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/runtime.B40kIuYm.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/app.CxOEHydX.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/app.Dc9p2kw1.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/preload-helper.C1FmrZbK.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/render.CM3wPBfR.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/events.DTvxUH_b.js">
@@ -18,16 +18,16 @@
 		<link rel="modulepreload" href="../_app/immutable/chunks/proxy.B3-__M_J.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/props.BJTpJmXG.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/index-client.JNdFE_pc.js">
-		<link rel="modulepreload" href="../_app/immutable/nodes/0.BuqpShK_.js">
+		<link rel="modulepreload" href="../_app/immutable/nodes/0.BhpFGKy8.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/snippet.BlUAN25S.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/stores.DR9BfmdQ.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/stores.CV_BPUgT.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/attributes.faLUl4vZ.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/lifecycle.BHVFZquU.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/fetcher.CDkwpESE.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/plugins.svelte.DxBglWfE.js">
-		<link rel="modulepreload" href="../_app/immutable/nodes/9.DJzct9MA.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/fetcher.CABHu9Eq.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/plugins.svelte.D9-d_f1D.js">
+		<link rel="modulepreload" href="../_app/immutable/nodes/9.p1-OxAMZ.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/input.CHcNizJA.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/models.svelte.CAIon5e8.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/models.svelte.5lccqy5G.js">
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents"><!--[--><!--[--><!----><div class="min-h-screen flex flex-col"><nav class="flex flex-row justify-between bg-bg1 p-3"><a href="" class="text-lg font-bold hover:bg-bg2 px-2 py-1 rounded transition duration-300">SCANEO</a> <div class="flex flex-row gap-6"><a href="/campaigns" class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Campaigns</a> <a href="/models" class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Models</a> <a href="/plugins" class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Plugins</a></div> <div class="flex flex-row gap-3"><a href="https://github.com/earthpulse/scaneo" target="_blank" class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Github</a></div></nav><!----> <main class="flex flex-col flex-1"><!----><div class="max-w-2xl mx-auto p-6 w-full"><h1 class="text-3xl font-bold mb-6">Create a new model</h1> <form class="flex flex-col gap-4"><div class="form-control"><label for="model-name" class="label font-medium mb-1">Model Name</label> <input id="model-name" required type="text" class="input input-bordered w-full" value="" placeholder="Enter model name"></div> <div class="form-control"><label for="model-description" class="label font-medium mb-1">Model Description</label> <input id="model-description" required type="text" class="input input-bordered w-full" value="" placeholder="Enter model description"></div> <div class="form-control"><label for="model-url" class="label font-medium mb-1">Model URL</label> <input id="model-url" required type="text" class="input input-bordered w-full" value="" placeholder="Enter model URL"></div> <div class="form-control"><label class="label font-medium mb-1">Task</label> <div class="flex gap-4"><label class="label cursor-pointer"><input type="radio" name="task" class="radio radio-primary" value="classification" disabled> <span class="ml-2">Classification</span></label> <label class="label cursor-pointer"><input type="radio" name="task" class="radio radio-primary" value="detection" disabled> <span class="ml-2">Detection</span></label> <label class="label cursor-pointer"><input type="radio" name="task" class="radio radio-primary" value="segmentation" checked> <span class="ml-2">Segmentation</span></label></div></div> <div class="form-control"><label class="preprocessing font-medium mb-1">Preprocessing options</label> <div class="flex flex-col gap-4"><label class="preprocessing cursor-pointer"><input type="checkbox" name="preprocessing" class="checkbox checkbox-primary" value="S2RGB"> <span class="ml-2">S2RGB</span> <p class="text-sm text-gray-600 ml-8">Converts Sentinel-2 bands 4,3,2 to RGB by scaling values between
@@ -40,7 +40,7 @@
 			
 			<script>
 				{
-					__sveltekit_1yydhgz = {
+					__sveltekit_jn8sz8 = {
 						base: new URL("..", location).pathname.slice(0, -1)
 					};
 
@@ -49,8 +49,8 @@
 					const data = [null,null];
 
 					Promise.all([
-						import("../_app/immutable/entry/start.gZOj1m3X.js"),
-						import("../_app/immutable/entry/app.CxOEHydX.js")
+						import("../_app/immutable/entry/start.mkZOx8kJ.js"),
+						import("../_app/immutable/entry/app.Dc9p2kw1.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 9],
