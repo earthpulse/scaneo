@@ -8,6 +8,7 @@
   import ErrorMsg from "$components/ErrorMsg.svelte";
   import Card from "$components/Card.svelte";
   import DeleteBnt from "$components/DeleteBtn.svelte";
+  import baseUrl from "$stores/baseUrl.svelte.js";
 
   $effect(() => {
     campaigns.retrieve();
@@ -37,12 +38,18 @@
         <Card name={campaign.name} description={campaign.description}>
           <div class="card-actions flex flex-row gap-2 mt-6 justify-between">
             <span class="flex flex-row gap-2">
-              <LabelBtn link={`/campaigns/label?id=${campaign.id}`} />
-              <ExportBnt link={`/campaigns/export?id=${campaign.id}`} />
+              <LabelBtn
+                link={`${baseUrl.url}/campaigns/label?id=${campaign.id}`}
+              />
+              <ExportBnt
+                link={`${baseUrl.url}/campaigns/export?id=${campaign.id}`}
+              />
             </span>
             <span class="flex flex-row gap-2">
               <DeleteBnt onclick={() => deleteCampaign(campaign.id)} />
-              <ManageBnt link={`/campaigns/campaign?id=${campaign.id}`} />
+              <ManageBnt
+                link={`${baseUrl.url}/campaigns/campaign?id=${campaign.id}`}
+              />
             </span>
           </div>
         </Card>

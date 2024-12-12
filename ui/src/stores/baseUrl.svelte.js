@@ -1,5 +1,5 @@
 function createBaseUrl() {
-  let url = $state(null);
+  let url = $state("");
 
   return {
     set url(value) {
