@@ -10,9 +10,7 @@
 
   $effect(() => {
     let url = PUBLIC_API_URL || $page.url.origin + $page.url.pathname;
-    if (!url.endsWith("/")) baseUrl.url = url + "/";
-    else baseUrl.url = url;
-    console.log("hola", url, baseUrl.url);
+    baseUrl.url = url;
     plugins.retrieve();
   });
 </script>
