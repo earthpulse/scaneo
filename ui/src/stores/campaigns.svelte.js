@@ -4,8 +4,7 @@ import {
 } from "$lib/campaigns/retrieve";
 import deleteCampaign from "$lib/campaigns/delete";
 import exportCampaign from "$lib/campaigns/export";
-
-import { PUBLIC_API_URL } from "$env/static/public";
+import baseUrl from "$stores/baseUrl.svelte.js";
 
 function createCampaigns() {
   let data = $state([]);
@@ -21,7 +20,7 @@ function createCampaigns() {
 
   const createWS = (payload, endpoint) => {
     ws = new WebSocket(
-      `${PUBLIC_API_URL.replace("https://", "ws://")}/_campaigns/${endpoint}`
+      `${baseUrl.url.replace("https://", "ws://")}/_campaigns/${endpoint}`
     );
     ws.onmessage = (event) => {
       const _data = JSON.parse(event.data);
@@ -59,7 +58,7 @@ function createCampaigns() {
 
   const exportWS = (campaignId) => {
     ws = new WebSocket(
-      `${PUBLIC_API_URL.replace(
+      `${baseUrl.url.replace(
         "https://",
         "ws://"
       )}/_campaigns/${campaignId}/export`

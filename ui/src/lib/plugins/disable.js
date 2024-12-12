@@ -1,7 +1,7 @@
-import { PUBLIC_API_URL } from "$env/static/public";
+import baseUrl from "$stores/baseUrl.svelte.js";
 import { fetcher } from "$lib/utils/fetcher";
 
 export default async (name) => {
-  const url = `${PUBLIC_API_URL}/_plugins/${name}`;
+  const url = `${baseUrl.url}/_plugins/${name}`;
   return fetcher(url, "DELETE");
 };

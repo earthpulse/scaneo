@@ -1,11 +1,11 @@
 <script>
-  import { PUBLIC_API_URL } from "$env/static/public";
   import { mapStore } from "$stores/map/map.svelte.js";
   import images from "$stores/images.svelte.js";
   import imageBBs from "$stores/map/imageBBs.svelte.js";
   import settings from "$stores/settings.svelte.js";
   import { onDestroy } from "svelte";
   import campaigns from "$stores/campaigns.svelte.js";
+  import baseUrl from "$stores/baseUrl.svelte.js";
 
   let {
     options,
@@ -40,7 +40,7 @@
     const map = mapStore.map;
     if (map && images.current) {
       images.zoom(images.current.bbox, map);
-      let url = `${PUBLIC_API_URL}/images/${images.current.path}/{z}/{x}/{y}.png?stretch=${stretch}&bands=${bands}&palette=${palette}`;
+      let url = `${baseUrl.url}/images/${images.current.path}/{z}/{x}/{y}.png?stretch=${stretch}&bands=${bands}&palette=${palette}`;
       if (campaigns.current.eotdlDatasetId) {
         url += `&eotdlDatasetId=${campaigns.current.eotdlDatasetId}`;
       }

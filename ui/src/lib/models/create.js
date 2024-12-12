@@ -1,5 +1,5 @@
-import { PUBLIC_API_URL } from "$env/static/public";
 import { fetcher } from "$lib/utils/fetcher";
+import baseUrl from "$stores/baseUrl.svelte.js";
 
 export default async (
   name,
@@ -9,7 +9,7 @@ export default async (
   preprocessing,
   postprocessing
 ) => {
-  const _url = `${PUBLIC_API_URL}/_models`;
+  const _url = `${baseUrl.url}/_models`;
   const body = { name, description, url, task, preprocessing, postprocessing };
   return fetcher(_url, "POST", body);
 };
