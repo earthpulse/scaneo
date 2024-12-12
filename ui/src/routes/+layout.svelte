@@ -9,8 +9,9 @@
   const { children } = $props();
 
   $effect(() => {
-    let url = PUBLIC_API_URL || $page.url.origin + $page.url.pathname;
+    let url = PUBLIC_API_URL || $page.url.origin;
     baseUrl.url = url;
+    console.log("baseUrl", baseUrl.url);
     plugins.retrieve();
   });
 </script>
