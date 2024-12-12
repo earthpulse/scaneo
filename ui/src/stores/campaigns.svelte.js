@@ -19,9 +19,10 @@ function createCampaigns() {
   let completed = $state(false);
 
   const createWS = (payload, endpoint) => {
-    ws = new WebSocket(
-      `${baseUrl.url.replace("https://", "ws://")}/_campaigns/${endpoint}`
-    );
+    // ws = new WebSocket(
+    //   `${baseUrl.url.replace("https://", "ws://")}/_campaigns/${endpoint}`
+    // );
+    ws = new WebSocket(`${baseUrl.url}/_campaigns/${endpoint}`);
     ws.onmessage = (event) => {
       const _data = JSON.parse(event.data);
       if (_data.status === "processing") {
@@ -57,12 +58,13 @@ function createCampaigns() {
   };
 
   const exportWS = (campaignId) => {
-    ws = new WebSocket(
-      `${baseUrl.url.replace(
-        "https://",
-        "ws://"
-      )}/_campaigns/${campaignId}/export`
-    );
+    // ws = new WebSocket(
+    //   `${baseUrl.url.replace(
+    //     "https://",
+    //     "ws://"
+    //   )}/_campaigns/${campaignId}/export`
+    // );
+    ws = new WebSocket(`${baseUrl.url}/_campaigns/${campaignId}/export`);
     ws.onmessage = (event) => {
       const _data = JSON.parse(event.data);
       if (_data.status === "exporting") {
