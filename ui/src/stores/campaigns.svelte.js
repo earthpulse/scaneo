@@ -57,7 +57,7 @@ function createCampaigns() {
     };
   };
 
-  const exportWS = (campaignId) => {
+  const exportWS = (campaignId, payload) => {
     // ws = new WebSocket(
     //   `${baseUrl.url.replace(
     //     "https://",
@@ -94,7 +94,7 @@ function createCampaigns() {
       message = "Exporting campaign...";
       exporting = true;
       completed = false;
-      ws.send(JSON.stringify({}));
+      ws.send(JSON.stringify(payload));
     };
   };
 
@@ -178,10 +178,10 @@ function createCampaigns() {
       if (err) console.error(error);
       current = _data;
     },
-    export: async (campaignId) => {
+    export: async (campaignId, exportType, exportPath) => {
       // const { error: err } = await exportCampaign(campaignId);
       // if (err) throw new Error(err.message);
-      exportWS(campaignId);
+      exportWS(campaignId, { exportType, exportPath });
     },
   };
 }

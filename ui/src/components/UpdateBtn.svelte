@@ -3,7 +3,7 @@
 </script>
 
 <button
-  class="btn btn-outline btn-sm tooltip flex items-center"
+  class="btn btn-outline btn-sm tooltip flex items-center p-2"
   {onclick}
   data-tip="Update"
 >

@@ -209,6 +209,9 @@ def _update_label_mappings(campaign_id: str, body: UpdateLabelMappingsBody):
 async def websocket_export_campaign(websocket: WebSocket, campaign_id: str):
     await websocket.accept()
     try:
+        # Receive the campaign data as JSON
+        data = await websocket.receive_json()
+
         # Create campaign with progress callback
         async def progress_callback(progress: float, message: str):
             await websocket.send_json({
@@ -220,6 +223,8 @@ async def websocket_export_campaign(websocket: WebSocket, campaign_id: str):
         # Call create_campaign with the callback
         await export_campaign(
             campaign_id,
+            data["exportType"],
+            data["exportPath"],
             progress_callback=progress_callback
         )
         

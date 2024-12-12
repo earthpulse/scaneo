@@ -3,7 +3,7 @@
 </script>
 
 <a
-  class="btn btn-primary btn-sm tooltip flex items-center"
+  class="btn btn-primary btn-sm tooltip flex items-center p-2"
   href={link}
   data-tip="Manage"
   aria-label="Manage"
