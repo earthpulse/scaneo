@@ -4,6 +4,7 @@
 
   import models from "$stores/models.svelte.js";
   import DeleteBtn from "$components/DeleteBtn.svelte";
+  import baseUrl from "$stores/baseUrl.svelte.js";
 
   $effect(() => {
     models.retrieveOne($page.url.searchParams.get("id"));
@@ -12,7 +13,7 @@
   const deleteModel = () => {
     if (confirm("Are you sure you want to delete this model?")) {
       models.delete($page.url.searchParams.get("id"));
-      goto("/models");
+      goto(`${baseUrl.url}/models`);
     }
   };
 </script>

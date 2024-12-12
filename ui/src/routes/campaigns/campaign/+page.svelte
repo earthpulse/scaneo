@@ -13,6 +13,7 @@
   import UpdateBtn from "$components/UpdateBtn.svelte";
   import Labels from "../label/Labels.svelte";
   import ModelSelector from "../create/ModelSelector.svelte";
+  import baseUrl from "$stores/baseUrl.svelte.js";
 
   let parsedLabelMappings = $state({});
   let campaignId = $state("");
@@ -45,7 +46,7 @@
   const deleteCampaign = () => {
     if (confirm("Are you sure you want to delete this campaign?")) {
       campaigns.delete(campaignId);
-      goto("/campaigns");
+      goto(`${baseUrl.url}/campaigns`);
     }
   };
 
@@ -71,8 +72,8 @@
       </h1>
 
       <div class="flex flex-row gap-3">
-        <LabelBtn link={`/campaigns/label?id=${campaignId}`} />
-        <ExportBtn link={`/campaigns/export?id=${campaignId}`} />
+        <LabelBtn link={`${baseUrl.url}/campaigns/label?id=${campaignId}`} />
+        <ExportBtn link={`${baseUrl.url}/campaigns/export?id=${campaignId}`} />
         <UpdateBtn onclick={updateCampaign} />
         <DeleteBtn onclick={deleteCampaign} />
       </div>

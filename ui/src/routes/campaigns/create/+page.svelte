@@ -5,6 +5,7 @@
   import EOTDLDatasetSelector from "./EOTDLDatasetSelector.svelte";
   import ModelSelector from "./ModelSelector.svelte";
   import LabelGenerator from "./LabelGenerator.svelte";
+  import baseUrl from "$stores/baseUrl.svelte.js";
 
   let name = $state("");
   let description = $state("");
@@ -148,7 +149,7 @@
         <p>Campaign created successfully !</p>
 
         <a
-          href={`/campaigns/label?id=${campaigns.data[0]?.id}`}
+          href={`${baseUrl.url}/campaigns/label?id=${campaigns.data[0]?.id}`}
           class="btn btn-primary">Label</a
         >
       </div>

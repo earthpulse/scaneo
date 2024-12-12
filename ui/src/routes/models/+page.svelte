@@ -6,6 +6,7 @@
   import Card from "$components/Card.svelte";
   import ManageBnt from "$components/ManageBnt.svelte";
   import DeleteBtn from "$components/DeleteBtn.svelte";
+  import baseUrl from "$stores/baseUrl.svelte.js";
 
   $effect(() => {
     models.retrieve();
@@ -36,7 +37,7 @@
           <div class="card-actions flex flex-row gap-2 mt-6 justify-end">
             <span class="flex flex-row gap-2"> </span>
             <DeleteBtn onclick={() => deleteModel(model.id)} />
-            <ManageBnt link={`/models/model?id=${model.id}`} />
+            <ManageBnt link={`${baseUrl.url}/models/model?id=${model.id}`} />
           </div>
         </Card>
       {/each}

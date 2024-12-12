@@ -1,6 +1,7 @@
 <script>
   import models from "$stores/models.svelte.js";
   import { goto } from "$app/navigation";
+  import baseUrl from "$stores/baseUrl.svelte.js";
 
   let name = $state("");
   let description = $state("");
@@ -25,7 +26,7 @@
             .filter(([k, v]) => v)
             .map(([k]) => k)
         );
-        goto(`/models/model?id=${data.id}`);
+        goto(`${baseUrl.url}/models/model?id=${data.id}`);
       } catch (error) {
         alert(error);
       }
