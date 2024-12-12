@@ -40,7 +40,7 @@
     const map = mapStore.map;
     if (map && images.current) {
       images.zoom(images.current.bbox, map);
-      let url = `${baseUrl.url}/images/${images.current.path}/{z}/{x}/{y}.png?stretch=${stretch}&bands=${bands}&palette=${palette}`;
+      let url = `${baseUrl.api_url}/images/${images.current.path}/{z}/{x}/{y}.png?stretch=${stretch}&bands=${bands}&palette=${palette}`;
       if (campaigns.current.eotdlDatasetId) {
         url += `&eotdlDatasetId=${campaigns.current.eotdlDatasetId}`;
       }

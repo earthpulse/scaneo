@@ -9,20 +9,18 @@
   const { children } = $props();
 
   const trimUrl = (url, exp) => url.split(exp)[0];
-
+  // required to work with multi-path proxies (eotdl eox workspace)
   $effect(() => {
     let url = PUBLIC_API_URL || $page.url.origin + $page.url.pathname;
-
-    // hacky af
+    // hacky af (add here all the first level routes)
     if (url.includes("/campaigns")) url = trimUrl(url, "/campaigns");
     else if (url.includes("/models")) url = trimUrl(url, "/models");
     else if (url.includes("/plugins")) url = trimUrl(url, "/plugins");
-
     // Remove trailing slash if present
     url = url.replace(/\/+$/, "");
-
     baseUrl.url = url;
-    console.log("baseUrl", baseUrl.url);
+    baseUrl.api_url = url;
+    if (import.meta.env.MODE == "development") baseUrl.url = $page.url.origin;
     plugins.retrieve();
   });
 </script>

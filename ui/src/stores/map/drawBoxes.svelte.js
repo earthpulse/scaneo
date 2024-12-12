@@ -26,13 +26,11 @@ function createDrawBoxes() {
     layer.options.color = labels.data.filter(
       (label) => data.value == label.name
     )[0].color;
-    console.log("data", data);
     layer.annotationId = data.id;
     drawnItems.addLayer(layer);
   };
 
   const editCallback = (e) => {
-    console.log("editCallback");
     e.layers.eachLayer((layer) => {
       const bounds = layer.getBounds();
       annotations.updateDetection(layer.annotationId, [

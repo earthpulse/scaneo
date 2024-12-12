@@ -9,7 +9,7 @@ export default async (
   preprocessing,
   postprocessing
 ) => {
-  const _url = `${baseUrl.url}/_models`;
+  const _url = `${baseUrl.api_url}/_models`;
   const body = { name, description, url, task, preprocessing, postprocessing };
   return fetcher(_url, "POST", body);
 };
