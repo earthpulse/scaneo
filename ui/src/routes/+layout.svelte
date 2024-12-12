@@ -2,10 +2,17 @@
   import "$styles/app.css";
   import Nav from "./Nav.svelte";
   import plugins from "$stores/plugins.svelte.js";
+  import { PUBLIC_API_URL } from "$env/static/public";
+  import { page } from "$app/stores";
+  import baseUrl from "$stores/baseUrl.svelte.js";
 
   const { children } = $props();
 
   $effect(() => {
+    let url = PUBLIC_API_URL || $page.url.origin + $page.url.pathname;
+    if (!url.endsWith("/")) baseUrl.url = url + "/";
+    else baseUrl.url = url;
+    console.log("hola", url, baseUrl.url);
     plugins.retrieve();
   });
 </script>
