@@ -11,10 +11,10 @@
   const trimUrl = (url, exp) => url.split(exp)[0];
 
   $effect(() => {
-    let url = PUBLIC_API_URL || $page.url.origin;
+    let url = PUBLIC_API_URL || $page.url.origin + $page.url.pathname;
 
     // hacky af
-    if (url.includes("/campaings")) url = trimUrl(url, "/campaings");
+    if (url.includes("/campaigns")) url = trimUrl(url, "/campaigns");
     else if (url.includes("/models")) url = trimUrl(url, "/models");
     else if (url.includes("/plugins")) url = trimUrl(url, "/plugins");
 
