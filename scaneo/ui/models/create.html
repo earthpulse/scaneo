@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="../favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<link href="../_app/immutable/assets/0.B4n1NuZR.css" rel="stylesheet">
+		<link rel="modulepreload" href="../_app/immutable/entry/start.S90cumo2.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/entry.CmmDslp3.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/runtime.cJOh_ioU.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/app.6yvDwQ8P.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/preload-helper.C1FmrZbK.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/render.Gnl0czpM.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/events.BOQTMbzA.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/disclose-version.DymP2m3X.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/if.Bhj5v8Zz.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/proxy.D4aqs5o-.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/props.B7tyearX.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/index-client.BS7WnwP4.js">
+		<link rel="modulepreload" href="../_app/immutable/nodes/0.Gs6nppGq.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/snippet.CdFhtc_7.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/stores.BRHuMDzc.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/attributes.CayNqfGD.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/lifecycle.DM9IC38U.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/fetcher.C3wkiN9W.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/plugins.svelte.D3to2jZ2.js">
+		<link rel="modulepreload" href="../_app/immutable/nodes/9.BjoTQPmd.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/input.CvnAJZ7U.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/models.svelte.BY3bXU-h.js">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents"><!--[--><!--[--><!----><div class="min-h-screen flex flex-col"><nav class="flex flex-row justify-between bg-bg1 p-3"><a href="" class="text-lg font-bold hover:bg-bg2 px-2 py-1 rounded transition duration-300">SCANEO</a> <div class="flex flex-row gap-6"><a href="/campaigns" class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Campaigns</a> <a href="/models" class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Models</a> <a href="/plugins" class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Plugins</a></div> <div class="flex flex-row gap-3"><a href="https://github.com/earthpulse/scaneo" target="_blank" class="hover:bg-bg2 px-2 py-1 rounded transition duration-300">Github</a></div></nav><!----> <main class="flex flex-col flex-1"><!----><div class="max-w-2xl mx-auto p-6 w-full"><h1 class="text-3xl font-bold mb-6">Create a new model</h1> <form class="flex flex-col gap-4"><div class="form-control"><label for="model-name" class="label font-medium mb-1">Model Name</label> <input id="model-name" required type="text" class="input input-bordered w-full" value="" placeholder="Enter model name"></div> <div class="form-control"><label for="model-description" class="label font-medium mb-1">Model Description</label> <input id="model-description" required type="text" class="input input-bordered w-full" value="" placeholder="Enter model description"></div> <div class="form-control"><label for="model-url" class="label font-medium mb-1">Model URL</label> <input id="model-url" required type="text" class="input input-bordered w-full" value="" placeholder="Enter model URL"></div> <div class="form-control"><label class="label font-medium mb-1">Task</label> <div class="flex gap-4"><label class="label cursor-pointer"><input type="radio" name="task" class="radio radio-primary" value="classification" disabled> <span class="ml-2">Classification</span></label> <label class="label cursor-pointer"><input type="radio" name="task" class="radio radio-primary" value="detection" disabled> <span class="ml-2">Detection</span></label> <label class="label cursor-pointer"><input type="radio" name="task" class="radio radio-primary" value="segmentation" checked> <span class="ml-2">Segmentation</span></label></div></div> <div class="form-control"><label class="preprocessing font-medium mb-1">Preprocessing options</label> <div class="flex flex-col gap-4"><label class="preprocessing cursor-pointer"><input type="checkbox" name="preprocessing" class="checkbox checkbox-primary" value="S2RGB"> <span class="ml-2">S2RGB</span> <p class="text-sm text-gray-600 ml-8">Converts Sentinel-2 bands 4,3,2 to RGB by scaling values between
+            0-3000 to 0-255</p></label></div></div> <div class="form-control"><label class="postprocessing font-medium mb-1">Postprocessing options</label> <div class="flex flex-col gap-4"><label class="postprocessing cursor-pointer"><input type="checkbox" name="postprocessing" class="checkbox checkbox-primary" value="Sigmoid"> <span class="ml-2">Sigmoid</span> <p class="text-sm text-gray-600 ml-8">Applies sigmoid function to model output and thresholds at 0.5 to
+            create binary mask</p></label></div></div> <p>When you perform inference, the backend will perform a POST request to the
+      model URL with the image as a multipart/form-data request, using the name
+      "image" for the form data field. You can use the preprocessing and
+      postprocessing options to preprocess and postprocess the image before and
+      after inference (limited to simple, common operations).</p> <button class="btn btn-primary mt-4 w-full md:w-auto md:self-end" type="submit">Create Model</button></form></div><!----><!----></main></div><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_1itkx5j = {
+						base: new URL("..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("../_app/immutable/entry/start.S90cumo2.js"),
+						import("../_app/immutable/entry/app.6yvDwQ8P.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 9],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
