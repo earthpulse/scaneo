@@ -59,6 +59,10 @@
   $effect(() => {
     campaigns.reset();
   });
+
+  onDestroy(() => {
+    campaigns.reset();
+  });
 </script>
 
 <div class="w-full max-w-2xl p-6 mx-auto">

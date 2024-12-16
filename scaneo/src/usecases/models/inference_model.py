@@ -77,7 +77,7 @@ def inference_model(model_id: str, image: str):
 			# y = src.read(1)  # Read the first band
 			# read all bands
 			y = src.read()
-		print("y", y.shape)
+		print("y", y.shape, y.min(), y.max())
 		# output indexes
 		output_indexes = [l.output_index for l in label_mappings]
 		if max(output_indexes) > y.shape[0]:
@@ -85,34 +85,34 @@ def inference_model(model_id: str, image: str):
 		# apply postprocessing steps
 		for step in model.postprocessing:
 			y = parse_processing_step(step)(y)
-		for ix, band in enumerate(y):
-			# get label from label mapping
-			label_id = [l for l in label_mappings if l.output_index == ix]
-			if len(label_id) == 0:
-				continue # no label mapping for this band
-			label_id = label_id[0]
+		for lm in label_mappings:
+			_y = np.zeros_like(y)
+			_y[y == lm.output_index] = y[y == lm.output_index]
 			label_repo = LabelsDBRepo()
-			label = label_repo.retrieve_label(label_id)
+			label = label_repo.retrieve_label(lm.labelId)
 			label = Label.from_tuple(label)
 			# Convert binary mask to vector features
 			shapes = features.shapes(
-				band.astype(np.uint8),
+				_y.astype(np.uint8),
 				transform=transform
 			)
 			# Convert shapes to GeoJSON features
-			# TODO: make compatible with segmentation annotation format
-			# {'type': 'Feature', 'properties': {}, 'geometry': {'type': 'MultiPolygon', 'coordinates': [[[[2.805799538073053, 42.35803640805155], ..., [2.805799538073053, 42.35803640805155]]]]}}
+			# TODO: make compatible with segmentation annotation format (MultiPolygon)
 			geojson = {
 				"type": "FeatureCollection",
 				"features": [
 					{
 						"type": "Feature",
 						"geometry": geometry,
-						"properties": {"value": value}
+						"properties": {
+							"label": label.name,
+							"task": "segmentation"
+						}
 					}
 					for geometry, value in shapes
 				]
 			}
+			print("geojson", geojson)
 			# Add CRS information if available
 			if crs:
 				geojson["crs"] = {
@@ -120,7 +120,9 @@ def inference_model(model_id: str, image: str):
 					"properties": {"name": crs.to_string()}
 				}
 			# save annotation 
-			# create_segmentation_annotation(image.id, geojson, label.name) # se guardan los names en annotations o los ids?
-		return annotations
+			ann = create_segmentation_annotation(image.id, geojson, label.name) # se guardan los names en annotations o los ids?
+			annotations.append(ann)
 	else:
 		raise ValueError(f"Not implemented for task {model.task}")
+	return annotations
+	
