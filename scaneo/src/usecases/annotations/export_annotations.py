@@ -65,6 +65,7 @@ async def export_annotations(campaign_id, export_type, export_path, progress_cal
 						}
 					)
 			
+			print(export_type, export_path)
 			if export_type == "eotdl":
 				raise Exception("Export type not implemented")
 			else:
