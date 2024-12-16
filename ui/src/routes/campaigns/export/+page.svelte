@@ -2,13 +2,16 @@
   import { page } from "$app/stores";
   import campaigns from "$stores/campaigns.svelte.js";
   import { onDestroy } from "svelte";
+  import { browser } from "$app/environment";
 
   let disabled = $derived(campaigns.exporting);
   let exportType = $state("eotdl");
   let exportPath = $state("");
 
   $effect(() => {
-    campaigns.retrieveOne($page.url.searchParams.get("id"));
+    if (browser) {
+      campaigns.retrieveOne($page.url.searchParams.get("id"));
+    }
   });
 
   const exportCampaign = (e) => {

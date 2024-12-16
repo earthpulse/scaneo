@@ -21,6 +21,16 @@ const config = {
       $components: "./src/components",
       $styles: "./src/styles",
     },
+    // prerender: {
+    //   handleHttpError: ({ path, referrer, message }) => {
+    //     // Ignore URL parameter errors during prerendering
+    //     if (message.includes("Cannot access url.searchParams")) {
+    //       return;
+    //     }
+    //     // Throw other errors
+    //     throw new Error(message);
+    //   },
+    // },
   },
   preprocess: vitePreprocess(),
 };
