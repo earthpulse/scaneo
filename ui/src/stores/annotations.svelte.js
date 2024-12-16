@@ -89,6 +89,9 @@ function createAnnotations() {
       error = null;
       current = null;
     },
+    append: (annotations) => {
+      data = [...annotations, ...data];
+    },
   };
 }
 

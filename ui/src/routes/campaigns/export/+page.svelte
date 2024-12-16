@@ -3,7 +3,7 @@
   import campaigns from "$stores/campaigns.svelte.js";
   import { onDestroy } from "svelte";
 
-  let disabled = $state(false);
+  let disabled = $derived(campaigns.exporting);
   let exportType = $state("eotdl");
   let exportPath = $state("");
 
@@ -17,7 +17,6 @@
     }
     e.preventDefault();
     try {
-      disabled = true;
       campaigns.export(
         $page.url.searchParams.get("id"),
         exportType,
@@ -30,7 +29,6 @@
 
   const cancel = () => {
     campaigns.cancel();
-    disabled = false;
   };
 
   onDestroy(() => {

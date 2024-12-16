@@ -1,10 +1,10 @@
 import json
-import time 
+import os
 
 from ..images.retrieve_images import retrieve_images
 from .retrieve_annotations import retrieve_annotations
 
-async def export_annotations(campaign_id, progress_callback=None):
+async def export_annotations(campaign_id, export_type, export_path, progress_callback=None):
 	images = retrieve_images(campaign_id)
 	for i, image in enumerate(images):
 		if progress_callback is not None:
@@ -64,7 +64,14 @@ async def export_annotations(campaign_id, progress_callback=None):
 							}
 						}
 					)
-			dst_path = '.'.join(image.path.split('.')[:-1]) + '.geojson'
-			with open(dst_path, "w") as f:
-				json.dump(feature_collection, f)
+			
+			if export_type == "eotdl":
+				raise Exception("Export type not implemented")
+			else:
+				dst_path = '.'.join(image.path.split('.')[:-1]) + '.geojson'
+				if export_type == "folder":
+					dst_path = os.path.join(export_path, dst_path)
+				os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+				with open(dst_path, "w") as f:
+					json.dump(feature_collection, f)
 	return
