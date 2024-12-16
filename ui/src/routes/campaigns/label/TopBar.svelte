@@ -5,6 +5,14 @@
   import ExportBtn from "$components/ExportBtn.svelte";
   import baseUrl from "$stores/baseUrl.svelte.js";
   import { page } from "$app/stores";
+  import { browser } from "$app/environment";
+
+  let campaignId = $state("");
+  $effect(() => {
+    if (browser) {
+      campaignId = $page.url.searchParams.get("id");
+    }
+  });
 </script>
 
 <nav
@@ -13,9 +21,7 @@
   <span class="flex flex-row gap-2">
     <TaskSelector />
     <ModelSelector />
-    <ExportBtn
-      link={`${baseUrl.url}/campaigns/export?id=${$page.url.searchParams.get("id")}`}
-    />
+    <ExportBtn link={`${baseUrl.url}/campaigns/export?id=${campaignId}`} />
   </span>
   <span class="flex flex-row gap-2">
     <Settings />
