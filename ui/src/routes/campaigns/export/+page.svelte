@@ -5,7 +5,7 @@
   import { browser } from "$app/environment";
 
   let disabled = $derived(campaigns.exporting);
-  let exportType = $state("eotdl");
+  let exportType = $state("");
   let exportPath = $state("");
 
   $effect(() => {
