@@ -3,12 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-# from src.storage import Storage
-# from src.image import get_images_info
-# from src.cache import create_database, persist_dict_in_db
-
-# from routers import images, labels, geojson
-
+from routers import campaigns, images, models, plugins, labels, annotations, geojson
 
 app = FastAPI(docs_url=None)
 
@@ -20,18 +15,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(images.router)
-# app.include_router(labels.router)
-# app.include_router(geojson.router)
-
-
-# # TODO: option to update db (if dataset changes)
-# if not os.environ.get("EOTDL"):
-#     storage = Storage()
-#     if create_database(storage.name, True):
-#         persist_dict_in_db(storage.name, get_images_info(True), True)
-# else:
-#     print("Using EOTDL dataset, select a dataset in the UI first.")
+app.include_router(campaigns.router)
+app.include_router(images.router)
+app.include_router(models.router)
+app.include_router(plugins.router)
+app.include_router(labels.router)
+app.include_router(annotations.router)
+app.include_router(geojson.router)
 
 # this needs to be last in order to not override other routes
 # ui is in same directory as this file
