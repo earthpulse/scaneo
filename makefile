@@ -19,4 +19,7 @@ publish:
 	uv publish --username "__token__" --password "$(token)"
 
 dev:
-	python scaneo/main.py -r -d data
+	uv run scaneo/main.py -r
+
+ai-api:
+	uv run uvicorn models.main:app --port 8001 --reload --env-file models/.env
