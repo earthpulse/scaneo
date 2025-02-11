@@ -57,7 +57,6 @@ async def inference(
 			# image = sigmoid(outputs) > 0.5  # this should be defined in the model metadata
 			if outputs.ndim > 3:  # get first band
 				outputs = outputs[0]
-			print("hola", outputs.shape, model_wrapper.original_size)
 			outputs = resize(outputs, model_wrapper.original_size, preserve_range=True)
 			# outputs = outputs.astype(np.uint8)
 			img = Image.fromarray(outputs[0], mode="F")  # only returns binary mask
