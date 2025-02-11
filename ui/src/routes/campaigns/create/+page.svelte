@@ -7,6 +7,7 @@
   import LabelGenerator from "./LabelGenerator.svelte";
   import baseUrl from "$stores/baseUrl.svelte.js";
   import { onDestroy } from "svelte";
+
   let name = $state("");
   let description = $state("");
   let localPath = $state("");
