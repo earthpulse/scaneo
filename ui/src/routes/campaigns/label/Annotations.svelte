@@ -2,8 +2,9 @@
   import annotations from "$stores/annotations.svelte.js";
   import drawBoxes from "$stores/map/drawBoxes.svelte.js";
   import drawBrush from "$stores/map/drawBrush.svelte.js";
+  import drawPoints from "$stores/map/drawPoints.svelte.js";
   import DeleteOutline from "svelte-material-icons/DeleteOutline.svelte";
-
+  
   const deleteAnnotation = (id) => {
     if (
       confirm(
@@ -11,6 +12,7 @@
       )
     ) {
       annotations.delete(id);
+      drawPoints.deletePointsAnnotation(id);
       drawBoxes.removeLayer(id);
       drawBrush.removeLayer(id);
     }

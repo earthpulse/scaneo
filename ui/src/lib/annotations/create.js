@@ -15,3 +15,8 @@ export async function createSegmentationAnnotation(layer_data, label, imageId) {
   const url = `${baseUrl.api_url}/annotations/segmentation`;
   return fetcher(url, "POST", { layer_data, label, imageId });
 }
+
+export async function createPointsAnnotation(points, label, imageId) {
+  const url = `${baseUrl.api_url}/annotations/points`;
+  return fetcher(url, "POST", { points, label, imageId });
+}
