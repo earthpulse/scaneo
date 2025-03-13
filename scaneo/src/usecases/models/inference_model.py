@@ -9,7 +9,73 @@ import os
 from ...repos import ModelsDBRepo, ImagesDBRepo, CampaignsDBRepo, EOTDLRepo, LabelMappingsDBRepo, LabelsDBRepo
 from ...models import Image, Model, Campaign, LabelMapping, Label
 from . import processing
-from ..annotations import create_segmentation_annotation
+from ..annotations import create_segmentation_annotation, retrieve_annotations
+
+import numpy as np
+import os
+import rasterio
+from ultralytics import SAM
+import rasterio
+from rasterio import features
+from pyproj import Transformer
+import numpy as np
+
+def process_image_to_geojson(image_path, points, label, checkpoint_path="sam2_s.pt"):
+	with rasterio.open(image_path) as src:
+		red = src.read(4)
+		green = src.read(3)
+		blue = src.read(2)
+		rgb = np.stack([red, green, blue], axis=-1)
+		transform = src.transform
+		crs = src.crs
+
+		transformer_geo_to_crs = Transformer.from_crs("EPSG:4326", crs, always_xy=True)
+		inv_transform = ~transform
+
+		points_pixel = []
+		for point in points:
+			lat, lon = point
+			x_proj, y_proj = transformer_geo_to_crs.transform(lon, lat)
+			col, row = inv_transform * (x_proj, y_proj)
+			points_pixel.append([col, row])
+	
+	model = SAM(checkpoint_path)
+	results = model(rgb, points=points_pixel)
+	
+	combined_mask = np.zeros_like(results[0].masks[0].data.cpu().numpy().squeeze(), dtype=np.uint8)
+	for mask in results[0].masks:
+		mask_data = mask.data.cpu().numpy().squeeze().astype(np.uint8)
+		combined_mask = np.logical_or(combined_mask, mask_data).astype(np.uint8)
+	
+	shapes = features.shapes(combined_mask, transform=transform)
+	
+	polygons = []
+	for shape, value in shapes:
+		if value != 0:
+			coords = shape["coordinates"]
+			geo_coords = []
+			for ring in coords:
+				geo_ring = []
+				for point in ring:
+					x, y = point
+					lon, lat = transformer_geo_to_crs.transform(x, y, direction='INVERSE')
+					geo_ring.append([lon, lat])
+				geo_coords.append(geo_ring)
+			polygons.append(geo_coords)
+	
+	geojson = {
+		"type": "Feature",
+		"geometry": {
+			"type": "MultiPolygon",
+			"coordinates": polygons
+		},
+		"properties": {
+			"label": label,
+			"task": "segmentation"
+		}
+	}
+	
+	return geojson
 
 def sigmoid(x):
 	return 1 / (1 + np.exp(-x))
@@ -23,7 +89,7 @@ def parse_processing_step(step):
         return getattr(processing, name)()
     raise ValueError(f"Invalid processing step: {step}")
 
-def inference_model(model_id: str, image: str):
+def inference_model(model_id: str, image: str, points: list = None):
 	# retrieve model
 	models_repo = ModelsDBRepo()
 	model = models_repo.retrieve_model(model_id)
@@ -122,6 +188,21 @@ def inference_model(model_id: str, image: str):
 			# save annotation 
 			ann = create_segmentation_annotation(image.id, geojson, label.name) # se guardan los names en annotations o los ids?
 			annotations.append(ann)
+	elif model.task == "SAM":
+		for annotation in retrieve_annotations(image.id):
+			if annotation.type == "points":
+				points = annotation.points
+		if points != None:
+			for lm in label_mappings:
+				label_repo = LabelsDBRepo()
+				label = label_repo.retrieve_label(lm.labelId)
+				label = Label.from_tuple(label)
+				geojson = process_image_to_geojson(image_path, points, label.name)
+				ann = create_segmentation_annotation(image.id, geojson, label.name) # se guardan los names en annotations o los ids?
+				annotations.append(ann)
+		else:
+			raise ValueError("You need to set points")
+		return annotations
 	else:
 		raise ValueError(f"Not implemented for task {model.task}")
 	return annotations

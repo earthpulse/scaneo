@@ -34,51 +34,51 @@
   };
 </script>
 
-<div class="max-w-2xl mx-auto p-6 w-full">
-  <h1 class="text-3xl font-bold mb-6">Create a new model</h1>
+<div class="w-full max-w-2xl p-6 mx-auto">
+  <h1 class="mb-6 text-3xl font-bold">Create a new model</h1>
   <form class="flex flex-col gap-4" onsubmit={createModel}>
     <div class="form-control">
-      <label for="model-name" class="label font-medium mb-1">Model Name</label>
+      <label for="model-name" class="mb-1 font-medium label">Model Name</label>
       <input
         id="model-name"
         required
         type="text"
-        class="input input-bordered w-full"
+        class="w-full input input-bordered"
         bind:value={name}
         placeholder="Enter model name"
       />
     </div>
 
     <div class="form-control">
-      <label for="model-description" class="label font-medium mb-1"
+      <label for="model-description" class="mb-1 font-medium label"
         >Model Description</label
       >
       <input
         id="model-description"
         required
         type="text"
-        class="input input-bordered w-full"
+        class="w-full input input-bordered"
         bind:value={description}
         placeholder="Enter model description"
       />
     </div>
 
     <div class="form-control">
-      <label for="model-url" class="label font-medium mb-1">Model URL</label>
+      <label for="model-url" class="mb-1 font-medium label">Model URL</label>
       <input
         id="model-url"
         required
         type="text"
-        class="input input-bordered w-full"
+        class="w-full input input-bordered"
         bind:value={url}
         placeholder="Enter model URL"
       />
     </div>
 
     <div class="form-control">
-      <label class="label font-medium mb-1">Task</label>
+      <label class="mb-1 font-medium label">Task</label>
       <div class="flex gap-4">
-        <label class="label cursor-pointer">
+        <label class="cursor-pointer label">
           <input
             type="radio"
             name="task"
@@ -89,7 +89,7 @@
           />
           <span class="ml-2">Classification</span>
         </label>
-        <label class="label cursor-pointer">
+        <label class="cursor-pointer label">
           <input
             type="radio"
             name="task"
@@ -100,7 +100,7 @@
           />
           <span class="ml-2">Detection</span>
         </label>
-        <label class="label cursor-pointer">
+        <label class="cursor-pointer label">
           <input
             type="radio"
             name="task"
@@ -110,14 +110,24 @@
           />
           <span class="ml-2">Segmentation</span>
         </label>
+        <label class="cursor-pointer label">
+          <input
+            type="radio"
+            name="task"
+            class="radio radio-primary"
+            value="SAM"
+            bind:group={task}
+          />
+          <span class="ml-2">SAM</span>
+        </label>
       </div>
     </div>
 
     <div class="form-control">
-      <label class="preprocessing font-medium mb-1">Preprocessing options</label
+      <label class="mb-1 font-medium preprocessing">Preprocessing options</label
       >
       <div class="flex flex-col gap-4">
-        <label class="preprocessing cursor-pointer">
+        <label class="cursor-pointer preprocessing">
           <input
             type="checkbox"
             name="preprocessing"
@@ -126,7 +136,7 @@
             bind:checked={preprocessing.S2RGB}
           />
           <span class="ml-2">S2RGB</span>
-          <p class="text-sm text-gray-600 ml-8">
+          <p class="ml-8 text-sm text-gray-600">
             Converts Sentinel-2 bands 4,3,2 to RGB by scaling values between
             0-3000 to 0-255
           </p>
@@ -135,11 +145,11 @@
     </div>
 
     <div class="form-control">
-      <label class="postprocessing font-medium mb-1"
+      <label class="mb-1 font-medium postprocessing"
         >Postprocessing options</label
       >
       <div class="flex flex-col gap-4">
-        <label class="postprocessing cursor-pointer">
+        <label class="cursor-pointer postprocessing">
           <input
             type="checkbox"
             name="postprocessing"
@@ -148,7 +158,7 @@
             bind:checked={postprocessing.Sigmoid}
           />
           <span class="ml-2">Sigmoid</span>
-          <p class="text-sm text-gray-600 ml-8">
+          <p class="ml-8 text-sm text-gray-600">
             Applies sigmoid function to model output and thresholds at 0.5 to
             create binary mask
           </p>
@@ -165,7 +175,7 @@
     </p>
 
     <button
-      class="btn btn-primary mt-4 w-full md:w-auto md:self-end"
+      class="w-full mt-4 btn btn-primary md:w-auto md:self-end"
       type="submit"
     >
       Create Model
