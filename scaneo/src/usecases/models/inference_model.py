@@ -4,78 +4,24 @@ import PIL
 import requests
 from io import BytesIO
 from rasterio import features
-import os
-
 from ...repos import ModelsDBRepo, ImagesDBRepo, CampaignsDBRepo, EOTDLRepo, LabelMappingsDBRepo, LabelsDBRepo
 from ...models import Image, Model, Campaign, LabelMapping, Label
 from . import processing
 from ..annotations import create_segmentation_annotation, retrieve_annotations
-
-import numpy as np
 import os
-import rasterio
-from ultralytics import SAM
-import rasterio
 from rasterio import features
 from pyproj import Transformer
 import numpy as np
+from pydantic import BaseModel
+from typing import List, Any
+import json
+class SAMBody(BaseModel):
+    image: Any
+    points: Any
+    label: Any
+    crs: Any
+    transform: Any
 
-def process_image_to_geojson(image_path, points, label, checkpoint_path="sam2_s.pt"):
-	with rasterio.open(image_path) as src:
-		red = src.read(4)
-		green = src.read(3)
-		blue = src.read(2)
-		rgb = np.stack([red, green, blue], axis=-1)
-		transform = src.transform
-		crs = src.crs
-
-		transformer_geo_to_crs = Transformer.from_crs("EPSG:4326", crs, always_xy=True)
-		inv_transform = ~transform
-
-		points_pixel = []
-		for point in points:
-			lat, lon = point
-			x_proj, y_proj = transformer_geo_to_crs.transform(lon, lat)
-			col, row = inv_transform * (x_proj, y_proj)
-			points_pixel.append([col, row])
-	
-	model = SAM(checkpoint_path)
-	results = model(rgb, points=points_pixel)
-	
-	combined_mask = np.zeros_like(results[0].masks[0].data.cpu().numpy().squeeze(), dtype=np.uint8)
-	for mask in results[0].masks:
-		mask_data = mask.data.cpu().numpy().squeeze().astype(np.uint8)
-		combined_mask = np.logical_or(combined_mask, mask_data).astype(np.uint8)
-	
-	shapes = features.shapes(combined_mask, transform=transform)
-	
-	polygons = []
-	for shape, value in shapes:
-		if value != 0:
-			coords = shape["coordinates"]
-			geo_coords = []
-			for ring in coords:
-				geo_ring = []
-				for point in ring:
-					x, y = point
-					lon, lat = transformer_geo_to_crs.transform(x, y, direction='INVERSE')
-					geo_ring.append([lon, lat])
-				geo_coords.append(geo_ring)
-			polygons.append(geo_coords)
-	
-	geojson = {
-		"type": "Feature",
-		"geometry": {
-			"type": "MultiPolygon",
-			"coordinates": polygons
-		},
-		"properties": {
-			"label": label,
-			"task": "segmentation"
-		}
-	}
-	
-	return geojson
 
 def sigmoid(x):
 	return 1 / (1 + np.exp(-x))
@@ -90,6 +36,7 @@ def parse_processing_step(step):
     raise ValueError(f"Invalid processing step: {step}")
 
 def inference_model(model_id: str, image: str, points: list = None):
+	print("aa")
 	# retrieve model
 	models_repo = ModelsDBRepo()
 	model = models_repo.retrieve_model(model_id)
@@ -130,14 +77,16 @@ def inference_model(model_id: str, image: str, points: list = None):
 		for i in range(x.shape[0]):
 			dst.write(x[i], i+1)
 	img_buffer.seek(0)
+	print("aa")
 	# send request with memory buffer
-	res = requests.post(model.url, files={'image': (img_buffer)})
 	# res = requests.post(model.url, files={'image': ('image.tif', img_buffer, 'image/tiff')})
-	if res.status_code != 200:
-		raise Exception(f"Error in inference: {res.status_code} {res.text}")
 	# generate annotations
 	annotations = []
 	if model.task == "segmentation":
+		res = requests.post(model.url, files={'image': (img_buffer)})
+		print("aa")
+		if res.status_code != 200:
+			raise Exception(f"Error in inference: {res.status_code} {res.text}")
 		# decode the image from the response content
 		with rio.open(BytesIO(res.content)) as src:
 			# y = src.read(1)  # Read the first band
@@ -189,16 +138,82 @@ def inference_model(model_id: str, image: str, points: list = None):
 			ann = create_segmentation_annotation(image.id, geojson, label.name) # se guardan los names en annotations o los ids?
 			annotations.append(ann)
 	elif model.task == "SAM":
+		print("aa")
 		for annotation in retrieve_annotations(image.id):
 			if annotation.type == "points":
 				points = annotation.points
 		if points != None:
 			for lm in label_mappings:
+				print("aa")
+				with rasterio.open(image_path) as src:
+					red = src.read(4)
+					green = src.read(3)
+					blue = src.read(2)
+					rgb = np.stack([red, green, blue], axis=-1)
+					transform = src.transform
+					crs = src.crs
+
+					transformer_geo_to_crs = Transformer.from_crs("EPSG:4326", crs, always_xy=True)
+					inv_transform = ~transform
+
+					points_pixel = []
+					for point in points:
+						lat, lon = point
+						x_proj, y_proj = transformer_geo_to_crs.transform(lon, lat)
+						col, row = inv_transform * (x_proj, y_proj)
+						points_pixel.append([col, row])
 				label_repo = LabelsDBRepo()
 				label = label_repo.retrieve_label(lm.labelId)
 				label = Label.from_tuple(label)
-				geojson = process_image_to_geojson(image_path, points, label.name)
-				ann = create_segmentation_annotation(image.id, geojson, label.name) # se guardan los names en annotations o los ids?
+				from PIL import Image as PILImage
+				from rasterio.transform import Affine
+
+    # Read RGB bands and convert to uint8
+				with rasterio.open(image_path) as src:
+					# Read bands and squeeze singleton dimensions
+					red = src.read(4).squeeze().astype(np.uint16)  # Keep original precision
+					green = src.read(3).squeeze().astype(np.uint16)
+					blue = src.read(2).squeeze().astype(np.uint16)
+
+					# Normalize to 0-255 range if needed (for 16-bit data)
+					if red.max() > 255:
+						red = (red / 257).astype(np.uint8)
+						green = (green / 257).astype(np.uint8)
+						blue = (blue / 257).astype(np.uint8)
+					else:
+						red = red.astype(np.uint8)
+						green = green.astype(np.uint8)
+						blue = blue.astype(np.uint8)
+
+					# Stack bands and ensure shape is (height, width, 3)
+					rgb = np.stack([red, green, blue], axis=-1)
+
+				# Convert to PIL Image
+				rgb_pil = PILImage.fromarray(rgb, mode='RGB')
+				
+				# Save to PNG buffer
+				png_buffer = BytesIO()
+				rgb_pil.save(png_buffer, format='PNG')
+				png_buffer.seek(0)
+
+
+				# Prepare data and files for the request
+				data = {
+					"points": json.dumps(points_pixel),
+					"label": label.name,
+					"crs": str(crs),
+					"transform": json.dumps(transform.to_gdal()),  # Convert Affine to GDAL tuple
+				}
+				files = {'image': ('image.png', png_buffer, 'image/png')}
+
+				# Send POST request
+				response = requests.post(model.url, files=files, data=data)
+
+				if response.status_code != 200:
+					raise Exception(f"Error in SAM inference: {response.text}")
+
+				geojson = response.json()
+				ann = create_segmentation_annotation(image.id, geojson, label.name)
 				annotations.append(ann)
 		else:
 			raise ValueError("You need to set points")
