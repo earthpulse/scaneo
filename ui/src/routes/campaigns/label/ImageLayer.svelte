@@ -9,7 +9,7 @@
 
   let {
     options,
-    stretch = [0, 3000],
+    stretch = [0, 4000],
     bands = [4, 3, 2],
     palette = "viridis",
   } = $props();
