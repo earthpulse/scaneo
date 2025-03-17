@@ -77,7 +77,6 @@ def inference_model(model_id: str, image: str):
 			# y = src.read(1)  # Read the first band
 			# read all bands
 			y = src.read()
-		print("y", y.shape, y.min(), y.max())
 		# output indexes
 		output_indexes = [l.output_index for l in label_mappings]
 		if max(output_indexes) > y.shape[0]:
