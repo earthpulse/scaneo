@@ -99,24 +99,23 @@ def inference_model(model_id: str, image: str):
 			# Convert shapes to GeoJSON features
 			# TODO: make compatible with segmentation annotation format (MultiPolygon)
 			geojson = {
-				"type": "FeatureCollection",
-				"features": [
-					{
-						"type": "Feature",
-						"geometry": geometry,
-						"properties": {
-							"label": label.name,
-							"task": "segmentation"
-						}
-					}
-					for geometry, value in shapes
-				]
+				"type": "Feature",
+				"geometry": {
+					"type": "MultiPolygon",
+					"coordinates": [
+						shape["coordinates"] for shape, value  in shapes if value ==  lm.output_index
+					]
+				},  # Extraer la geometría de cada Feature
+				"properties": {
+					"label": label.name,
+					"task": "segmentation"
+				}
+						# Iterar sobre cada Feature en el FeatureCollection
 			}
-			print("geojson", geojson)
-			# Add CRS information if available
+
 			if crs:
 				geojson["crs"] = {
-					"type": "name",
+					"type": "name",  # Tipo correcto
 					"properties": {"name": crs.to_string()}
 				}
 			# save annotation 
