@@ -41,7 +41,11 @@
 </script>
 
 {#if models.data?.length > 0}
-  <select class="select select-sm" onchange={() => models.retrieveOne(selected_model)} bind:value={selected_model}>
+  <select
+    class="select select-sm"
+    onchange={() => models.retrieveOne(selected_model)}
+    bind:value={selected_model}
+  >
     <option value={null} disabled>Select a model</option>
     {#each models.data as model}
       <option value={model.id}>{model.name}</option>
