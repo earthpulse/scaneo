@@ -5,11 +5,11 @@
   import { onDestroy } from "svelte";
   import labels from "$stores/labels.svelte.js";
   import annotations from "$stores/annotations.svelte.js";
-  import drawBoxes from "$stores/map/drawBoxes.svelte.js";
   import { mapStore } from "$stores/map/map.svelte.js";
   import images from "$stores/images.svelte.js";
+  import drawBoxes from "$stores/map/drawBoxes.svelte.js";
   import drawBrush from "$stores/map/drawBrush.svelte.js";
-
+  import drawPoints from "$stores/map/drawPoints.svelte";
   let selected = $state("labels");
 
   $effect(async () => {
@@ -17,9 +17,11 @@
       const data = await annotations.retrieve(images.current.id);
       drawBoxes.initItems(mapStore.map);
       drawBrush.initItems(mapStore.map);
+      drawPoints.initItems(mapStore.map);
       data?.forEach((annotation) => {
         if (annotation.type === "detection") drawBoxes.addLayer(annotation);
         if (annotation.type === "segmentation") drawBrush.addLayer(annotation);
+        if (annotation.type === "points") drawPoints.addLayer(annotation);
       });
     }
   });
@@ -28,6 +30,7 @@
     labels.reset();
     drawBoxes.remove(mapStore.map);
     drawBrush.remove(mapStore.map);
+    drawPoints.remove(mapStore.map);
     annotations.reset();
   });
 </script>

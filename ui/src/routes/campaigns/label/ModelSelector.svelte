@@ -41,15 +41,14 @@
 </script>
 
 {#if models.data?.length > 0}
-  <Divider />
-  <select class="select select-sm" bind:value={selected_model}>
+  <select class="select select-sm" onchange={() => models.retrieveOne(selected_model)} bind:value={selected_model}>
     <option value={null} disabled>Select a model</option>
     {#each models.data as model}
       <option value={model.id}>{model.name}</option>
     {/each}
   </select>
   <button
-    class="btn btn-sm tooltip flex items-center p-2 btn-outline"
+    class="flex items-center p-2 btn btn-sm tooltip btn-outline"
     data-tip="Run model inference"
     onclick={inference}
     {disabled}><RobotOutline size="15" /></button

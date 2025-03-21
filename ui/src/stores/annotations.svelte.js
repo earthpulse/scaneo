@@ -3,9 +3,10 @@ import {
   createClassificationAnnotation,
   createDetectionAnnotation,
   createSegmentationAnnotation,
+  createPointsAnnotation,
 } from "$lib/annotations/create";
 import deleteAnnotation from "$lib/annotations/delete";
-import { updateDetectionAnnotation } from "$lib/annotations/update";
+import { updateDetectionAnnotation, updatePointsAnnotation } from "$lib/annotations/update";
 
 function createAnnotations() {
   let data = $state([]);
@@ -77,6 +78,26 @@ function createAnnotations() {
       if (err) throw new Error(err.message);
       data = [_data, ...data];
       return _data;
+    },
+    createPoints: async (points, label, imageId) => {
+      const { data: _data, error: err } = await createPointsAnnotation(
+        points,
+        label,
+        imageId
+      );
+      if (err) throw new Error(err.message);
+      data = [_data, ...data];
+      return _data;
+    },
+    updatePoints: async (id, points) => {
+      const { data: _data, error: err } = await updatePointsAnnotation(
+        id,
+        points
+      );
+      if (err) throw new Error(err.message);
+      data = data.map((annotation) =>
+        annotation.id === id ? { ...annotation, points } : annotation
+      );
     },
     delete: async (id) => {
       const { error: err } = await deleteAnnotation(id);

@@ -57,6 +57,9 @@ function createModels() {
       if (err) console.error(error);
       current = _data;
     },
+    setCurrent: async (model) => {
+      current = model;
+    },
     inference: async (model, image_id) => {
       const { data: _data, error: err } = await inference(model, image_id);
       if (err) throw new Error(err);

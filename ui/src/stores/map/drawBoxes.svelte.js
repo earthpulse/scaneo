@@ -128,7 +128,7 @@ function createDrawBoxes() {
       drawnItems.addLayer(layer);
     },
     removeLayer: (id) => {
-      drawnItems.eachLayer((layer) => {
+      drawnItems?.eachLayer((layer) => {
         if (layer.annotationId === id) drawnItems.removeLayer(layer);
       });
     },
