@@ -18,23 +18,16 @@ function createDrawBoxes() {
     };
   
     const deleteCallback = async (e) => {
-      // e.layers contains all layers being deleted
       let updatedAnnotations = {};
     
       e.layers.eachLayer(layer => {
-        // Get coordinates from the layer
         const layerLatLng = [layer.getLatLng().lat, layer.getLatLng().lng];
-        
-        // Find the point in the points array by comparing coordinates
         const index = points.findIndex(point => 
           point[0] === layerLatLng[0] && point[1] === layerLatLng[1]
         );
         
         if (index > -1) {
-          // Remove the point from points array
           points.splice(index, 1);
-          
-          // Track which annotations need updates
           if (layer.annotationId) {
             updatedAnnotations[layer.annotationId] = true;
           }
@@ -60,7 +53,6 @@ function createDrawBoxes() {
 
     if (!LabelHasPoints()){
       points.push([layer.getLatLng().lat, layer.getLatLng().lng])
-
       const data = await annotations.createPoints(
         points,
         labels.current,

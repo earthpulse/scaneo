@@ -9,6 +9,7 @@ from ...models import Image, Model, Campaign, LabelMapping, Label
 from . import processing
 from ..annotations import create_segmentation_annotation, retrieve_annotations
 import os
+import rasterio
 from rasterio import features
 from pyproj import Transformer
 import numpy as np
@@ -36,7 +37,6 @@ def parse_processing_step(step):
     raise ValueError(f"Invalid processing step: {step}")
 
 def inference_model(model_id: str, image: str, points: list = None):
-	print("aa")
 	# retrieve model
 	models_repo = ModelsDBRepo()
 	model = models_repo.retrieve_model(model_id)
@@ -77,14 +77,12 @@ def inference_model(model_id: str, image: str, points: list = None):
 		for i in range(x.shape[0]):
 			dst.write(x[i], i+1)
 	img_buffer.seek(0)
-	print("aa")
 	# send request with memory buffer
 	# res = requests.post(model.url, files={'image': ('image.tif', img_buffer, 'image/tiff')})
 	# generate annotations
 	annotations = []
 	if model.task == "segmentation":
 		res = requests.post(model.url, files={'image': (img_buffer)})
-		print("aa")
 		if res.status_code != 200:
 			raise Exception(f"Error in inference: {res.status_code} {res.text}")
 		# decode the image from the response content
@@ -138,13 +136,11 @@ def inference_model(model_id: str, image: str, points: list = None):
 			ann = create_segmentation_annotation(image.id, geojson, label.name) # se guardan los names en annotations o los ids?
 			annotations.append(ann)
 	elif model.task == "SAM":
-		print("aa")
 		for annotation in retrieve_annotations(image.id):
 			if annotation.type == "points":
 				points = annotation.points
 		if points != None:
 			for lm in label_mappings:
-				print("aa")
 				with rasterio.open(image_path) as src:
 					red = src.read(4)
 					green = src.read(3)
@@ -167,15 +163,10 @@ def inference_model(model_id: str, image: str, points: list = None):
 				label = Label.from_tuple(label)
 				from PIL import Image as PILImage
 				from rasterio.transform import Affine
-
-    # Read RGB bands and convert to uint8
 				with rasterio.open(image_path) as src:
-					# Read bands and squeeze singleton dimensions
 					red = src.read(4).squeeze().astype(np.uint16)  # Keep original precision
 					green = src.read(3).squeeze().astype(np.uint16)
 					blue = src.read(2).squeeze().astype(np.uint16)
-
-					# Normalize to 0-255 range if needed (for 16-bit data)
 					if red.max() > 255:
 						red = (red / 257).astype(np.uint8)
 						green = (green / 257).astype(np.uint8)
@@ -185,19 +176,11 @@ def inference_model(model_id: str, image: str, points: list = None):
 						green = green.astype(np.uint8)
 						blue = blue.astype(np.uint8)
 
-					# Stack bands and ensure shape is (height, width, 3)
 					rgb = np.stack([red, green, blue], axis=-1)
-
-				# Convert to PIL Image
 				rgb_pil = PILImage.fromarray(rgb, mode='RGB')
-				
-				# Save to PNG buffer
 				png_buffer = BytesIO()
 				rgb_pil.save(png_buffer, format='PNG')
 				png_buffer.seek(0)
-
-
-				# Prepare data and files for the request
 				data = {
 					"points": json.dumps(points_pixel),
 					"label": label.name,
@@ -205,13 +188,9 @@ def inference_model(model_id: str, image: str, points: list = None):
 					"transform": json.dumps(transform.to_gdal()),  # Convert Affine to GDAL tuple
 				}
 				files = {'image': ('image.png', png_buffer, 'image/png')}
-
-				# Send POST request
 				response = requests.post(model.url, files=files, data=data)
-
 				if response.status_code != 200:
 					raise Exception(f"Error in SAM inference: {response.text}")
-
 				geojson = response.json()
 				ann = create_segmentation_annotation(image.id, geojson, label.name)
 				annotations.append(ann)

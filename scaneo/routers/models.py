@@ -48,11 +48,12 @@ def _delete_model(model_id: str):
 
 class InferenceBody(BaseModel):
     image: int
+    points: Optional[list[list[float, float], ...]] = None
 
 @router.post("/inference/{model_id}")
 def _inference_model(model_id: str, body: InferenceBody):
     try:
-        return inference_model(model_id, body.image)
+        return inference_model(model_id, body.image, body.points)
     except Exception as e:
         print("error models:inference_model", e)
         raise HTTPException(status_code=500, detail=str(e))
