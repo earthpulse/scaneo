@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
 from src.usecases.models import create_model, retrieve_models, delete_model, retrieve_one_model, inference_model, retrieve_model_label_mappings
+import traceback
 
 router = APIRouter(prefix="/_models", tags=["models"])
 
@@ -54,6 +55,7 @@ def _inference_model(model_id: str, body: InferenceBody):
     try:
         return inference_model(model_id, body.image)
     except Exception as e:
+        traceback.print_exc()
         print("error models:inference_model", e)
         raise HTTPException(status_code=500, detail=str(e))
     

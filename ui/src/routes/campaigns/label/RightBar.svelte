@@ -1,6 +1,7 @@
 <script>
   import Labels from "./Labels.svelte";
   import Annotations from "./Annotations.svelte";
+  import ImageSettings from "./ImageSettings.svelte";
   import FileExplorer from "./FileExplorer.svelte";
   import { onDestroy } from "svelte";
   import labels from "$stores/labels.svelte.js";
@@ -54,12 +55,21 @@
           : ''}"
         onclick={() => (selected = "annotations")}>Annotations</button
       >
+      <button
+        class="pb-1 {selected === 'settings'
+          ? 'border-b-2 border-primary'
+          : ''}"
+        onclick={() => (selected = "settings")}>Settings</button
+      >
     </span>
     {#if selected === "labels"}
       <Labels />
     {/if}
     {#if selected === "annotations"}
       <Annotations />
+    {/if}
+    {#if selected === "settings"}
+      <ImageSettings />
     {/if}
   </div>
 </div>

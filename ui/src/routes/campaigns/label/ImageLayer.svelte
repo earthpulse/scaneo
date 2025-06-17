@@ -1,18 +1,13 @@
 <script>
   import { mapStore } from "$stores/map/map.svelte.js";
   import images from "$stores/images.svelte.js";
+  import campaigns from "$stores/campaigns.svelte.js";
   import imageBBs from "$stores/map/imageBBs.svelte.js";
   import settings from "$stores/settings.svelte.js";
   import { onDestroy } from "svelte";
-  import campaigns from "$stores/campaigns.svelte.js";
   import baseUrl from "$stores/baseUrl.svelte.js";
 
-  let {
-    options,
-    stretch = [0, 4000],
-    bands = [4, 3, 2],
-    palette = "viridis",
-  } = $props();
+  let { options, palette = "viridis" } = $props();
 
   let layer = $state(null);
   let initialized = $state(false);
@@ -36,11 +31,13 @@
     }
   });
 
+  $inspect(campaigns.current);
+
   $effect(() => {
     const map = mapStore.map;
     if (map && images.current) {
       images.zoom(images.current.bbox, map);
-      let url = `${baseUrl.api_url}/images/${images.current.path}/{z}/{x}/{y}.png?stretch=${stretch}&bands=${bands}&palette=${palette}`;
+      let url = `${baseUrl.api_url}/images/${campaigns.current.path}/${images.current.path}/{z}/{x}/{y}.png?stretch=${settings.stretch}&bands=${settings.rgb}&palette=${palette}`;
       if (campaigns.current.eotdlDatasetId) {
         url += `&eotdlDatasetId=${campaigns.current.eotdlDatasetId}`;
       }

@@ -7,7 +7,7 @@ from rasterio import features
 from ...repos import ModelsDBRepo, ImagesDBRepo, CampaignsDBRepo, EOTDLRepo, LabelMappingsDBRepo, LabelsDBRepo
 from ...models import Image, Model, Campaign, LabelMapping, Label
 from . import processing
-from ..annotations import create_segmentation_annotation, retrieve_annotations
+from ..annotations import create_segmentation_annotation, retrieve_annotations, create_classification_annotation
 import os
 from rasterio import features
 from pyproj import Transformer
@@ -15,6 +15,7 @@ import numpy as np
 from pydantic import BaseModel
 from typing import List, Any
 import json
+
 class SAMBody(BaseModel):
     image: Any
     points: Any
@@ -27,16 +28,15 @@ def sigmoid(x):
 	return 1 / (1 + np.exp(-x))
 
 def parse_processing_step(step):
-    if isinstance(step, str):
-        name = step.split("(")[0]
-        # params = step.split("(")[1].split(")")[0].split(", ")
-        # kwargs = {param.split("=")[0]: param.split("=")[1] for param in params}
-        # return getattr(processing, name)(**kwargs)
-        return getattr(processing, name)()
-    raise ValueError(f"Invalid processing step: {step}")
+	if isinstance(step, str):
+		name = step.split("(")[0]
+		# params = step.split("(")[1].split(")")[0].split(", ")
+		# kwargs = {param.split("=")[0]: param.split("=")[1] for param in params}
+		# return getattr(processing, name)(**kwargs)
+		return getattr(processing, name)()
+	raise ValueError(f"Invalid processing step: {step}")
 
 def inference_model(model_id: str, image: str, points: list = None):
-	print("aa")
 	# retrieve model
 	models_repo = ModelsDBRepo()
 	model = models_repo.retrieve_model(model_id)
@@ -58,7 +58,7 @@ def inference_model(model_id: str, image: str, points: list = None):
 		eotdl_repo = EOTDLRepo()
 		image_path = eotdl_repo.get_url(campaign.eotdlDatasetId, image.path)
 	else:
-		image_path = image.path
+		image_path = campaign.path + '/' + image.path
 	# read image 
 	ds = rio.open(image_path)
 	transform = ds.transform
@@ -77,19 +77,16 @@ def inference_model(model_id: str, image: str, points: list = None):
 		for i in range(x.shape[0]):
 			dst.write(x[i], i+1)
 	img_buffer.seek(0)
-	print("aa")
 	# send request with memory buffer
 	# res = requests.post(model.url, files={'image': ('image.tif', img_buffer, 'image/tiff')})
 	# generate annotations
 	annotations = []
 	if model.task == "segmentation":
 		res = requests.post(model.url, files={'image': (img_buffer)})
-		print("aa")
 		if res.status_code != 200:
 			raise Exception(f"Error in inference: {res.status_code} {res.text}")
 		# decode the image from the response content
 		with rio.open(BytesIO(res.content)) as src:
-			# y = src.read(1)  # Read the first band
 			# read all bands
 			y = src.read()
 		# output indexes
@@ -135,25 +132,42 @@ def inference_model(model_id: str, image: str, points: list = None):
 			# save annotation 
 			ann = create_segmentation_annotation(image.id, geojson, label.name) # se guardan los names en annotations o los ids?
 			annotations.append(ann)
+	elif model.task == "classification":
+		res = requests.post(model.url, files={'image': (img_buffer)})
+		if res.status_code != 200:
+			raise Exception(f"Error in inference: {res.status_code} {res.text}")
+		# get model outputs
+		probas = res.json()
+		# output indexes
+		output_indexes = [l.output_index for l in label_mappings]
+		if max(output_indexes) > len(probas):
+			raise ValueError(f"Found output index in label mapping that is larger than the number of bands!")
+		# apply postprocessing steps
+		for step in model.postprocessing:
+			y = parse_processing_step(step)(y)
+		# get largest probability
+		label_id = np.argmax(probas)
+		label = [l for l in label_mappings if l.output_index == label_id][0]
+		label_repo = LabelsDBRepo()
+		label = label_repo.retrieve_label(label.labelId)
+		label = Label.from_tuple(label)
+		ann = create_classification_annotation(image.id, label.name) # se guardan los names en annotations o los ids?
+		annotations.append(ann)
 	elif model.task == "SAM":
-		print("aa")
 		for annotation in retrieve_annotations(image.id):
 			if annotation.type == "points":
 				points = annotation.points
 		if points != None:
 			for lm in label_mappings:
-				print("aa")
-				with rasterio.open(image_path) as src:
+				with rio.open(image_path) as src:
 					red = src.read(4)
 					green = src.read(3)
 					blue = src.read(2)
 					rgb = np.stack([red, green, blue], axis=-1)
 					transform = src.transform
 					crs = src.crs
-
 					transformer_geo_to_crs = Transformer.from_crs("EPSG:4326", crs, always_xy=True)
 					inv_transform = ~transform
-
 					points_pixel = []
 					for point in points:
 						lat, lon = point
@@ -165,9 +179,8 @@ def inference_model(model_id: str, image: str, points: list = None):
 				label = Label.from_tuple(label)
 				from PIL import Image as PILImage
 				from rasterio.transform import Affine
-
-    # Read RGB bands and convert to uint8
-				with rasterio.open(image_path) as src:
+    			# Read RGB bands and convert to uint8
+				with rio.open(image_path) as src:
 					# Read bands and squeeze singleton dimensions
 					red = src.read(4).squeeze().astype(np.uint16)  # Keep original precision
 					green = src.read(3).squeeze().astype(np.uint16)

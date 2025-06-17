@@ -3,8 +3,10 @@ import os
 
 from ..images.retrieve_images import retrieve_images
 from .retrieve_annotations import retrieve_annotations
+from ..campaigns.retrieve_one_campaign import retrieve_one_campaign
 
 async def export_annotations(campaign_id, export_type, export_path, progress_callback=None):
+	campaign = retrieve_one_campaign(campaign_id)	
 	images = retrieve_images(campaign_id)
 	for i, image in enumerate(images):
 		if progress_callback is not None:
@@ -65,11 +67,10 @@ async def export_annotations(campaign_id, export_type, export_path, progress_cal
 						}
 					)
 			
-			print(export_type, export_path)
 			if export_type == "eotdl":
 				raise Exception("Export type not implemented")
 			else:
-				dst_path = '.'.join(image.path.split('.')[:-1]) + '.geojson'
+				dst_path = campaign.path + '/' + '.'.join(image.path.split('.')[:-1]) + '.geojson'
 				if export_type == "folder":
 					dst_path = os.path.join(export_path, dst_path)
 				os.makedirs(os.path.dirname(dst_path), exist_ok=True)

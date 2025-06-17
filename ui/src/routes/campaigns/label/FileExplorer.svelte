@@ -60,14 +60,15 @@
       currentPath = currentPath.slice(0, currentPath.length - 1);
       onDetails = false;
     } else {
-      currentLevel = navigationStack.pop();
-      currentPath = currentPath.slice(0, currentPath.length - 1);
+      if (navigationStack.length > 0) {
+        currentLevel = navigationStack.pop();
+        currentPath = currentPath.slice(0, currentPath.length - 1);
+      }
     }
   };
 
   const goToLevel = (folder) => {
     const folderIndex = currentPath.indexOf(folder) + 1;
-
     if (
       currentPath.length > navigationStack.length &&
       folder.split(".").length < 2
@@ -115,7 +116,12 @@
           class="p-1 rounded-md input-sm w-full"
         />
         <div class="text-sm flex">
-          <p>Path: /</p>
+          <button
+            onclick={() => goToLevel("")}
+            class="text-nowrap hover:underline"
+          >
+            {"/"}</button
+          >
           {#each currentPath as folder}
             <button
               onclick={() => goToLevel(folder)}

@@ -27,12 +27,12 @@
         {#if layer == "streets"}
           <TileLayer
             url={"https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"}
-            options={{ maxZoom: 20, zIndex: 1 }}
+            options={{ maxZoom: 40, zIndex: 1 }}
           />
         {:else if layer == "satellite"}
           <TileLayer
             url={"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"}
-            options={{ maxZoom: 20, zIndex: 1 }}
+            options={{ maxZoom: 40, zIndex: 1 }}
           />
         {/if}
         <LayersControl layers={["streets", "satellite"]} bind:layer />
@@ -45,5 +45,5 @@
 </div>
 
 {#if images.data}
-  <ImageLayer />
+  <ImageLayer options={{ maxZoom: 20, zIndex: 2 }} />
 {/if}

@@ -7,8 +7,8 @@
   let description = $state("");
   let url = $state("");
   let task = $state("segmentation");
-  let preprocessing = $state({ S2RGB: false });
-  let postprocessing = $state({ Sigmoid: false });
+  let preprocessing = $state({ S2RGB: false, SATRGB: false });
+  let postprocessing = $state({ Sigmoid: false, Argmax: false });
 
   const createModel = async (e) => {
     e.preventDefault();
@@ -24,7 +24,7 @@
             .map(([k]) => k),
           Object.entries(postprocessing)
             .filter(([k, v]) => v)
-            .map(([k]) => k)
+            .map(([k]) => k),
         );
         goto(`${baseUrl.url}/models/model?id=${data.id}`);
       } catch (error) {
@@ -84,7 +84,6 @@
             name="task"
             class="radio radio-primary"
             value="classification"
-            disabled
             bind:group={task}
           />
           <span class="ml-2">Classification</span>
@@ -141,6 +140,20 @@
             0-3000 to 0-255
           </p>
         </label>
+        <label class="cursor-pointer preprocessing">
+          <input
+            type="checkbox"
+            name="preprocessing"
+            class="checkbox checkbox-primary"
+            value="SATRGB"
+            bind:checked={preprocessing.SATRGB}
+          />
+          <span class="ml-2">SATRGB</span>
+          <p class="ml-8 text-sm text-gray-600">
+            Converts satellite bands 1,2,3 to RGB by scaling values between
+            0-3000 to 0-1
+          </p>
+        </label>
       </div>
     </div>
 
@@ -161,6 +174,19 @@
           <p class="ml-8 text-sm text-gray-600">
             Applies sigmoid function to model output and thresholds at 0.5 to
             create binary mask
+          </p>
+        </label>
+        <label class="cursor-pointer postprocessing">
+          <input
+            type="checkbox"
+            name="postprocessing"
+            class="checkbox checkbox-primary"
+            value="Argmax"
+            bind:checked={postprocessing.Argmax}
+          />
+          <span class="ml-2">Argmax</span>
+          <p class="ml-8 text-sm text-gray-600">
+            Applies argmax function to model output to create a mask
           </p>
         </label>
       </div>
