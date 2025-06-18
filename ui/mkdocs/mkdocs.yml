@@ -1,11 +1,14 @@
-site_name: ScanEO
+site_name: SCANEO
 
 nav:
   - Introduction: 'index.md'
   - Getting Started: 'getting_started.md'
-  - Interface: 'interface.md'
-  - Tools: 'tools.md'
-  - Saving and exporting: 'saving_and_exporting.md'
+  - Labelling Campaigns: 'labelling_campaigns.md'
+  - Labelling Interface: 'labelling_interface.md'
+  - Exporting: 'exporting.md'
+  - AI Assisted Labelling: 'ai_assisted_labelling.md'
+  - EOTDL Integration: 'eotdl.md'
+  - Contributing: 'contributing.md'
 
 theme:
   name: material

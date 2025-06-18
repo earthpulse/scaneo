@@ -1,61 +1,49 @@
 ## Installation
 
-You can install the library and CLI using pip.
+You can install the library and CLI using [uv](https://docs.astral.sh/uv/).
 
-```py
-pip install scaneo
+```
+uv init
+uv add scaneo
 ```
 
 To verify the installation you can run the `help` command, which will give you a list of all the available commands in the CLI.
 
-```py
-scaneo --help
+```
+uv run scaneo --help
 ```
 
 Until we hit a stable release it is recommended to upgrade the cli regularly to get the latest changes.
 
-```py
-pip install eotdl --upgrade
+```
+uv add scaneo --upgrade
 ```
 
-> The library and CLI require Python >= 3.8.
+## The CLI
 
-## CLI
+Start SCANEO with the `scaneo` command.
 
-```py
-pip install scaneo
+```
+uv run scaneo
 ```
 
-You can pick a port to run the server on with the flag `--port` or `-p`.
+You can now visit [localhost:8000](http://localhost:8000/) to see the UI.
 
-```py
-scaneo --port 8080
+You can pick a host and/or port to run the server on with the flag `--host` or `-h` and `--port` or `-p`.
+
+```
+scaneo --host 0.0.0.0 --port 8000
 ```
 
 Find out which version of the CLI you are running with the flag `--version` or `-v`.
 
-```py
+```
 scaneo --version
 ```
 
-## Loading datasets
+## The UI
 
-If you're working with local data, you can specify a path to a local file with the flag `--data` or `-d` before the path to the data.
+Once you open the UI, you will be presented with a simple landing page.
 
-```py
-scaneo --data ./path-to-data/
-```
+![Landing Page](../img/ui.png)
 
-Youy may add a path to an environment file with credentials to a cloud bucket with the flag `--env`, `.env` or `-e`.
-
-```py
-scaneo --env
-```
-
-```py title=".env"
-URL=''
-ACCESS_KEY=''
-SECRET_KEY=''
-REGION=''
-BUCKET=''
-```
