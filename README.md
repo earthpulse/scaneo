@@ -74,14 +74,14 @@ The CLI runs the API, which in turns serves the static files for the UI.
 Run the API with the CLI:
 
 ```
-python scaneo/main.py run -r
+make dev
 ```
 
 Then, run the UI:
 
 ```
 cd ui
-yarn dev
+bun run dev
 ```
 
 > Remember to create the .env file from .env.example
@@ -96,6 +96,31 @@ Build the UI, copy the build inside `scaneo` and build the python package:
 Your annoatations will be stored as `GeoJSON` files with the same name of your images. For example, if you are labeling `image1.tif`, your annotations will be stored in `image1.geojson`. Additionally, a `spai.json` file will be created containing some metadata about your annotations.
 
 > It is needed to install mkdocs with `pip install mkdocs-material`
+
+### Inference
+
+You can run the sample inference API to test the assisted labelling capabilities. 
+
+First, get the models and samples from EOTDL:
+
+```
+uv run eotdl models get SCANEO -p eotdl -a -f
+```
+
+Then, move the models and samples to the inference folder:
+
+```
+mv eotdl/SCANEO/models inference/models
+mv eotdl/SCANEO/samples inference/samples
+```
+
+Finally, start the inference API:
+
+```
+make inference
+```
+
+You can test the models in the [inference notebook](inference/inference.ipynb).
 
 ### Notes
 
