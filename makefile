@@ -9,10 +9,10 @@ build:
 	mv ui/static/docs/img ui/static
 	cd ui && bun run build
 	cp -r ui/build scaneo/ui
-	# sed -i 's/^version = .*/version = "$(v)"/' pyproject.toml
-	# sed -i 's/^__version__ = .*/__version__ = "$(v)"/' scaneo/main.py
-	sed -i '' 's/^version = .*/version = "$(v)"/' pyproject.toml
-	sed -i '' 's/^__version__ = .*/__version__ = "$(v)"/' scaneo/main.py
+	sed -i 's/^version = .*/version = "$(v)"/' pyproject.toml
+	sed -i 's/^__version__ = .*/__version__ = "$(v)"/' scaneo/main.py
+	# sed -i '' 's/^version = .*/version = "$(v)"/' pyproject.toml
+	# sed -i '' 's/^__version__ = .*/__version__ = "$(v)"/' scaneo/main.py
 	uv build
 
 publish:

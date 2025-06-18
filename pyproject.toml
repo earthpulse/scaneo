@@ -1,6 +1,6 @@
 [project]
 name = "scaneo"
-version = "2024.12.16"
+version = "2025.06.18"
 description = "A labelling tool for satellite imagery"
 authors = [
     {name = "earthpulse", email = "it@earthpulse.es"},
