@@ -9,7 +9,7 @@ from pathlib import Path
 
 app = typer.Typer()
 
-__version__ = "2025.06.18-3"
+__version__ = "2025.06.18-4"
 
 @app.command()
 def run(
