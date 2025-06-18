@@ -35,3 +35,4 @@ uv.lock
 inference/models
 inference/samples
 *.onnx
+eotdl

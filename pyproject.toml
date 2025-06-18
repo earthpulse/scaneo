@@ -44,4 +44,5 @@ dev = [
     "python-multipart>=0.0.20",
     "scikit-image>=0.25.1",
     "fastapi[standard]>=0.115.12",
+    "eotdl>=2025.5.26.post4",
 ]
