@@ -1,6 +1,6 @@
 # Contributing to SCANEO
 
-SCANEO is an open-source project managed by [EarthPulse](https://earthpulse.com). We welcome bug reports and contributions from the community to help improve the tool.
+SCANEO is an open-source project managed by [EarthPulse](https://earthpulse.ai). We welcome bug reports and contributions from the community to help improve the tool.
 
 ## How to Contribute
 
