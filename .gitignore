@@ -15,7 +15,6 @@ ui/build
 .svelte-kit
 *.txt
 *geojson
-*.tif
 data
 !ui/src/stores/Data
 kk
@@ -33,3 +32,5 @@ ui/mkdocs/site/**/*
 kk*
 uv.lock
 .venv
+inference/models
+inference/samples
