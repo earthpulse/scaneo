@@ -4,7 +4,7 @@
     <img src="https://github.com/earthpulse/scaneo/blob/main/ui/static/scaneo.png" alt="" style="width: 90%;" />
 </p>
 
-Create your own training datasets from satellite imagery, effortlessly and faster than ever.</p>
+Annotate satellite imagery for training AI models.</p>
 
 <p align="center">
     <a href="https://pypi.python.org/pypi/scaneo">
@@ -14,39 +14,36 @@ Create your own training datasets from satellite imagery, effortlessly and faste
 
 </div>
 
-SCANEO is an AI-powered web tool for smart labeling of satellite data training datasets. It can generate labels on its own, and its model can also be retrained with user-validated labels, creating a feedback loop that increases accuracy and speeds up labeling. In this way, SCANEO benefits both models and data sets simultaneously, and promotes the proliferation of artificial intelligence models applied to Earth observation data.
+SCANEO is a labelling tool for annotating satellite images. Its primary goal is to improve the efficiency of the creation of training datasets for AI models. To that end, SCANEO features an intuitive labelling interface and assisted labelling capabilities. Current capabilities include:
+
+- Create labelling campaigns from local or remote data
+- Annotate images for classification, detection and segmentation tasks
+- Assisted labelling with AI models
+- Export annotations in GeoJSON format
+- Integration with [EOTDL](https://eotdl.com).
 
 ## Why SCANEO?
 
-The shortage of suitable and accessible training datasets used to train AI models applied to Earth observation data is just one of the many problems faced by users who want to apply artificial intelligence to satellite data. Furthermore, the acquisition and labeling of EO data is complicated and expensive, slowing the advancement of AI in EO and limiting its potential compared to other fields.
+The development and deployment of AI models for Earth Observation (EO) applications faces significant challenges due to the scarcity of high-quality, well-annotated training datasets. This data bottleneck stems from several factors: the complex nature of satellite imagery, which requires domain expertise for accurate labeling; the high costs associated with data acquisition and manual annotation; and the technical challenges in preprocessing and standardizing multi-source EO data. These limitations have created a substantial gap between the potential applications of AI in Earth Observation and its current implementation, particularly when compared to more mature AI applications in other domains where training data is more readily available and easier to process.
 
-This is how SCANEO emerges, a smart labeling web application for training sets with satellite data, powered through artificial intelligence and active learning.
+To address some of these challenges, SCANEO provides a web-based annotation platform that combines artificial intelligence and active learning techniques to accelerate the creation of training datasets from satellite imagery.
 
 ## Installation
 
-[SCANEO](https://pypi.org/project/scaneo/) is simply a Python package that can be installed using pip.
+We recommend using [uv](https://docs.astral.sh/uv/) to install SCANEO.
 
 ```
-pip install scaneo
+uv init
+uv add scaneo
 ```
 
 Is is recommended to upgrade the package regularly, in order to get the latest changes.
 
 ```
-pip install scaneo --upgrade
+uv add scaneo --upgrade
 ```
-
-> The library requires Python >= 3.8
->
-> For a fast installation, we commend using `uv pip install scaneo`.
 
 ## Usage
-
-SCANEO allows to launch the labelling web application through CLI commands. The first thing you can do is run the help command, which will give you a list of all the available commands in the CLI.
-
-```
-scaneo --help
-```
 
 You can launch `scaneo` with a single command:
 
@@ -56,20 +53,31 @@ scaneo
 
 This will launch the UI, which will be accessible on your [localhost:8000](http://localhost:8000/).
 
+To learn more about the CLI and options, run:
+
+```
+scaneo --help
+```
+
 ## Documentation and tutorials
 
-To view the documentation, launch the UI and go to [localhost:8000/docs](http://localhost:8000/docs/). There you will find all the detailed SCANEO documentation, with advanced examples of usage, videos and tutorials.
+To view the documentation, launch the UI and go to [localhost:8000/docs](http://localhost:8000/docs/). 
 
-## Build
+## Development
 
 This repository contains the source code for SCANEO.
 
-- scaneo: includes the CLI, the library and the API.
+- scaneo: includes the CLI and the API.
 - ui: includes the web application UI.
+- inference: includes a simple inference API.
 
-The CLI runs the API, which in turns serves the static files for the UI.
+First, clone the repository and install the dependencies:
 
-### Development
+```
+git clone https://github.com/earthpulse/scaneo.git
+cd scaneo
+uv sync
+```
 
 Run the API with the CLI:
 
@@ -87,15 +95,17 @@ bun run dev
 > Remember to create the .env file from .env.example
 > `cp .env.example .env`
 
-### Production
+### Build
 
-In the UI, create `.env.production` with an empty `API_URL`.
+In the UI, create `.env.production` with an empty `PUBLIC_API_URL`.
 
-Build the UI, copy the build inside `scaneo` and build the python package:
+Then, build the Python package:
 
-Your annoatations will be stored as `GeoJSON` files with the same name of your images. For example, if you are labeling `image1.tif`, your annotations will be stored in `image1.geojson`. Additionally, a `spai.json` file will be created containing some metadata about your annotations.
+```
+make build v=0.1.0
+```
 
-> It is needed to install mkdocs with `pip install mkdocs-material`
+> The `v` parameter is the version of the package, change it to the desired version.
 
 ### Inference
 
