@@ -7,7 +7,7 @@ nav:
   - Labelling Interface: 'labelling_interface.md'
   - Exporting: 'exporting.md'
   - AI Assisted Labelling: 'ai_assisted_labelling.md'
-  - EOTDL Integration: 'eotdl.md'
+  - Integrations: 'integrations.md'
   - Contributing: 'contributing.md'
 
 theme:
