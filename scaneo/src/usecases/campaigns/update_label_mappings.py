@@ -14,7 +14,7 @@ def update_label_mappings(campaign_id, labelMappings):
 	label_mappings = []
 	for modelId, mapping in labelMappings.items():
 		for labelName, index in mapping.items():
-			if index:
+			if index is not None:
 				data = create_label_mapping(campaign_id, modelId, labelName, index)
 				label_mappings.append(data)
 			else:

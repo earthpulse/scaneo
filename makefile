@@ -3,7 +3,7 @@ build:
 	rm -rf scaneo/ui
 	rm -rf ui/.svelte-kit
 	rm -r -f ui/static/docs 
-	cd ui/mkdocs && mkdocs build
+	cd ui/mkdocs && uv run mkdocs build
 	cp -r ui/mkdocs/site ui/static/docs
 	rm -r ui/static/img
 	mv ui/static/docs/img ui/static
@@ -19,7 +19,8 @@ publish:
 	uv publish --username "__token__" --password "$(token)"
 
 dev:
-	uv run scaneo/main.py -r
+	uv run scaneo/main.py -r -p 8000
 
-ai-api:
-	uv run uvicorn models.main:app --port 8001 --reload --env-file models/.env
+.PHONY: inference
+inference:
+	uv run uvicorn inference.main:app --host 0.0.0.0 --port 8001 --reload

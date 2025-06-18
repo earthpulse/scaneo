@@ -91,6 +91,7 @@ def inference_model(model_id: str, image: str, points: list = None):
 			y = src.read()
 		# output indexes
 		output_indexes = [l.output_index for l in label_mappings]
+		print(y.shape, label_mappings)
 		if max(output_indexes) > y.shape[0]:
 			raise ValueError(f"Found output index in label mapping that is larger than the number of bands!")
 		# apply postprocessing steps

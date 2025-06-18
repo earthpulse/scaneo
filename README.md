@@ -93,7 +93,7 @@ In the UI, create `.env.production` with an empty `API_URL`.
 
 Build the UI, copy the build inside `scaneo` and build the python package:
 
-Your annoatations will be stored as `GeoJSON` files with the same name of your images, followed by `_labels.geojson`. For example, if you are labeling `image1.tif`, your annotations will be stored in `image1_labels.geojson`. Additionally, a `labels.json` file will be created containing some metadata about your annotations.
+Your annoatations will be stored as `GeoJSON` files with the same name of your images. For example, if you are labeling `image1.tif`, your annotations will be stored in `image1.geojson`. Additionally, a `spai.json` file will be created containing some metadata about your annotations.
 
 > It is needed to install mkdocs with `pip install mkdocs-material`
 
