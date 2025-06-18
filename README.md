@@ -63,6 +63,10 @@ scaneo --help
 
 To view the documentation, launch the UI and go to [localhost:8000/docs](http://localhost:8000/docs/). 
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
+
 ## Development
 
 This repository contains the source code for SCANEO.
