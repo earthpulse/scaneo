@@ -34,3 +34,4 @@ uv.lock
 .venv
 inference/models
 inference/samples
+*.onnx
