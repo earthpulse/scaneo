@@ -2,13 +2,13 @@ In order to accelerate the labelling process, SCANEO offers the possibility to u
 
 You can create and manage your models in the models section.
 
-![model](../img/models.png)
+![model](/img/models.png)
 
 ## Create a model
 
 Create a new model by clicking on the `+` button. You will be presented with a form to fill in the details of the model (name, description, etc.).
 
-![new_model](../img/new_model.png)
+![new_model](/img/new_model.png)
 
 You will need a public URL where the model is hosted. SCANEO will send the image to the model by performing a POST request to the URL with the following payload:
 
@@ -38,7 +38,7 @@ We also provide common pre- and post-processing functionality to use the model.
 
 Once a model is created, you have to add it to a campaign. Visit the manage campaign page and add the model at the bottom.
 
-![select_model](../img/select_model.png)
+![select_model](/img/select_model.png)
 
 Make sure to map your labels to the model's outputs:
 
@@ -52,7 +52,7 @@ Make sure to map your labels to the model's outputs:
 
 Now that you have a model added to a campaign, you can use it to assist you in the labelling process.
 
-![assisted_labelling](../img/assisted.png)
+![assisted_labelling](/img/assisted.png)
 
 Select the model you want to use for the assisted labelling and click on the `Run model inference` button. If everything is set up correctly, the model will run and you will see the results in the map. The provided predictions will be automatically added to the image as annotations. You can now edit the annotations as you wish.
 

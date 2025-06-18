@@ -1,12 +1,12 @@
 You can create and manage your labelling campaigns by navigating to the 'Campaigns' tab.
 
-![Campaigns](../img/campaigns.png)
+![Campaigns](/img/campaigns.png)
 
 ## Creating a new campaign
 
 You can create a new campaign by clicking the 'New Campaign' button.
 
-![New Campaign](../img/new_campaign.png)
+![New Campaign](/img/new_campaign.png)
 
 You will be presented with a form to fill in the details of your campaign (name, description, etc.).
 

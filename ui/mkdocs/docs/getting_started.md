@@ -45,5 +45,5 @@ scaneo --version
 
 Once you open the UI, you will be presented with a simple landing page.
 
-![Landing Page](../img/ui.png)
+![Landing Page](/img/ui.png)
 

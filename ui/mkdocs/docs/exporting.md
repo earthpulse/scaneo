@@ -1,6 +1,6 @@
 You can export the annotations of a campaign at any point in the export section.
 
-![export](../img/export.png)
+![export](/img/export.png)
 
 Once you click on the `Export campaign` button, all annotations will be exported. A GeoJSON file will be created in the same directory as the campaign, one file per image. 
 

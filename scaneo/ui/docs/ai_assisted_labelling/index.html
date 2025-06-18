@@ -555,10 +555,10 @@
 
 <p>In order to accelerate the labelling process, SCANEO offers the possibility to use AI models to assist you.</p>
 <p>You can create and manage your models in the models section.</p>
-<p><img alt="model" src="../img/models.png" /></p>
+<p><img alt="model" src="/img/models.png" /></p>
 <h2 id="create-a-model">Create a model<a class="headerlink" href="#create-a-model" title="Permanent link">¶</a></h2>
 <p>Create a new model by clicking on the <code>+</code> button. You will be presented with a form to fill in the details of the model (name, description, etc.).</p>
-<p><img alt="new_model" src="../img/new_model.png" /></p>
+<p><img alt="new_model" src="/img/new_model.png" /></p>
 <p>You will need a public URL where the model is hosted. SCANEO will send the image to the model by performing a POST request to the URL with the following payload:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;image&quot;</span><span class="p">,</span>
@@ -581,7 +581,7 @@
 </blockquote>
 <h2 id="add-a-model-to-a-campaign">Add a model to a campaign<a class="headerlink" href="#add-a-model-to-a-campaign" title="Permanent link">¶</a></h2>
 <p>Once a model is created, you have to add it to a campaign. Visit the manage campaign page and add the model at the bottom.</p>
-<p><img alt="select_model" src="../img/select_model.png" /></p>
+<p><img alt="select_model" src="/img/select_model.png" /></p>
 <p>Make sure to map your labels to the model's outputs:</p>
 <ul>
 <li>Classification: position of the label in the list of logits/probabilities.</li>
@@ -593,7 +593,7 @@
 </blockquote>
 <h2 id="ai-assisted-labelling">AI assisted labelling<a class="headerlink" href="#ai-assisted-labelling" title="Permanent link">¶</a></h2>
 <p>Now that you have a model added to a campaign, you can use it to assist you in the labelling process.</p>
-<p><img alt="assisted_labelling" src="../img/assisted.png" /></p>
+<p><img alt="assisted_labelling" src="/img/assisted.png" /></p>
 <p>Select the model you want to use for the assisted labelling and click on the <code>Run model inference</code> button. If everything is set up correctly, the model will run and you will see the results in the map. The provided predictions will be automatically added to the image as annotations. You can now edit the annotations as you wish.</p>
 <h2 id="activle-learning">Activle Learning<a class="headerlink" href="#activle-learning" title="Permanent link">¶</a></h2>
 <p>Active learning is a machine learning technique that iteratively selects the most informative samples for annotation to improve model performance while minimizing the amount of labeled data needed. SCANEO helps you implement active learning by:</p>

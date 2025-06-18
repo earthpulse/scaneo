@@ -10,11 +10,11 @@ The [EOTDL](https://eotdl.com) is a repository of training datasets and ML model
 
 First, enable the EOTDL plugin in the Plugins page.
 
-![plugins](../img/plugins.png)
+![plugins](/img/plugins.png)
 
 Now, when you create a new campaign, you will see the EOTDL option in the storage section. Choose it and select the dataset you want to import.
 
-![eotdl_create](../img/create_eotdl.png)
+![eotdl_create](/img/create_eotdl.png)
 
 The rest of features apply as usual. This means that only `.tif` images in the dataset will be imported.
 
