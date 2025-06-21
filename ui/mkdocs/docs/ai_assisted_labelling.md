@@ -56,7 +56,7 @@ Now that you have a model added to a campaign, you can use it to assist you in t
 
 Select the model you want to use for the assisted labelling and click on the `Run model inference` button. If everything is set up correctly, the model will run and you will see the results in the map. The provided predictions will be automatically added to the image as annotations. You can now edit the annotations as you wish.
 
-## Activle Learning
+## Active Learning
 
 Active learning is a machine learning technique that iteratively selects the most informative samples for annotation to improve model performance while minimizing the amount of labeled data needed. SCANEO helps you implement active learning by:
 
