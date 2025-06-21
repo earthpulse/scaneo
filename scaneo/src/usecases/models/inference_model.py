@@ -1,6 +1,5 @@
 import rasterio as rio
 import numpy as np
-import PIL
 import requests
 from io import BytesIO
 from rasterio import features
@@ -8,9 +7,7 @@ from ...repos import ModelsDBRepo, ImagesDBRepo, CampaignsDBRepo, EOTDLRepo, Lab
 from ...models import Image, Model, Campaign, LabelMapping, Label
 from . import processing
 from ..annotations import create_segmentation_annotation, retrieve_annotations, create_classification_annotation
-import os
 from rasterio import features
-from pyproj import Transformer
 import numpy as np
 from pydantic import BaseModel
 from typing import List, Any
@@ -89,17 +86,25 @@ def inference_model(model_id: str, image: str, points: list = None):
 		with rio.open(BytesIO(res.content)) as src:
 			# read all bands
 			y = src.read()
+		# we expect alway only one band with class codified in pixel: 0, 1, 2, ...
+		if y.shape[0] > 1:
+			raise ValueError(f"Expected only one band with class codified in pixel: 0, 1, 2, ... but got {y.shape[0]} bands")
 		# output indexes
 		output_indexes = [l.output_index for l in label_mappings]
-		print(y.shape, label_mappings)
-		if max(output_indexes) > y.shape[0]:
-			raise ValueError(f"Found output index in label mapping that is larger than the number of bands!")
+		# if max(output_indexes) > y.shape[0]:
+		# 	raise ValueError(f"Found output index in label mapping that is larger than the number of bands!")
 		# apply postprocessing steps
 		for step in model.postprocessing:
 			y = parse_processing_step(step)(y)
+		print(y.shape, y.max(), y.min(), np.unique(y))
 		for lm in label_mappings:
 			_y = np.zeros_like(y)
 			_y[y == lm.output_index] = y[y == lm.output_index]
+			
+			# Check if this label appears in the segmentation mask
+			if lm.output_index not in np.unique(y):
+				print(f"Label with output_index {lm.output_index} not found in segmentation mask, skipping...")
+				continue
 			label_repo = LabelsDBRepo()
 			label = label_repo.retrieve_label(lm.labelId)
 			label = Label.from_tuple(label)
@@ -130,6 +135,30 @@ def inference_model(model_id: str, image: str, points: list = None):
 					"type": "name",  # Tipo correcto
 					"properties": {"name": crs.to_string()}
 				}
+			
+			# Convert geojson to EPSG:4326 if it's not already in that CRS
+			if crs and crs.to_string() != "EPSG:4326":
+				from pyproj import Transformer
+				transformer = Transformer.from_crs(crs, "EPSG:4326", always_xy=True)
+				
+				# Transform coordinates in the MultiPolygon
+				transformed_coordinates = []
+				for polygon in geojson["geometry"]["coordinates"]:
+					transformed_polygon = []
+					for ring in polygon:
+						transformed_ring = []
+						for coord in ring:
+							lon, lat = transformer.transform(coord[0], coord[1])
+							transformed_ring.append([lon, lat])
+						transformed_polygon.append(transformed_ring)
+					transformed_coordinates.append(transformed_polygon)
+				
+				geojson["geometry"]["coordinates"] = transformed_coordinates
+				geojson["crs"] = {
+					"type": "name",
+					"properties": {"name": "EPSG:4326"}
+				}
+			
 			# save annotation 
 			ann = create_segmentation_annotation(image.id, geojson, label.name) # se guardan los names en annotations o los ids?
 			annotations.append(ann)
