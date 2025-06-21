@@ -21,16 +21,20 @@ const config = {
       $components: "./src/components",
       $styles: "./src/styles",
     },
-    // prerender: {
-    //   handleHttpError: ({ path, referrer, message }) => {
-    //     // Ignore URL parameter errors during prerendering
-    //     if (message.includes("Cannot access url.searchParams")) {
-    //       return;
-    //     }
-    //     // Throw other errors
-    //     throw new Error(message);
-    //   },
-    // },
+    prerender: {
+      handleHttpError: ({ path, referrer, message }) => {
+        // Ignore docs routes during prerendering since they're static files
+        if (path.startsWith('/docs')) {
+          return;
+        }
+        // Ignore URL parameter errors during prerendering
+        if (message.includes("Cannot access url.searchParams")) {
+          return;
+        }
+        // Throw other errors
+        throw new Error(message);
+      },
+    },
   },
   preprocess: vitePreprocess(),
 };
