@@ -24,4 +24,4 @@ def export_labels(campaign_id, export_type, export_path):
 		with open(os.path.join(export_path, "spai.json"), "w") as f:
 			f.write(json.dumps(labels))
 		return
-	raise Exception("Export mode not implemented")
+	raise Exception(f"Export type {export_type} not implemented")

@@ -66,13 +66,13 @@ async def export_annotations(campaign_id, export_type, export_path, progress_cal
 							}
 						}
 					)
-			
 			if export_type == "eotdl":
-				raise Exception("Export type not implemented")
+				raise Exception("Export directly to EOTDL is not implemented")
 			else:
-				dst_path = campaign.path + '/' + '.'.join(image.path.split('.')[:-1]) + '.geojson'
-				if export_type == "folder":
-					dst_path = os.path.join(export_path, dst_path)
+				if export_type == "folder": # choose output
+					dst_path = export_path + '/' + '.'.join(image.path.split('.')[:-1]) + '.geojson'
+				else: # use campaign path
+					dst_path = campaign.path + '/' + '.'.join(image.path.split('.')[:-1]) + '.geojson'
 				os.makedirs(os.path.dirname(dst_path), exist_ok=True)
 				with open(dst_path, "w") as f:
 					json.dump(feature_collection, f)

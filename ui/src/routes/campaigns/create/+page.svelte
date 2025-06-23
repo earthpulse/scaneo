@@ -12,21 +12,21 @@
   let description = $state("");
   let localPath = $state("");
   let storageOption = $state(0);
-  let eotdlDatasetId = $state("");
+  let eotdlDatasetName = $state("");
   let labels = $state([]);
   let labelMappings = $state({});
 
   const createCampaign = async (e) => {
     e.preventDefault();
     if (storageOption == 2) {
-      if (!eotdlDatasetId) return alert("EOTDL dataset is required");
+      if (!eotdlDatasetName) return alert("EOTDL dataset is required");
       try {
         campaigns.createEOTDL(
           name,
           description,
-          eotdlDatasetId,
+          eotdlDatasetName,
           labels,
-          labelMappings
+          labelMappings,
         );
       } catch (error) {
         alert(error);
@@ -141,7 +141,7 @@
     {:else if storageOption == 1}
       <S3StorageParams />
     {:else}
-      <EOTDLDatasetSelector bind:eotdlDatasetId />
+      <EOTDLDatasetSelector bind:eotdlDatasetName />
     {/if}
 
     <LabelGenerator bind:labels />

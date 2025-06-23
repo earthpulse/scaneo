@@ -37,9 +37,12 @@
     const map = mapStore.map;
     if (map && images.current) {
       images.zoom(images.current.bbox, map);
-      let url = `${baseUrl.api_url}/images/${campaigns.current.path}/${images.current.path}/{z}/{x}/{y}.png?stretch=${settings.stretch}&bands=${settings.rgb}&palette=${palette}`;
+      let url = `${baseUrl.api_url}/images/`;
+      const query = `stretch=${settings.stretch}&bands=${settings.rgb}&palette=${palette}`;
       if (campaigns.current.eotdlDatasetId) {
-        url += `&eotdlDatasetId=${campaigns.current.eotdlDatasetId}`;
+        url += `${images.current.path}/{z}/{x}/{y}.png?${query}&eotdlDatasetId=${campaigns.current.eotdlDatasetId}`;
+      } else {
+        url += `${campaigns.current.path}/${images.current.path}/{z}/{x}/{y}.png?${query}`;
       }
       if (layer) {
         layer.setUrl(url);

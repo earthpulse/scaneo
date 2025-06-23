@@ -23,7 +23,7 @@
       campaigns.export(
         $page.url.searchParams.get("id"),
         exportType,
-        exportPath
+        exportPath,
       );
     } catch (e) {
       alert(e.message);
@@ -66,7 +66,9 @@
             value="folder"
             bind:group={exportType}
           />
-          <span class="label-text">Export to local folder</span>
+          <span class="label-text"
+            >Export to local folder (only annotations)</span
+          >
         </label>
         {#if exportType === "folder"}
           <input

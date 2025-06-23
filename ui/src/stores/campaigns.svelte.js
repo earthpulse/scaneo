@@ -146,12 +146,12 @@ function createCampaigns() {
     createEOTDL: async (
       name,
       description,
-      eotdlDatasetId,
+      eotdlDatasetName,
       labels,
       labelMappings
     ) => {
       createWS(
-        { name, description, eotdlDatasetId, labels, labelMappings },
+        { name, description, eotdlDatasetName, labels, labelMappings },
         "create-eotdl"
       );
     },

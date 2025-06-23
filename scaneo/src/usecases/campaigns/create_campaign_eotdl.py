@@ -3,20 +3,16 @@ from ...repos import CampaignsDBRepo, ImagesDBRepo, EOTDLRepo
 from .create_campaign import get_bbox
 from ...usecases.labels import create_label
 
-
-async def create_campaign_eotdl(name, description, eotdlDatasetId, labels, labelMappings, progress_callback=None):	
+async def create_campaign_eotdl(name, description, eotdlDatasetName, labels, labelMappings, progress_callback=None):	
+	# retreive eotdlDatasetId from eotdlDatasetName
+	eotdl_repo = EOTDLRepo()
+	eotdlDatasetId = eotdl_repo.get_dataset(eotdlDatasetName)
 	repo = CampaignsDBRepo()
 	id = repo.generate_id()
 	campaign = Campaign(id=id, name=name, description=description, eotdlDatasetId=eotdlDatasetId)
-	repo.create_campaign(campaign)
-	# create labels
-	if labels:
-		for label in labels:
-			create_label(label['name'], label['color'], campaign.id)
 	# retrieve images from eotdl
-	eotdl_repo = EOTDLRepo()
-	images, error = eotdl_repo.get_files(eotdlDatasetId, "*.tif") 
-	if len(images) == 0:
+	images, error = eotdl_repo.get_files(eotdlDatasetName, "*.tif") 
+	if not images or len(images) == 0:
 		raise Exception("No '.tif' images found in EOTDL dataset.")
 	# generate bounding boxes
 	if progress_callback is not None:
@@ -30,5 +26,9 @@ async def create_campaign_eotdl(name, description, eotdlDatasetId, labels, label
 	images_repo = ImagesDBRepo()
 	images_repo.create_images(images, id, bbs)
 	campaign.image_count = len(images)
-	repo.update_campaign(campaign)
+	# create labels
+	if labels:	
+		for label in labels:
+			create_label(label['name'], label['color'], campaign.id)
+	repo.create_campaign(campaign)
 	return campaign

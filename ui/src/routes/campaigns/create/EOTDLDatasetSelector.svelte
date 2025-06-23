@@ -1,13 +1,13 @@
 <script>
-  let { eotdlDatasetId = $bindable("") } = $props();
+  let { eotdlDatasetName = $bindable("") } = $props();
 
   let datasets = $state([]);
   let loading = $state(false);
   let searchTerm = $state("");
   let filteredDatasets = $derived(
     datasets.filter((dataset) =>
-      dataset.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+      dataset.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    ),
   );
 
   $effect(async () => {
@@ -42,9 +42,9 @@
     />
 
     <label class="label font-medium mb-1">Select EOTDL Dataset</label>
-    <select class="select select-bordered w-full" bind:value={eotdlDatasetId}>
+    <select class="select select-bordered w-full" bind:value={eotdlDatasetName}>
       {#each filteredDatasets as dataset}
-        <option value={dataset.id}>{dataset.name}</option>
+        <option value={dataset.name}>{dataset.name}</option>
       {/each}
     </select>
   </div>

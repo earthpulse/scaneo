@@ -30,21 +30,28 @@ class EOTDLRepo:
             return {"Authorization": "Bearer " + data["id_token"]}
         raise Exception("Invalid headers")
 
-    def get_url(self, dataset_id, filename, version=None):
-        url = self.url + f"datasets/{dataset_id}/download/{filename}"
+    def get_url(self, eotdlDatasetId, file_id, version=None):
+        file_url = f"https://api.eotdl.com/datasets/{eotdlDatasetId}/stage/{file_id}"
         if version is not None:
-            url += "?version=" + str(version)
+            file_url += "?version=" + str(version)
         headers = self.generate_headers(self.user)
-        response = requests.get(url, headers=headers, stream=True)
-        return BytesIO(response.content)
+        response = requests.get(file_url, headers=headers)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        return response.json()['presigned_url']
     
-    def get_files(self, dataset_id, pattern=None):
-        res = requests.get(f"https://api.eotdl.com/datasets/{dataset_id}/files")
+    def get_files(self, dataset_name, pattern=None):
+        res = requests.get(f"https://api.eotdl.com/stac/collections/{dataset_name}/items")
         files, error = self.format_response(res)
         if error:
             return None, error
-        files = [f["filename"] for f in files]
+        files = [f["id"] for f in files]
         if pattern:
-            return fnmatch.filter(files, pattern), None
+            files = [f for f in files if fnmatch.fnmatch(f, pattern)]
         return files, None
-    
+
+    def get_dataset(self, eotdlDatasetName):
+        res = requests.get(f"https://api.eotdl.com/datasets?name={eotdlDatasetName}")
+        dataset, error = self.format_response(res)
+        if error:
+            return None, error
+        return dataset['id']

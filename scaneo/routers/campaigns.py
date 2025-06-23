@@ -80,49 +80,6 @@ async def websocket_create_campaign(websocket: WebSocket):
     finally:
         await websocket.close()
 
-@router.websocket("/import")
-async def websocket_create_campaign(websocket: WebSocket):
-    await websocket.accept()
-    try:
-        # Receive the campaign data as JSON
-        data = await websocket.receive_json()
-        
-        # Create campaign with progress callback
-        async def progress_callback(progress: float, message: str):
-            await websocket.send_json({
-                "progress": progress,
-                "message": message,
-                "status": "processing"
-            })
-        
-        # Call create_campaign with the callback
-        result = await create_imported_campaign(
-            data["name"], 
-            data["description"], 
-            data["path"],
-            progress_callback=progress_callback
-        )
-        
-        # Send success response
-        data = result.model_dump()
-        await websocket.send_json({
-            "status": "complete",
-            "data": {
-                "name": data["name"],
-                "description": data["description"],
-                "id": data["id"]
-            }
-        })
-        
-    except Exception as e:
-        print("error campaigns:websocket_import_campaign", e)
-        await websocket.send_json({
-            "status": "error",
-            "error": str(e)
-        })
-    finally:
-        await websocket.close()
-
 @router.delete("/{campaign_id}")
 def _delete_campaign(campaign_id: str):
     try:
@@ -150,7 +107,7 @@ async def websocket_create_campaign_eotdl(websocket: WebSocket):
         result = await create_campaign_eotdl(
             data["name"], 
             data["description"], 
-            data["eotdlDatasetId"],
+            data["eotdlDatasetName"],
             data["labels"],
             data["labelMappings"],
             progress_callback=progress_callback
@@ -196,14 +153,6 @@ def _update_label_mappings(campaign_id: str, body: UpdateLabelMappingsBody):
         print("error campaigns:update_label_mappings", e)
         raise HTTPException(status_code=500, detail=str(e))
     
-
-# @router.post("/{campaign_id}/export")
-# def _export_campaign(campaign_id: str):
-#     try:
-#         return export_campaign(campaign_id)
-#     except Exception as e:
-#         print("error campaigns:export_campaign", e)
-#         raise HTTPException(status_code=500, detail=str(e))
 
 @router.websocket("/{campaign_id}/export")
 async def websocket_export_campaign(websocket: WebSocket, campaign_id: str):

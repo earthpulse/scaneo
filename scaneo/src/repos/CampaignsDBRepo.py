@@ -14,8 +14,8 @@ class CampaignsDBRepo(DBRepo):
             image_count INTEGER NOT NULL DEFAULT 0,
             annotation_count INTEGER NOT NULL DEFAULT 0,
             path TEXT NULL,
-            eotdlDatasetId TEXT NULL
-        )""")
+            eotdlDatasetId TEXT NULL 
+        )""") 
         self.commit_and_close_db()
 
     def retrieve_campaigns(self):

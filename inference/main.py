@@ -78,10 +78,8 @@ async def segmentation(
 		)
 		image = resize(image, (1, 3, *new_size), preserve_range=True)
 		print(f"Resized image from {original_size} to {new_size}")
-	print(image.shape, image.dtype, image.min(), image.max())
 	outputs = inference('hr-roads.onnx', image)
 	mask = sigmoid(outputs[0])
-	print(mask.shape, mask.dtype, mask.min(), mask.max())
 	binary_mask = mask[0] > 0.5
 	binary_mask = resize(binary_mask, original_size, preserve_range=True)
 	binary_mask = binary_mask.astype(np.uint8)
