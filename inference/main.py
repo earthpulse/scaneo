@@ -9,6 +9,7 @@ import numpy as np
 from pathlib import Path
 import skimage
 from skimage.transform import resize
+import torch
 
 
 MODELS_PATH = str(Path(__file__).parent / 'models')
@@ -23,6 +24,26 @@ app.add_middleware(
 	allow_headers=["*"],
 )
 
+def load_image(image, bands=(4,3,2), norm_values=4000, nearest_divisible=None):
+	ds = rio.open(io.BytesIO(image.file.read())) 
+	if bands is not None:
+		image = ds.read(bands)
+	else:
+		image = ds.read()
+	return ds, np.expand_dims((image / norm_values).clip(0, 1).astype(np.float32), axis=0)
+
+def resize_image(x, nearest_multiple=32):
+	bs, nc, osize = x.shape[0], x.shape[1], x.shape[2:]
+	if osize[0] % nearest_multiple != 0 or osize[1] % nearest_multiple != 0:
+		# resize to nearest multiple 
+		new_size = (
+			nearest_multiple * (osize[0] // nearest_multiple),
+			nearest_multiple * (osize[1] // nearest_multiple),
+		)
+		x = resize(x, (bs, nc, *new_size), preserve_range=True)
+		print(f"Resized image from {osize} to {new_size}")
+	return x, osize
+
 def load_model(model):
 	ort_session = onnxruntime.InferenceSession(MODELS_PATH + '/' + model)
 	return ort_session
@@ -34,22 +55,22 @@ def inference(model, image):
 	ort_outs = ort_session.run(None, ort_inputs)
 	return ort_outs[0]
 
-def load_image(image, bands=(4,3,2), norm_values=4000):
-	ds = rio.open(io.BytesIO(image.file.read())) 
-	image = ds.read(bands)
-	return ds, np.expand_dims((image / norm_values).clip(0, 1).astype(np.float32), axis=0)
+def inference_pt(model, image):
+	model = torch.load(MODELS_PATH + '/' + model, weights_only=False)
+	model.eval()
+	with torch.no_grad():
+		outputs = model(torch.from_numpy(image).float())
+	return outputs
 
 @app.post("/s2-roads")
-async def segmentation(
+async def road_segmentation(
 	request: Request,  
 	image: UploadFile = File(...), 
 ):
 	ds, image = load_image(image)
 	outputs = inference('s2-roads.onnx', image)
 	mask = (outputs[0] > 0.5).astype(np.uint8)
-	print(mask.shape, mask.dtype, mask.min(), mask.max())
 	meta = ds.meta
-	print(mask.shape, mask.dtype, mask.min(), mask.max())
 	meta.update(count=1, dtype=np.uint8)
 	buf = io.BytesIO()
 	with rio.open(buf, 'w', **meta) as dst:
@@ -61,7 +82,7 @@ def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
 @app.post("/hr-roads")
-async def segmentation(
+async def hr_road_segmentation(
 	request: Request,  
 	image: UploadFile = File(...), 
 ):
@@ -69,7 +90,6 @@ async def segmentation(
 	image = (image / 255).astype(np.float32).transpose(2, 0, 1)
 	image = np.expand_dims(image, axis=0)
 	original_size = image.shape[2:]
-	print(original_size)
 	if original_size[0] % 32 != 0 or original_size[1] % 32 != 0:
 		# resize to nearest multiple of 32
 		new_size = (
@@ -86,5 +106,24 @@ async def segmentation(
 	img = Image.fromarray(binary_mask, mode="L")
 	buf = io.BytesIO()
 	img.save(buf, "tiff")
+	buf.seek(0)
+	return StreamingResponse(buf, media_type="image/tiff")
+
+@app.post("/s2-clouds")
+async def cloud_segmentation(
+	request: Request,  
+	image: UploadFile = File(...), 
+):
+	ds, image = load_image(image, bands=None)
+	image, osize = resize_image(image, 32)
+	outputs = inference_pt('L2A_EfficientNetUnet.pt', image)
+	mask = torch.argmax(outputs, dim=1).cpu().numpy().astype(np.uint8)
+	print(mask.shape, mask.min(), mask.max())
+	meta = ds.meta
+	mask = resize(mask, (mask.shape[0], *osize), preserve_range=True)
+	meta.update(count=1, dtype=np.uint8)
+	buf = io.BytesIO()
+	with rio.open(buf, 'w', **meta) as dst:
+		dst.write(mask)
 	buf.seek(0)
 	return StreamingResponse(buf, media_type="image/tiff")
