@@ -11,16 +11,7 @@ app = typer.Typer()
 
 __version__ = "2025.06.23"
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s")
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
-# Remove other handlers to ensure only console logging
-if len(logger.handlers) > 1:
-    logger.handlers = [console_handler]
+logger = logging.basicConfig(level=logging.INFO)
 
 @app.command()
 def run(

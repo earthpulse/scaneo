@@ -26,7 +26,6 @@ class SATRGB(ProcessingStep):
     def __call__(self, x):
         x = x[(1,2,3), ...]
         x = np.clip(x / 3000, 0, 1)
-        # x = (x * 255).astype(np.uint8)
         return x
 
 class Sigmoid(ProcessingStep):
@@ -36,13 +35,17 @@ class Sigmoid(ProcessingStep):
         probas = 1 / (1 + np.exp(-x))
         if self.threshold is not None:
             return probas > self.threshold
-        return probas
+        return probas.astype(np.uint8)
     
 class Argmax(ProcessingStep):
     def __init__(self):
         super().__init__("Argmax")
     def __call__(self, x):
-        print("iepaaa", x.shape)
         x = x.argmax(axis=0)
-        print("asdasdf", x.shape)
         return x
+
+class Threshold(ProcessingStep):
+    def __init__(self, threshold=0.5):
+        super().__init__("Threshold", threshold=threshold)
+    def __call__(self, x):
+        return (x > self.threshold).astype(np.uint8)

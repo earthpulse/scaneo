@@ -96,7 +96,7 @@ def inference_model(model_id: str, image: str, points: list = None):
 		# apply postprocessing steps
 		for step in model.postprocessing:
 			y = parse_processing_step(step)(y)
-		print(y.shape, y.max(), y.min(), np.unique(y))
+		# print(y.shape, y.max(), y.min(), np.unique(y))
 		for lm in label_mappings:
 			_y = np.zeros_like(y)
 			_y[y == lm.output_index] = y[y == lm.output_index]

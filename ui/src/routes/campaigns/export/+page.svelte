@@ -5,7 +5,7 @@
   import { browser } from "$app/environment";
 
   let disabled = $derived(campaigns.exporting);
-  let exportType = $state("");
+  let exportType = $state("folder");
   let exportPath = $state("");
 
   $effect(() => {
@@ -45,7 +45,7 @@
       <p>Your annotations will be exported at: {campaigns.current?.path}</p>
     {:else if campaigns.current?.eotdlDatasetId}
       <p>This is an EOTDL dataset. Choose one export option:</p>
-      <div class="form-control">
+      <!-- <div class="form-control">
         <label class="cursor-pointer gap-2 flex flex-row items-center">
           <input
             type="radio"
@@ -56,7 +56,7 @@
           />
           <span class="label-text">Export to EOTDL</span>
         </label>
-      </div>
+      </div> -->
       <div class="form-control">
         <label class="cursor-pointer gap-2 flex flex-row items-center">
           <input

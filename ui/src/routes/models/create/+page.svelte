@@ -8,7 +8,11 @@
   let url = $state("");
   let task = $state("segmentation");
   let preprocessing = $state({ S2RGB: false, SATRGB: false });
-  let postprocessing = $state({ Sigmoid: false, Argmax: false });
+  let postprocessing = $state({
+    Sigmoid: false,
+    Argmax: false,
+    Threshold: false,
+  });
 
   const createModel = async (e) => {
     e.preventDefault();
@@ -187,6 +191,19 @@
           <span class="ml-2">Argmax</span>
           <p class="ml-8 text-sm text-gray-600">
             Applies argmax function to model output to create a mask
+          </p>
+        </label>
+        <label class="cursor-pointer postprocessing">
+          <input
+            type="checkbox"
+            name="postprocessing"
+            class="checkbox checkbox-primary"
+            value="Threshold"
+            bind:checked={postprocessing.Threshold}
+          />
+          <span class="ml-2">Threshold</span>
+          <p class="ml-8 text-sm text-gray-600">
+            Applies threshold of 0.5 to model output to create a binary mask
           </p>
         </label>
       </div>
