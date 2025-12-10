@@ -44,9 +44,11 @@ class EOTDLRepo:
         files, error = self.format_response(res)
         if error:
             return None, error
-        files = [f["id"] for f in files]
+        print("Found files: ", len(files['features']), flush=True)
+        files = [f["id"] for f in files['features']]
         if pattern:
             files = [f for f in files if fnmatch.fnmatch(f, pattern)]
+            print("Filtered files: ", len(files), flush=True)
         return files, None
 
     def get_dataset(self, eotdlDatasetName):

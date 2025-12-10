@@ -11,10 +11,11 @@ async def create_campaign_eotdl(name, description, eotdlDatasetName, labels, lab
 	id = repo.generate_id()
 	campaign = Campaign(id=id, name=name, description=description, eotdlDatasetId=eotdlDatasetId)
 	# retrieve images from eotdl
-	images, error = eotdl_repo.get_files(eotdlDatasetName, "*.tif") 
+	images, error = eotdl_repo.get_files(eotdlDatasetId, "*.tif") 
 	if not images or len(images) == 0:
 		raise Exception("No '.tif' images found in EOTDL dataset.")
 	# generate bounding boxes
+	print("Generating bounding boxes", flush=True)
 	if progress_callback is not None:
 		bbs = []
 		for i, image in enumerate(images):

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, WebSocket
 from pydantic import BaseModel
+import traceback
 
 from src.usecases.campaigns import export_campaign, create_campaign, create_campaign_eotdl, retrieve_campaigns, delete_campaign, retrieve_one_campaign, create_imported_campaign, retrieve_campaign_label_mappings, update_label_mappings
 
@@ -126,6 +127,7 @@ async def websocket_create_campaign_eotdl(websocket: WebSocket):
         
     except Exception as e:
         print("error campaigns:websocket_create_campaign", e)
+        traceback.print_exc()
         await websocket.send_json({
             "status": "error",
             "error": str(e)
