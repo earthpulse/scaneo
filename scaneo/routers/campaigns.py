@@ -1,8 +1,11 @@
 from fastapi import APIRouter, HTTPException, WebSocket
 from pydantic import BaseModel
 import traceback
+import logging
 
 from src.usecases.campaigns import export_campaign, create_campaign, create_campaign_eotdl, retrieve_campaigns, delete_campaign, retrieve_one_campaign, create_imported_campaign, retrieve_campaign_label_mappings, update_label_mappings
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/_campaigns", tags=["campaigns"])
 
@@ -98,6 +101,7 @@ async def websocket_create_campaign_eotdl(websocket: WebSocket):
         
         # Create campaign with progress callback
         async def progress_callback(progress: float, message: str):
+            logger.info("progress_callback", progress, message)
             await websocket.send_json({
                 "progress": progress,
                 "message": message,

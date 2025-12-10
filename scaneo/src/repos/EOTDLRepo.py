@@ -1,8 +1,7 @@
 import requests
-from io import BytesIO
-import fnmatch
 import os
 import json
+import re
 
 class EOTDLRepo:
     def __init__(self):
@@ -13,7 +12,7 @@ class EOTDLRepo:
             self.user = {'api_key': os.environ['EOTDL_API_KEY']}
         else:
             try:
-                with open(os.path.expanduser('~/.eotdl/creds.json')) as f:
+                with open(os.path.expanduser('~/.cache/eotdl/creds.json')) as f:
                     self.user = json.load(f)
             except FileNotFoundError:
                 raise Exception("No EOTDL credentials found. Please run `eotdl auth login` or set the EOTDL_API_KEY environment variable.")
@@ -44,11 +43,10 @@ class EOTDLRepo:
         files, error = self.format_response(res)
         if error:
             return None, error
-        print("Found files: ", len(files['features']), flush=True)
         files = [f["id"] for f in files['features']]
         if pattern:
-            files = [f for f in files if fnmatch.fnmatch(f, pattern)]
-            print("Filtered files: ", len(files), flush=True)
+            regex = re.compile(pattern)
+            files = [f for f in files if regex.match(f)]
         return files, None
 
     def get_dataset(self, eotdlDatasetName):
@@ -56,4 +54,4 @@ class EOTDLRepo:
         dataset, error = self.format_response(res)
         if error:
             return None, error
-        return dataset['id']
+        return dataset

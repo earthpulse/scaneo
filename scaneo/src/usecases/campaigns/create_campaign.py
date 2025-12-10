@@ -34,7 +34,7 @@ async def create_campaign(name, description, path, labels, labelMappings, progre
 		for modelId, mapping in labelMappings.items():
 			for labelName, index in mapping.items():
 				create_label_mapping(campaign.id, modelId, labelName, index)
-	images = glob(os.path.join(path, '**/*.tif'), recursive=True)
+	images = glob(os.path.join(path, '**/*.tif'), recursive=True) + glob(os.path.join(path, '**/*.tiff'), recursive=True)
 	images_repo = ImagesDBRepo()
 	if progress_callback is not None:
 		bbs = []

@@ -13,6 +13,9 @@ from .image_utils import to_uint8, contrast_stretch
 import shapely
 import shapely.geometry
 from rasterio.warp import transform_bounds
+import logging
+
+logger = logging.getLogger(__name__)
 
 # import geopandas as gpd
 
@@ -45,7 +48,7 @@ def get_tile_data(file_path, xyz, bands, tile_size=(256, 256)):
     dst_tile = mercantile.Tile(x=x, y=y, z=z)
     tile_bounds = mercantile.xy_bounds(dst_tile)
 
-    # print(file_path)
+    print(file_path)
 
     src = rasterio.open(file_path)
 
@@ -61,6 +64,11 @@ def get_tile_data(file_path, xyz, bands, tile_size=(256, 256)):
     # without geopandas (check if it works)
     bounds = src.bounds
     src_crs = src.crs
+    logger.info("src_crs", src_crs)
+    logger.info("bounds", bounds)   
+    print("src_crs", src_crs)
+    print("bands", src.indexes)
+    print("bounds", bounds)
     dst_crs = "EPSG:4326"
     wgs84_bounds = transform_bounds(src_crs, dst_crs, *bounds)
     bb = shapely.geometry.box(*wgs84_bounds)

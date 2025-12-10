@@ -1,7 +1,7 @@
 import typer
 import os
-import sys
 from pathlib import Path
+import logging
 
 # # Add the cli directory to the Python path
 # scaneo_cli_dir = os.path.dirname(os.path.realpath(__file__))
@@ -10,6 +10,17 @@ from pathlib import Path
 app = typer.Typer()
 
 __version__ = "2025.06.23"
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+formatter = logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s")
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+# Remove other handlers to ensure only console logging
+if len(logger.handlers) > 1:
+    logger.handlers = [console_handler]
 
 @app.command()
 def run(

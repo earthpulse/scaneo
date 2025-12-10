@@ -6,6 +6,10 @@ from src.usecases.images import retrieve_images
 from src.utils.image import get_image_data, get_tile_data, ready_image
 from src.utils.image.errors import ImageOutOfBounds
 from src.repos import EOTDLRepo
+import logging
+
+logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix="/images", tags=["images"])
 
 @router.get("/{campaign}")
@@ -37,6 +41,7 @@ def retrieve_image_tile(
         if eotdlDatasetId:
             eotdl_repo = EOTDLRepo()
             image = eotdl_repo.get_url(eotdlDatasetId, image)
+            logger.info("EOTDL image retrieved", image)
         tile = get_tile_data(image, (x, y, z), bands, tile_size)
         tile = get_image_data(tile, stretch, palette)
         image = ready_image(tile)
