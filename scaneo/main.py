@@ -9,7 +9,7 @@ import logging
 
 app = typer.Typer()
 
-__version__ = "2025.06.23"
+__version__ = "2025.12.10"
 
 logger = logging.basicConfig(level=logging.INFO)
 
