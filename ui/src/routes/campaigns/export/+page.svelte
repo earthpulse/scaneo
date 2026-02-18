@@ -16,7 +16,12 @@
 
   const exportCampaign = (e) => {
     if (exportType === "folder" && !exportPath) {
-      return;
+      if (campaigns.current?.path) {
+        exportPath = `${campaigns.current?.path}/labels`.replace(/[\\/]+/g, '/');
+      }
+      else {
+        return;
+      }
     }
     e.preventDefault();
     try {
@@ -81,7 +86,7 @@
         {/if}
       </div>
     {:else}
-      <p>Something went wrong :(</p>
+      <p>Something went wrong :</p>
     {/if}
     <p>Images: {campaigns.current?.image_count}</p>
     <p>Annotations: {campaigns.current?.annotation_count}</p>
